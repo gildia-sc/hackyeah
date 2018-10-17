@@ -1,0 +1,11 @@
+version: '2'
+services:
+    hackyeah-postgresql:
+        image: postgres:10.4
+        # volumes:
+        #     - ~/volumes/jhipster/hackyeah/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=hackyeah
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432
