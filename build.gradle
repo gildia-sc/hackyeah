@@ -1,5 +1,3 @@
-import org.gradle.internal.os.OperatingSystem
-
 buildscript {
     ext {
         kotlinVersion = '1.2.70'
@@ -17,6 +15,7 @@ buildscript {
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
 }
@@ -29,13 +28,11 @@ plugins {
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "com.moowork.node" version "1.2.0"
     id 'org.liquibase.gradle' version '2.0.1'
-    //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
 apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-// Until JHipster supports JDK 9
 assert System.properties['java.specification.version'] == '1.8'
 
 apply plugin: 'maven'
@@ -47,11 +44,11 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
+apply plugin: 'kotlin-jpa'
 
 dependencyManagement {
     imports {
         mavenBom 'io.github.jhipster:jhipster-dependencies:' + jhipster_dependencies_version
-        //jhipster-needle-gradle-dependency-management - JHipster will add additional dependencies management here
     }
 }
 
@@ -81,35 +78,15 @@ bootWar {
     mainClassName = 'pl.epoint.hackyeah.HackyeahApp'
 }
 
-war {
-
-}
 
 springBoot {
     mainClassName = 'pl.epoint.hackyeah.HackyeahApp'
     buildInfo()
 }
 
-if (OperatingSystem.current().isWindows()) {
-    // https://stackoverflow.com/questions/40037487/the-filename-or-extension-is-too-long-error-using-gradle
-    task classpathJar(type: Jar) {
-        dependsOn configurations.runtime
-        appendix = 'classpath'
-
-        doFirst {
-            manifest {
-                attributes 'Class-Path': configurations.runtime.files.collect {
-                    it.toURI().toURL().toString().replaceFirst(/file:\/+/, '/').replaceAll(' ', '%20')
-                }.join(' ')
-            }
-        }
-    }
-
-    bootRun {
-        dependsOn classpathJar
-        doFirst {
-            classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", classpathJar.archivePath)
-        }
+bootRun {
+    doLast {
+        classpath = files("$buildDir/classes/kotlin/main", "$buildDir/resources/main", classpathJar.archivePath)
     }
 }
 
@@ -293,6 +270,6 @@ if (project.hasProperty('nodeInstall')) {
     }
 }
 
-compileJava.dependsOn processResources
+compileKotlin.dependsOn processResources
 processResources.dependsOn cleanResources, bootBuildInfo
 bootBuildInfo.mustRunAfter cleanResources
