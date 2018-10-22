@@ -67,26 +67,26 @@ class LoggingAspect(private val env: Environment) {
      * @return result
      * @throws Throwable throws IllegalArgumentException
      */
-//    @Around("applicationPackagePointcut() && springBeanPointcut()")
-//    @Throws(Throwable::class)
-//    fun logAround(joinPoint: ProceedingJoinPoint): Any {
-//        if (log.isDebugEnabled) {
-//            log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.signature.declaringTypeName,
-//                    joinPoint.signature.name, Arrays.toString(joinPoint.args))
-//        }
-//        try {
-//            val result = joinPoint.proceed()
-//            if (log.isDebugEnabled) {
-//                log.debug("Exit: {}.{}() with result = {}", joinPoint.signature.declaringTypeName,
-//                        joinPoint.signature.name, result)
-//            }
-//            return result
-//        } catch (e: IllegalArgumentException) {
-//            log.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.args),
-//                    joinPoint.signature.declaringTypeName, joinPoint.signature.name)
-//
-//            throw e
-//        }
-//
-//    }
+    @Around("applicationPackagePointcut() && springBeanPointcut()")
+    @Throws(Throwable::class)
+    fun logAround(joinPoint: ProceedingJoinPoint): Any? {
+        if (log.isDebugEnabled) {
+            log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.signature.declaringTypeName,
+                    joinPoint.signature.name, Arrays.toString(joinPoint.args))
+        }
+        try {
+            val result = joinPoint.proceed()
+            if (log.isDebugEnabled) {
+                log.debug("Exit: {}.{}() with result = {}", joinPoint.signature.declaringTypeName,
+                        joinPoint.signature.name, result)
+            }
+            return result
+        } catch (e: IllegalArgumentException) {
+            log.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.args),
+                    joinPoint.signature.declaringTypeName, joinPoint.signature.name)
+
+            throw e
+        }
+
+    }
 }
