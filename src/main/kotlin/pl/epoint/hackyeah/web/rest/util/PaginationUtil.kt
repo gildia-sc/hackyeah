@@ -17,7 +17,7 @@ import java.net.URLEncoder
  */
 object PaginationUtil {
 
-    fun <T> generatePaginationHttpHeaders(page: Page<T>, baseUrl: String): HttpHeaders {
+    @JvmStatic fun <T> generatePaginationHttpHeaders(page: Page<T>, baseUrl: String): HttpHeaders {
 
         val headers = HttpHeaders()
         headers.add("X-Total-Count", java.lang.Long.toString(page.totalElements))
@@ -44,7 +44,7 @@ object PaginationUtil {
         return UriComponentsBuilder.fromUriString(baseUrl).queryParam("page", page).queryParam("size", size).toUriString()
     }
 
-    fun <T> generateSearchPaginationHttpHeaders(query: String, page: Page<T>, baseUrl: String): HttpHeaders {
+    @JvmStatic fun <T> generateSearchPaginationHttpHeaders(query: String, page: Page<T>, baseUrl: String): HttpHeaders {
         val escapedQuery: String
         try {
             escapedQuery = URLEncoder.encode(query, "UTF-8")

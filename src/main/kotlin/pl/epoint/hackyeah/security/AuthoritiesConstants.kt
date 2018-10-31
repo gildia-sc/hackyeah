@@ -5,9 +5,9 @@ package pl.epoint.hackyeah.security
  */
 object AuthoritiesConstants {
 
-    val ADMIN = "ROLE_ADMIN"
+    @JvmField val ADMIN = "ROLE_ADMIN"
 
-    val USER = "ROLE_USER"
+    @JvmField val USER = "ROLE_USER"
 
-    val ANONYMOUS = "ROLE_ANONYMOUS"
+    @JvmField val ANONYMOUS = "ROLE_ANONYMOUS"
 }

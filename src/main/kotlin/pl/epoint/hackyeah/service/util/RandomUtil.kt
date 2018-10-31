@@ -32,7 +32,7 @@ object RandomUtil {
      *
      * @return the generated reset key
      */
-    fun generateResetKey(): String {
+    @JvmStatic fun generateResetKey(): String {
         return RandomStringUtils.randomNumeric(DEF_COUNT)
     }
 

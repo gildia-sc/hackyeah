@@ -3,7 +3,7 @@ package pl.epoint.hackyeah.web.rest
 import com.codahale.metrics.annotation.Timed
 import pl.epoint.hackyeah.domain.PersistentToken
 import pl.epoint.hackyeah.repository.PersistentTokenRepository
-import pl.epoint.hackyeah.repository.UserRepository
+import pl.epoint.hackyeah.repository.PlayerRepository
 import pl.epoint.hackyeah.security.SecurityUtils
 import pl.epoint.hackyeah.service.MailService
 import pl.epoint.hackyeah.service.UserService
@@ -40,7 +40,7 @@ import java.net.URLDecoder
  */
 @RestController
 @RequestMapping("/api")
-class AccountResource(private val userRepository: UserRepository,
+class AccountResource(private val playerRepository: PlayerRepository,
                       private val userService: UserService,
                       private val mailService: MailService,
                       private val persistentTokenRepository: PersistentTokenRepository) {
@@ -56,7 +56,7 @@ class AccountResource(private val userRepository: UserRepository,
     val account: UserDTO
         @GetMapping("/account")
         @Timed
-        get() = userService.userWithAuthorities
+        get() = userService.playerWithAuthorities
                 .map<UserDTO> { UserDTO(it) }
                 .orElseThrow { InternalServerErrorException("User could not be found") }
 
@@ -69,8 +69,8 @@ class AccountResource(private val userRepository: UserRepository,
     val currentSessions: List<PersistentToken>
         @GetMapping("/account/sessions")
         @Timed
-        get() = persistentTokenRepository.findByUser(
-                userRepository.findOneByLogin(SecurityUtils.currentUserLogin
+        get() = persistentTokenRepository.findByPlayer(
+                playerRepository.findOneByLogin(SecurityUtils.currentUserLogin
                         .orElseThrow({ InternalServerErrorException("Current user login not found") }))
                         .orElseThrow { InternalServerErrorException("User could not be found") }
         )
@@ -133,11 +133,11 @@ class AccountResource(private val userRepository: UserRepository,
     @Timed
     fun saveAccount(@Valid @RequestBody userDTO: UserDTO) {
         val userLogin = SecurityUtils.currentUserLogin.orElseThrow({ InternalServerErrorException("Current user login not found") })
-        val existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.email!!)
+        val existingUser = playerRepository.findOneByEmailIgnoreCase(userDTO.email!!)
         if (existingUser.isPresent && !existingUser.get().login!!.equals(userLogin, ignoreCase = true)) {
             throw EmailAlreadyUsedException()
         }
-        val user = userRepository.findOneByLogin(userLogin)
+        val user = playerRepository.findOneByLogin(userLogin)
         if (!user.isPresent) {
             throw InternalServerErrorException("User could not be found")
         }
@@ -182,9 +182,9 @@ class AccountResource(private val userRepository: UserRepository,
     fun invalidateSession(@PathVariable series: String) {
         val decodedSeries = URLDecoder.decode(series, "UTF-8")
         SecurityUtils.currentUserLogin
-                .flatMap{ userRepository.findOneByLogin(it) }
+                .flatMap{ playerRepository.findOneByLogin(it) }
                 .ifPresent { u ->
-                    persistentTokenRepository.findByUser(u).stream()
+                    persistentTokenRepository.findByPlayer(u).stream()
                         .filter { persistentToken -> StringUtils.equals(persistentToken.series, decodedSeries) }
                         .findAny().ifPresent { t -> persistentTokenRepository.deleteById(decodedSeries) }
                 }

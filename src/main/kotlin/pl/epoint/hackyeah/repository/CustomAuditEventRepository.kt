@@ -71,6 +71,6 @@ class CustomAuditEventRepository(private val persistenceAuditEventRepository: Pe
         /**
          * Should be the same as in Liquibase migration.
          */
-        protected val EVENT_DATA_COLUMN_MAX_LENGTH = 255
+        @JvmField val EVENT_DATA_COLUMN_MAX_LENGTH = 255
     }
 }

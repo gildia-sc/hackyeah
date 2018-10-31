@@ -1,6 +1,6 @@
 package pl.epoint.hackyeah.service
 
-import pl.epoint.hackyeah.domain.User
+import pl.epoint.hackyeah.domain.Player
 import io.github.jhipster.config.JHipsterProperties
 import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource
@@ -52,33 +52,33 @@ class MailService(private val jHipsterProperties: JHipsterProperties, private va
     }
 
     @Async
-    fun sendEmailFromTemplate(user: User, templateName: String, titleKey: String) {
-        val locale = Locale.forLanguageTag(user.langKey!!)
+    fun sendEmailFromTemplate(player: Player, templateName: String, titleKey: String) {
+        val locale = Locale.forLanguageTag(player.langKey!!)
         val context = Context(locale)
-        context.setVariable(USER, user)
+        context.setVariable(USER, player)
         context.setVariable(BASE_URL, jHipsterProperties.mail.baseUrl)
         val content = templateEngine.process(templateName, context)
         val subject = messageSource.getMessage(titleKey, null, locale)
-        sendEmail(user.email, subject, content, false, true)
+        sendEmail(player.email, subject, content, false, true)
 
     }
 
     @Async
-    fun sendActivationEmail(user: User) {
-        log.debug("Sending activation email to '{}'", user.email)
-        sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title")
+    fun sendActivationEmail(player: Player) {
+        log.debug("Sending activation email to '{}'", player.email)
+        sendEmailFromTemplate(player, "mail/activationEmail", "email.activation.title")
     }
 
     @Async
-    fun sendCreationEmail(user: User) {
-        log.debug("Sending creation email to '{}'", user.email)
-        sendEmailFromTemplate(user, "mail/creationEmail", "email.activation.title")
+    fun sendCreationEmail(player: Player) {
+        log.debug("Sending creation email to '{}'", player.email)
+        sendEmailFromTemplate(player, "mail/creationEmail", "email.activation.title")
     }
 
     @Async
-    fun sendPasswordResetMail(user: User) {
-        log.debug("Sending password reset email to '{}'", user.email)
-        sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title")
+    fun sendPasswordResetMail(player: Player) {
+        log.debug("Sending password reset email to '{}'", player.email)
+        sendEmailFromTemplate(player, "mail/passwordResetEmail", "email.reset.title")
     }
 
     companion object {

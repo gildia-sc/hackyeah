@@ -1,8 +1,8 @@
 package pl.epoint.hackyeah.web.rest
 
 import com.codahale.metrics.annotation.Timed
-import pl.epoint.hackyeah.domain.User
-import pl.epoint.hackyeah.repository.UserRepository
+import pl.epoint.hackyeah.domain.Player
+import pl.epoint.hackyeah.repository.PlayerRepository
 import pl.epoint.hackyeah.repository.search.UserSearchRepository
 import pl.epoint.hackyeah.service.MailService
 import pl.epoint.hackyeah.service.UserService
@@ -65,7 +65,7 @@ import org.elasticsearch.index.query.QueryBuilders.queryStringQuery
  */
 @RestController
 @RequestMapping("/api")
-class UserResource(private val userService: UserService, private val userRepository: UserRepository, private val mailService: MailService, private val userSearchRepository: UserSearchRepository) {
+class UserResource(private val userService: UserService, private val playerRepository: PlayerRepository, private val mailService: MailService, private val userSearchRepository: UserSearchRepository) {
 
     private val log = LoggerFactory.getLogger(UserResource::class.java)
 
@@ -95,15 +95,15 @@ class UserResource(private val userService: UserService, private val userReposit
     @Timed
     @PreAuthorize("hasRole(\"" + "ROLE_ADMIN" + "\")")
     @Throws(URISyntaxException::class)
-    fun createUser(@Valid @RequestBody userDTO: UserDTO): ResponseEntity<User> {
+    fun createUser(@Valid @RequestBody userDTO: UserDTO): ResponseEntity<Player> {
         log.debug("REST request to save User : {}", userDTO)
 
         if (userDTO.id != null) {
             throw BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists")
             // Lowercase the user login before comparing with database
-        } else if (userRepository.findOneByLogin(userDTO.login!!.toLowerCase()).isPresent) {
+        } else if (playerRepository.findOneByLogin(userDTO.login!!.toLowerCase()).isPresent) {
             throw LoginAlreadyUsedException()
-        } else if (userRepository.findOneByEmailIgnoreCase(userDTO.email!!).isPresent) {
+        } else if (playerRepository.findOneByEmailIgnoreCase(userDTO.email!!).isPresent) {
             throw EmailAlreadyUsedException()
         } else {
             val newUser = userService.createUser(userDTO)
@@ -127,11 +127,11 @@ class UserResource(private val userService: UserService, private val userReposit
     @PreAuthorize("hasRole(\"" + "ROLE_ADMIN" + "\")")
     fun updateUser(@Valid @RequestBody userDTO: UserDTO): ResponseEntity<UserDTO> {
         log.debug("REST request to update User : {}", userDTO)
-        var existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.email!!)
+        var existingUser = playerRepository.findOneByEmailIgnoreCase(userDTO.email!!)
         if (existingUser.isPresent && existingUser.get().id != userDTO.id) {
             throw EmailAlreadyUsedException()
         }
-        existingUser = userRepository.findOneByLogin(userDTO.login!!.toLowerCase())
+        existingUser = playerRepository.findOneByLogin(userDTO.login!!.toLowerCase())
         if (existingUser.isPresent && existingUser.get().id != userDTO.id) {
             throw LoginAlreadyUsedException()
         }
@@ -194,7 +194,7 @@ class UserResource(private val userService: UserService, private val userReposit
      */
     @GetMapping("/_search/users/{query}")
     @Timed
-    fun search(@PathVariable query: String): List<User> {
+    fun search(@PathVariable query: String): List<Player> {
         return StreamSupport
                 .stream(userSearchRepository.search(queryStringQuery(query)).spliterator(), false)
                 .collect(Collectors.toList())

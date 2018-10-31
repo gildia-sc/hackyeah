@@ -2,10 +2,10 @@ package pl.epoint.hackyeah.service
 
 import pl.epoint.hackyeah.config.Constants
 import pl.epoint.hackyeah.domain.Authority
-import pl.epoint.hackyeah.domain.User
+import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.repository.AuthorityRepository
 import pl.epoint.hackyeah.repository.PersistentTokenRepository
-import pl.epoint.hackyeah.repository.UserRepository
+import pl.epoint.hackyeah.repository.PlayerRepository
 import pl.epoint.hackyeah.repository.search.UserSearchRepository
 import pl.epoint.hackyeah.security.AuthoritiesConstants
 import pl.epoint.hackyeah.security.SecurityUtils
@@ -34,7 +34,7 @@ import java.util.stream.Collectors
  */
 @Service
 @Transactional
-class UserService(val userRepository: UserRepository,
+class UserService(val playerRepository: PlayerRepository,
                   val passwordEncoder: PasswordEncoder,
                   val userSearchRepository: UserSearchRepository,
                   val persistentTokenRepository: PersistentTokenRepository,
@@ -42,9 +42,9 @@ class UserService(val userRepository: UserRepository,
 
     private val log = LoggerFactory.getLogger(UserService::class.java)
 
-    val userWithAuthorities: Optional<User>
+    val playerWithAuthorities: Optional<Player>
         @Transactional(readOnly = true)
-        get() = SecurityUtils.currentUserLogin.flatMap { userRepository.findOneWithAuthoritiesByLogin(it) }
+        get() = SecurityUtils.currentUserLogin.flatMap { playerRepository.findOneWithAuthoritiesByLogin(it) }
 
     /**
      * @return a list of all the authorities
@@ -53,9 +53,9 @@ class UserService(val userRepository: UserRepository,
         get() = authorityRepository.findAll()
             .map { it.name!! }
 
-    fun activateRegistration(key: String): Optional<User> {
+    fun activateRegistration(key: String): Optional<Player> {
         log.debug("Activating user for activation key {}", key)
-        return userRepository.findOneByActivationKey(key)
+        return playerRepository.findOneByActivationKey(key)
             .map { user ->
                 // activate given user for the registration key.
                 user.activated = true
@@ -66,9 +66,9 @@ class UserService(val userRepository: UserRepository,
             }
     }
 
-    fun completePasswordReset(newPassword: String, key: String): Optional<User> {
+    fun completePasswordReset(newPassword: String, key: String): Optional<Player> {
         log.debug("Reset user password for reset key {}", key)
-        return userRepository.findOneByResetKey(key)
+        return playerRepository.findOneByResetKey(key)
             .filter { user -> user.resetDate!!.isAfter(Instant.now().minusSeconds(86400)) }
             .map { user ->
                 user.password = passwordEncoder.encode(newPassword)
@@ -78,8 +78,8 @@ class UserService(val userRepository: UserRepository,
             }
     }
 
-    fun requestPasswordReset(mail: String): Optional<User> {
-        return userRepository.findOneByEmailIgnoreCase(mail)
+    fun requestPasswordReset(mail: String): Optional<Player> {
+        return playerRepository.findOneByEmailIgnoreCase(mail)
             .filter { it.activated }
             .map { user ->
                 user.resetKey = RandomUtil.generateResetKey()
@@ -88,20 +88,20 @@ class UserService(val userRepository: UserRepository,
             }
     }
 
-    fun registerUser(userDTO: UserDTO, password: String): User {
-        userRepository.findOneByLogin(userDTO.login!!.toLowerCase()).ifPresent { existingUser ->
+    fun registerUser(userDTO: UserDTO, password: String): Player {
+        playerRepository.findOneByLogin(userDTO.login!!.toLowerCase()).ifPresent { existingUser ->
             val removed = removeNonActivatedUser(existingUser)
             if (!removed) {
                 throw LoginAlreadyUsedException()
             }
         }
-        userRepository.findOneByEmailIgnoreCase(userDTO.email!!).ifPresent { existingUser ->
+        playerRepository.findOneByEmailIgnoreCase(userDTO.email!!).ifPresent { existingUser ->
             val removed = removeNonActivatedUser(existingUser)
             if (!removed) {
                 throw EmailAlreadyUsedException()
             }
         }
-        val newUser = User()
+        val newUser = Player()
         val encryptedPassword = passwordEncoder.encode(password)
         newUser.login = userDTO.login!!.toLowerCase()
         // new user gets initially a generated password
@@ -118,23 +118,23 @@ class UserService(val userRepository: UserRepository,
         val authorities = HashSet<Authority>()
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent { authorities.add(it) }
         newUser.authorities = authorities
-        userRepository.save(newUser)
+        playerRepository.save(newUser)
         userSearchRepository.save(newUser)
         log.debug("Created Information for User: {}", newUser)
         return newUser
     }
 
-    private fun removeNonActivatedUser(existingUser: User): Boolean {
-        if (existingUser.activated) {
+    private fun removeNonActivatedUser(existingPlayer: Player): Boolean {
+        if (existingPlayer.activated) {
             return false
         }
-        userRepository.delete(existingUser)
-        userRepository.flush()
+        playerRepository.delete(existingPlayer)
+        playerRepository.flush()
         return true
     }
 
-    fun createUser(userDTO: UserDTO): User {
-        val user = User()
+    fun createUser(userDTO: UserDTO): Player {
+        val user = Player()
         user.login = userDTO.login!!.toLowerCase()
         user.firstName = userDTO.firstName
         user.lastName = userDTO.lastName
@@ -158,7 +158,7 @@ class UserService(val userRepository: UserRepository,
                 .collect(Collectors.toSet())
             user.authorities = authorities
         }
-        userRepository.save(user)
+        playerRepository.save(user)
         userSearchRepository.save(user)
         log.debug("Created Information for User: {}", user)
         return user
@@ -175,14 +175,14 @@ class UserService(val userRepository: UserRepository,
      */
     fun updateUser(firstName: String, lastName: String, email: String, langKey: String, imageUrl: String) {
         SecurityUtils.currentUserLogin
-            .flatMap { userRepository.findOneByLogin(it) }
+            .flatMap { playerRepository.findOneByLogin(it) }
             .ifPresent { user ->
                 user.firstName = firstName
                 user.lastName = lastName
                 user.email = email.toLowerCase()
                 user.langKey = langKey
                 user.imageUrl = imageUrl
-                userSearchRepository.save<User>(user)
+                userSearchRepository.save<Player>(user)
                 log.debug("Changed Information for User: {}", user)
             }
     }
@@ -194,7 +194,7 @@ class UserService(val userRepository: UserRepository,
      * @return updated user
      */
     fun updateUser(userDTO: UserDTO): Optional<UserDTO> {
-        return Optional.of(userRepository
+        return Optional.of(playerRepository
             .findById(userDTO.id!!))
             .filter { it.isPresent }
             .map { it.get() }
@@ -221,8 +221,8 @@ class UserService(val userRepository: UserRepository,
     }
 
     fun deleteUser(login: String) {
-        userRepository.findOneByLogin(login).ifPresent { user ->
-            userRepository.delete(user)
+        playerRepository.findOneByLogin(login).ifPresent { user ->
+            playerRepository.delete(user)
             userSearchRepository.delete(user)
             log.debug("Deleted User: {}", user)
         }
@@ -230,7 +230,7 @@ class UserService(val userRepository: UserRepository,
 
     fun changePassword(currentClearTextPassword: String, newPassword: String) {
         SecurityUtils.currentUserLogin
-            .flatMap { userRepository.findOneByLogin(it) }
+            .flatMap { playerRepository.findOneByLogin(it) }
             .ifPresent { user ->
                 val currentEncryptedPassword = user.password
                 if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
@@ -244,17 +244,17 @@ class UserService(val userRepository: UserRepository,
 
     @Transactional(readOnly = true)
     fun getAllManagedUsers(pageable: Pageable): Page<UserDTO> {
-        return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map { UserDTO(it) }
+        return playerRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map { UserDTO(it) }
     }
 
     @Transactional(readOnly = true)
-    fun getUserWithAuthoritiesByLogin(login: String): Optional<User> {
-        return userRepository.findOneWithAuthoritiesByLogin(login)
+    fun getUserWithAuthoritiesByLogin(login: String): Optional<Player> {
+        return playerRepository.findOneWithAuthoritiesByLogin(login)
     }
 
     @Transactional(readOnly = true)
-    fun getUserWithAuthorities(id: Long?): Optional<User> {
-        return userRepository.findOneWithAuthoritiesById(id)
+    fun getUserWithAuthorities(id: Long?): Optional<Player> {
+        return playerRepository.findOneWithAuthoritiesById(id)
     }
 
     /**
@@ -269,7 +269,7 @@ class UserService(val userRepository: UserRepository,
         val now = LocalDate.now()
         persistentTokenRepository.findByTokenDateBefore(now.minusMonths(1)).forEach { token ->
             log.debug("Deleting token {}", token.series)
-            val user = token.user
+            val user = token.player
             val persistentTokens = user!!.persistentTokens as MutableSet
             persistentTokens.remove(token)
             persistentTokenRepository.delete(token)
@@ -284,11 +284,11 @@ class UserService(val userRepository: UserRepository,
      */
     @Scheduled(cron = "0 0 1 * * ?")
     fun removeNotActivatedUsers() {
-        userRepository
+        playerRepository
             .findAllByActivatedIsFalseAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
             .forEach { user ->
                 log.debug("Deleting not activated user {}", user.login)
-                userRepository.delete(user)
+                playerRepository.delete(user)
                 userSearchRepository.delete(user)
             }
     }

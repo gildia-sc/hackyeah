@@ -50,7 +50,7 @@ class PersistentToken : Serializable {
 
     @JsonIgnore
     @ManyToOne
-    var user: User? = null
+    var player: Player? = null
 
     override fun equals(o: Any?): Boolean {
         if (this === o) {

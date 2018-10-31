@@ -1,7 +1,7 @@
 package pl.epoint.hackyeah.service.mapper
 
 import pl.epoint.hackyeah.domain.Authority
-import pl.epoint.hackyeah.domain.User
+import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.service.dto.UserDTO
 import org.springframework.stereotype.Service
 import java.util.Objects
@@ -16,22 +16,22 @@ import java.util.stream.Collectors
 @Service
 class UserMapper {
 
-    fun userToUserDTO(user: User): UserDTO {
-        return UserDTO(user)
+    fun userToUserDTO(player: Player): UserDTO {
+        return UserDTO(player)
     }
 
-    fun usersToUserDTOs(users: List<User>): List<UserDTO> {
-        return users.stream()
+    fun usersToUserDTOs(players: List<Player>): List<UserDTO> {
+        return players.stream()
                 .filter { Objects.nonNull(it) }
                 .map { this.userToUserDTO(it) }
                 .collect(Collectors.toList())
     }
 
-    fun userDTOToUser(userDTO: UserDTO?): User? {
+    fun userDTOToUser(userDTO: UserDTO?): Player? {
         if (userDTO == null) {
             return null
         } else {
-            val user = User()
+            val user = Player()
             user.id = userDTO.id
             user.login = userDTO.login
             user.firstName = userDTO.firstName
@@ -48,18 +48,18 @@ class UserMapper {
         }
     }
 
-    fun userDTOsToUsers(userDTOs: List<UserDTO>): List<User> {
+    fun userDTOsToUsers(userDTOs: List<UserDTO>): List<Player> {
         return userDTOs.stream()
                 .filter { Objects.nonNull(it) }
-                .map<User> { this.userDTOToUser(it) }
+                .map<Player> { this.userDTOToUser(it) }
                 .collect(Collectors.toList())
     }
 
-    fun userFromId(id: Long?): User? {
+    fun userFromId(id: Long?): Player? {
         if (id == null) {
             return null
         }
-        val user = User()
+        val user = Player()
         user.id = id
         return user
     }

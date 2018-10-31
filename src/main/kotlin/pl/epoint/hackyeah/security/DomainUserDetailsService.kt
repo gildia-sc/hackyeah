@@ -1,7 +1,7 @@
 package pl.epoint.hackyeah.security
 
-import pl.epoint.hackyeah.domain.User
-import pl.epoint.hackyeah.repository.UserRepository
+import pl.epoint.hackyeah.domain.Player
+import pl.epoint.hackyeah.repository.PlayerRepository
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -16,7 +16,7 @@ import java.util.Locale
  * Authenticate a user from the database.
  */
 @Component("userDetailsService")
-class DomainUserDetailsService(private val userRepository: UserRepository) : UserDetailsService {
+class DomainUserDetailsService(private val playerRepository: PlayerRepository) : UserDetailsService {
 
     private val log = LoggerFactory.getLogger(DomainUserDetailsService::class.java)
 
@@ -25,27 +25,27 @@ class DomainUserDetailsService(private val userRepository: UserRepository) : Use
         log.debug("Authenticating {}", login)
 
         if (EmailValidator().isValid(login, null)) {
-            return userRepository.findOneWithAuthoritiesByEmail(login)
+            return playerRepository.findOneWithAuthoritiesByEmail(login)
                     .map { user -> createSpringSecurityUser(login, user) }
                     .orElseThrow { UsernameNotFoundException("User with email $login was not found in the database") }
         }
 
         val lowercaseLogin = login.toLowerCase(Locale.ENGLISH)
-        return userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
+        return playerRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
                 .map { user -> createSpringSecurityUser(lowercaseLogin, user) }
                 .orElseThrow { UsernameNotFoundException("User $lowercaseLogin was not found in the database") }
 
     }
 
-    private fun createSpringSecurityUser(lowercaseLogin: String, user: User): org.springframework.security.core.userdetails.User {
-        if (!user.activated) {
+    private fun createSpringSecurityUser(lowercaseLogin: String, player: Player): org.springframework.security.core.userdetails.User {
+        if (!player.activated) {
             throw UserNotActivatedException("User $lowercaseLogin was not activated")
         }
-        val grantedAuthorities = user
+        val grantedAuthorities = player
             .authorities.map { authority -> SimpleGrantedAuthority(authority.name) }
 
-        return org.springframework.security.core.userdetails.User(user.login!!,
-                user.password!!,
+        return org.springframework.security.core.userdetails.User(player.login!!,
+                player.password!!,
                 grantedAuthorities)
     }
 }

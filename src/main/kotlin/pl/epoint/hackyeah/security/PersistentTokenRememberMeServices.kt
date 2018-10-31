@@ -2,7 +2,7 @@ package pl.epoint.hackyeah.security
 
 import pl.epoint.hackyeah.domain.PersistentToken
 import pl.epoint.hackyeah.repository.PersistentTokenRepository
-import pl.epoint.hackyeah.repository.UserRepository
+import pl.epoint.hackyeah.repository.PlayerRepository
 import pl.epoint.hackyeah.service.util.RandomUtil
 import io.github.jhipster.config.JHipsterProperties
 import io.github.jhipster.security.PersistentTokenCache
@@ -58,7 +58,7 @@ import java.util.Arrays
 @Service
 class PersistentTokenRememberMeServices(jHipsterProperties: JHipsterProperties,
                                         userDetailsService: org.springframework.security.core.userdetails.UserDetailsService,
-                                        private val persistentTokenRepository: PersistentTokenRepository, private val userRepository: UserRepository) : AbstractRememberMeServices(jHipsterProperties.security.rememberMe.key, userDetailsService) {
+                                        private val persistentTokenRepository: PersistentTokenRepository, private val playerRepository: PlayerRepository) : AbstractRememberMeServices(jHipsterProperties.security.rememberMe.key, userDetailsService) {
 
     private val log = LoggerFactory.getLogger(PersistentTokenRememberMeServices::class.java)
 
@@ -82,7 +82,7 @@ class PersistentTokenRememberMeServices(jHipsterProperties: JHipsterProperties,
 
             if (login == null) {
                 val token = getPersistentToken(cookieTokens)
-                login = token.user!!.login
+                login = token.player!!.login
 
                 // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
                 log.debug("Refreshing persistent login token for user '{}', series '{}'", login, token.series)
@@ -109,10 +109,10 @@ class PersistentTokenRememberMeServices(jHipsterProperties: JHipsterProperties,
         val login = successfulAuthentication.name
 
         log.debug("Creating new persistent login for user {}", login)
-        val token = userRepository.findOneByLogin(login).map { u ->
+        val token = playerRepository.findOneByLogin(login).map { u ->
             val t = PersistentToken()
             t.series = RandomUtil.generateSeriesData()
-            t.user = u
+            t.player = u
             t.tokenValue = RandomUtil.generateTokenData()
             t.tokenDate = LocalDate.now()
             t.ipAddress = request.remoteAddr

@@ -1,7 +1,5 @@
 package pl.epoint.hackyeah.security
 
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
@@ -16,7 +14,7 @@ object SecurityUtils {
      *
      * @return the login of the current user
      */
-    val currentUserLogin: Optional<String>
+    @JvmStatic val currentUserLogin: Optional<String>
         get() {
             val securityContext = SecurityContextHolder.getContext()
             return Optional.ofNullable(securityContext.authentication)
@@ -37,7 +35,7 @@ object SecurityUtils {
      *
      * @return true if the user is authenticated, false otherwise
      */
-    val isAuthenticated: Boolean
+    @JvmStatic val isAuthenticated: Boolean
         get() {
             val securityContext = SecurityContextHolder.getContext()
             return Optional.ofNullable(securityContext.authentication)
@@ -58,7 +56,7 @@ object SecurityUtils {
      * @param authority the authority to check
      * @return true if the current user has the authority, false otherwise
      */
-    fun isCurrentUserInRole(authority: String): Boolean {
+    @JvmStatic fun isCurrentUserInRole(authority: String): Boolean {
         val securityContext = SecurityContextHolder.getContext()
         return Optional.ofNullable(securityContext.authentication)
             .map<Boolean> { authentication ->

@@ -1,7 +1,7 @@
 package pl.epoint.hackyeah.repository
 
 import pl.epoint.hackyeah.domain.PersistentToken
-import pl.epoint.hackyeah.domain.User
+import pl.epoint.hackyeah.domain.Player
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
@@ -13,7 +13,7 @@ import java.time.LocalDate
 @Repository
 interface PersistentTokenRepository : JpaRepository<PersistentToken, String> {
 
-    fun findByUser(user: User): List<PersistentToken>
+    fun findByPlayer(player: Player): List<PersistentToken>
 
     fun findByTokenDateBefore(localDate: LocalDate): List<PersistentToken>
 

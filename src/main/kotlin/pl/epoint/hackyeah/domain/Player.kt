@@ -30,9 +30,9 @@ import java.util.Objects
  * A user.
  */
 @Entity
-@Table(name = "jhi_user")
-@org.springframework.data.elasticsearch.annotations.Document(indexName = "user")
-class User : AbstractAuditingEntity(), Serializable {
+@Table(name = "player")
+@org.springframework.data.elasticsearch.annotations.Document(indexName = "player")
+class Player : AbstractAuditingEntity(), Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
@@ -95,12 +95,14 @@ class User : AbstractAuditingEntity(), Serializable {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "jhi_user_authority", joinColumns = arrayOf(JoinColumn(name = "user_id", referencedColumnName = "id")), inverseJoinColumns = arrayOf(JoinColumn(name = "authority_name", referencedColumnName = "name")))
+    @JoinTable(name = "player_authority",
+        joinColumns = arrayOf(JoinColumn(name = "player_id", referencedColumnName = "id")),
+        inverseJoinColumns = arrayOf(JoinColumn(name = "authority_name", referencedColumnName = "name")))
     @BatchSize(size = 20)
     var authorities: Set<Authority> = HashSet()
 
     @JsonIgnore
-    @OneToMany(cascade = arrayOf(CascadeType.ALL), orphanRemoval = true, mappedBy = "user")
+    @OneToMany(cascade = arrayOf(CascadeType.ALL), orphanRemoval = true, mappedBy = "player")
     var persistentTokens: Set<PersistentToken> = HashSet()
 
     override fun equals(o: Any?): Boolean {
@@ -111,7 +113,7 @@ class User : AbstractAuditingEntity(), Serializable {
             return false
         }
 
-        val user = o as User?
+        val user = o as Player?
         return !(user!!.id == null || id == null) && id == user.id
     }
 
@@ -133,7 +135,6 @@ class User : AbstractAuditingEntity(), Serializable {
     }
 
     companion object {
-
         private const val serialVersionUID = 1L
     }
 }

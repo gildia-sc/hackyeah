@@ -1,6 +1,6 @@
 package pl.epoint.hackyeah.service.dto
 
-import pl.epoint.hackyeah.domain.User
+import pl.epoint.hackyeah.domain.Player
 
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -53,20 +53,20 @@ open class UserDTO {
         // Empty constructor needed for Jackson.
     }
 
-    constructor(user: User) {
-        this.id = user.id
-        this.login = user.login
-        this.firstName = user.firstName
-        this.lastName = user.lastName
-        this.email = user.email
-        this.isActivated = user.activated
-        this.imageUrl = user.imageUrl
-        this.langKey = user.langKey
-        this.createdBy = user.createdBy
-        this.createdDate = user.createdDate
-        this.lastModifiedBy = user.lastModifiedBy
-        this.lastModifiedDate = user.lastModifiedDate
-        this.authorities = user.authorities.stream()
+    constructor(player: Player) {
+        this.id = player.id
+        this.login = player.login
+        this.firstName = player.firstName
+        this.lastName = player.lastName
+        this.email = player.email
+        this.isActivated = player.activated
+        this.imageUrl = player.imageUrl
+        this.langKey = player.langKey
+        this.createdBy = player.createdBy
+        this.createdDate = player.createdDate
+        this.lastModifiedBy = player.lastModifiedBy
+        this.lastModifiedDate = player.lastModifiedDate
+        this.authorities = player.authorities.stream()
                 .map<String> { it.name }
                 .collect (Collectors.toSet())
     }

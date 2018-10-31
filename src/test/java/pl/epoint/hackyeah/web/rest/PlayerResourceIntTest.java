@@ -2,8 +2,8 @@ package pl.epoint.hackyeah.web.rest;
 
 import pl.epoint.hackyeah.HackyeahApp;
 import pl.epoint.hackyeah.domain.Authority;
-import pl.epoint.hackyeah.domain.User;
-import pl.epoint.hackyeah.repository.UserRepository;
+import pl.epoint.hackyeah.domain.Player;
+import pl.epoint.hackyeah.repository.PlayerRepository;
 import pl.epoint.hackyeah.repository.search.UserSearchRepository;
 import pl.epoint.hackyeah.security.AuthoritiesConstants;
 import pl.epoint.hackyeah.service.MailService;
@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = HackyeahApp.class)
-public class UserResourceIntTest {
+public class PlayerResourceIntTest {
 
     private static final String DEFAULT_LOGIN = "johndoe";
     private static final String UPDATED_LOGIN = "jhipster";
@@ -69,7 +69,7 @@ public class UserResourceIntTest {
     private static final String UPDATED_LANGKEY = "fr";
 
     @Autowired
-    private UserRepository userRepository;
+    private PlayerRepository playerRepository;
 
     /**
      * This repository is mocked in the pl.epoint.hackyeah.repository.search test package.
@@ -102,11 +102,11 @@ public class UserResourceIntTest {
 
     private MockMvc restUserMockMvc;
 
-    private User user;
+    private Player player;
 
     @Before
     public void setup() {
-        UserResource userResource = new UserResource(userService, userRepository, mailService, mockUserSearchRepository);
+        UserResource userResource = new UserResource(userService, playerRepository, mailService, mockUserSearchRepository);
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -121,30 +121,30 @@ public class UserResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which has a required relationship to the User entity.
      */
-    public static User createEntity(EntityManager em) {
-        User user = new User();
-        user.setLogin(DEFAULT_LOGIN + RandomStringUtils.randomAlphabetic(5));
-        user.setPassword(RandomStringUtils.random(60));
-        user.setActivated(true);
-        user.setEmail(RandomStringUtils.randomAlphabetic(5) + DEFAULT_EMAIL);
-        user.setFirstName(DEFAULT_FIRSTNAME);
-        user.setLastName(DEFAULT_LASTNAME);
-        user.setImageUrl(DEFAULT_IMAGEURL);
-        user.setLangKey(DEFAULT_LANGKEY);
-        return user;
+    public static Player createEntity(EntityManager em) {
+        Player player = new Player();
+        player.setLogin(DEFAULT_LOGIN + RandomStringUtils.randomAlphabetic(5));
+        player.setPassword(RandomStringUtils.random(60));
+        player.setActivated(true);
+        player.setEmail(RandomStringUtils.randomAlphabetic(5) + DEFAULT_EMAIL);
+        player.setFirstName(DEFAULT_FIRSTNAME);
+        player.setLastName(DEFAULT_LASTNAME);
+        player.setImageUrl(DEFAULT_IMAGEURL);
+        player.setLangKey(DEFAULT_LANGKEY);
+        return player;
     }
 
     @Before
     public void initTest() {
-        user = createEntity(em);
-        user.setLogin(DEFAULT_LOGIN);
-        user.setEmail(DEFAULT_EMAIL);
+        player = createEntity(em);
+        player.setLogin(DEFAULT_LOGIN);
+        player.setEmail(DEFAULT_EMAIL);
     }
 
     @Test
     @Transactional
     public void createUser() throws Exception {
-        int databaseSizeBeforeCreate = userRepository.findAll().size();
+        int databaseSizeBeforeCreate = playerRepository.findAll().size();
 
         // Create the User
         ManagedUserVM managedUserVM = new ManagedUserVM();
@@ -164,21 +164,21 @@ public class UserResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
-        assertThat(userList).hasSize(databaseSizeBeforeCreate + 1);
-        User testUser = userList.get(userList.size() - 1);
-        assertThat(testUser.getLogin()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(testUser.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
-        assertThat(testUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);
-        assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
-        assertThat(testUser.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
-        assertThat(testUser.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
+        List<Player> playerList = playerRepository.findAll();
+        assertThat(playerList).hasSize(databaseSizeBeforeCreate + 1);
+        Player testPlayer = playerList.get(playerList.size() - 1);
+        assertThat(testPlayer.getLogin()).isEqualTo(DEFAULT_LOGIN);
+        assertThat(testPlayer.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
+        assertThat(testPlayer.getLastName()).isEqualTo(DEFAULT_LASTNAME);
+        assertThat(testPlayer.getEmail()).isEqualTo(DEFAULT_EMAIL);
+        assertThat(testPlayer.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
+        assertThat(testPlayer.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
     }
 
     @Test
     @Transactional
     public void createUserWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = userRepository.findAll().size();
+        int databaseSizeBeforeCreate = playerRepository.findAll().size();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
         managedUserVM.setId(1L);
@@ -199,17 +199,17 @@ public class UserResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
-        assertThat(userList).hasSize(databaseSizeBeforeCreate);
+        List<Player> playerList = playerRepository.findAll();
+        assertThat(playerList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void createUserWithExistingLogin() throws Exception {
         // Initialize the database
-        userRepository.saveAndFlush(user);
-        mockUserSearchRepository.save(user);
-        int databaseSizeBeforeCreate = userRepository.findAll().size();
+        playerRepository.saveAndFlush(player);
+        mockUserSearchRepository.save(player);
+        int databaseSizeBeforeCreate = playerRepository.findAll().size();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
         managedUserVM.setLogin(DEFAULT_LOGIN);// this login should already be used
@@ -229,17 +229,17 @@ public class UserResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
-        assertThat(userList).hasSize(databaseSizeBeforeCreate);
+        List<Player> playerList = playerRepository.findAll();
+        assertThat(playerList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void createUserWithExistingEmail() throws Exception {
         // Initialize the database
-        userRepository.saveAndFlush(user);
-        mockUserSearchRepository.save(user);
-        int databaseSizeBeforeCreate = userRepository.findAll().size();
+        playerRepository.saveAndFlush(player);
+        mockUserSearchRepository.save(player);
+        int databaseSizeBeforeCreate = playerRepository.findAll().size();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
         managedUserVM.setLogin("anotherlogin");
@@ -259,16 +259,16 @@ public class UserResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
-        assertThat(userList).hasSize(databaseSizeBeforeCreate);
+        List<Player> playerList = playerRepository.findAll();
+        assertThat(playerList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void getAllUsers() throws Exception {
         // Initialize the database
-        userRepository.saveAndFlush(user);
-        mockUserSearchRepository.save(user);
+        playerRepository.saveAndFlush(player);
+        mockUserSearchRepository.save(player);
 
         // Get all the users
         restUserMockMvc.perform(get("/api/users?sort=id,desc")
@@ -287,14 +287,14 @@ public class UserResourceIntTest {
     @Transactional
     public void getUser() throws Exception {
         // Initialize the database
-        userRepository.saveAndFlush(user);
-        mockUserSearchRepository.save(user);
+        playerRepository.saveAndFlush(player);
+        mockUserSearchRepository.save(player);
 
         // Get the user
-        restUserMockMvc.perform(get("/api/users/{login}", user.getLogin()))
+        restUserMockMvc.perform(get("/api/users/{login}", player.getLogin()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.login").value(user.getLogin()))
+            .andExpect(jsonPath("$.login").value(player.getLogin()))
             .andExpect(jsonPath("$.firstName").value(DEFAULT_FIRSTNAME))
             .andExpect(jsonPath("$.lastName").value(DEFAULT_LASTNAME))
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
@@ -313,27 +313,27 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUser() throws Exception {
         // Initialize the database
-        userRepository.saveAndFlush(user);
-        mockUserSearchRepository.save(user);
-        int databaseSizeBeforeUpdate = userRepository.findAll().size();
+        playerRepository.saveAndFlush(player);
+        mockUserSearchRepository.save(player);
+        int databaseSizeBeforeUpdate = playerRepository.findAll().size();
 
         // Update the user
-        User updatedUser = userRepository.findById(user.getId()).get();
+        Player updatedPlayer = playerRepository.findById(player.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
-        managedUserVM.setId(updatedUser.getId());
-        managedUserVM.setLogin(updatedUser.getLogin());
+        managedUserVM.setId(updatedPlayer.getId());
+        managedUserVM.setLogin(updatedPlayer.getLogin());
         managedUserVM.setPassword(UPDATED_PASSWORD);
         managedUserVM.setFirstName(UPDATED_FIRSTNAME);
         managedUserVM.setLastName(UPDATED_LASTNAME);
         managedUserVM.setEmail(UPDATED_EMAIL);
-        managedUserVM.setActivated(updatedUser.getActivated());
+        managedUserVM.setActivated(updatedPlayer.getActivated());
         managedUserVM.setImageUrl(UPDATED_IMAGEURL);
         managedUserVM.setLangKey(UPDATED_LANGKEY);
-        managedUserVM.setCreatedBy(updatedUser.getCreatedBy());
-        managedUserVM.setCreatedDate(updatedUser.getCreatedDate());
-        managedUserVM.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        managedUserVM.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        managedUserVM.setCreatedBy(updatedPlayer.getCreatedBy());
+        managedUserVM.setCreatedDate(updatedPlayer.getCreatedDate());
+        managedUserVM.setLastModifiedBy(updatedPlayer.getLastModifiedBy());
+        managedUserVM.setLastModifiedDate(updatedPlayer.getLastModifiedDate());
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc.perform(put("/api/users")
@@ -342,41 +342,41 @@ public class UserResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
-        assertThat(userList).hasSize(databaseSizeBeforeUpdate);
-        User testUser = userList.get(userList.size() - 1);
-        assertThat(testUser.getFirstName()).isEqualTo(UPDATED_FIRSTNAME);
-        assertThat(testUser.getLastName()).isEqualTo(UPDATED_LASTNAME);
-        assertThat(testUser.getEmail()).isEqualTo(UPDATED_EMAIL);
-        assertThat(testUser.getImageUrl()).isEqualTo(UPDATED_IMAGEURL);
-        assertThat(testUser.getLangKey()).isEqualTo(UPDATED_LANGKEY);
+        List<Player> playerList = playerRepository.findAll();
+        assertThat(playerList).hasSize(databaseSizeBeforeUpdate);
+        Player testPlayer = playerList.get(playerList.size() - 1);
+        assertThat(testPlayer.getFirstName()).isEqualTo(UPDATED_FIRSTNAME);
+        assertThat(testPlayer.getLastName()).isEqualTo(UPDATED_LASTNAME);
+        assertThat(testPlayer.getEmail()).isEqualTo(UPDATED_EMAIL);
+        assertThat(testPlayer.getImageUrl()).isEqualTo(UPDATED_IMAGEURL);
+        assertThat(testPlayer.getLangKey()).isEqualTo(UPDATED_LANGKEY);
     }
 
     @Test
     @Transactional
     public void updateUserLogin() throws Exception {
         // Initialize the database
-        userRepository.saveAndFlush(user);
-        mockUserSearchRepository.save(user);
-        int databaseSizeBeforeUpdate = userRepository.findAll().size();
+        playerRepository.saveAndFlush(player);
+        mockUserSearchRepository.save(player);
+        int databaseSizeBeforeUpdate = playerRepository.findAll().size();
 
         // Update the user
-        User updatedUser = userRepository.findById(user.getId()).get();
+        Player updatedPlayer = playerRepository.findById(player.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
-        managedUserVM.setId(updatedUser.getId());
+        managedUserVM.setId(updatedPlayer.getId());
         managedUserVM.setLogin(UPDATED_LOGIN);
         managedUserVM.setPassword(UPDATED_PASSWORD);
         managedUserVM.setFirstName(UPDATED_FIRSTNAME);
         managedUserVM.setLastName(UPDATED_LASTNAME);
         managedUserVM.setEmail(UPDATED_EMAIL);
-        managedUserVM.setActivated(updatedUser.getActivated());
+        managedUserVM.setActivated(updatedPlayer.getActivated());
         managedUserVM.setImageUrl(UPDATED_IMAGEURL);
         managedUserVM.setLangKey(UPDATED_LANGKEY);
-        managedUserVM.setCreatedBy(updatedUser.getCreatedBy());
-        managedUserVM.setCreatedDate(updatedUser.getCreatedDate());
-        managedUserVM.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        managedUserVM.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        managedUserVM.setCreatedBy(updatedPlayer.getCreatedBy());
+        managedUserVM.setCreatedDate(updatedPlayer.getCreatedDate());
+        managedUserVM.setLastModifiedBy(updatedPlayer.getLastModifiedBy());
+        managedUserVM.setLastModifiedDate(updatedPlayer.getLastModifiedDate());
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc.perform(put("/api/users")
@@ -385,53 +385,53 @@ public class UserResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
-        assertThat(userList).hasSize(databaseSizeBeforeUpdate);
-        User testUser = userList.get(userList.size() - 1);
-        assertThat(testUser.getLogin()).isEqualTo(UPDATED_LOGIN);
-        assertThat(testUser.getFirstName()).isEqualTo(UPDATED_FIRSTNAME);
-        assertThat(testUser.getLastName()).isEqualTo(UPDATED_LASTNAME);
-        assertThat(testUser.getEmail()).isEqualTo(UPDATED_EMAIL);
-        assertThat(testUser.getImageUrl()).isEqualTo(UPDATED_IMAGEURL);
-        assertThat(testUser.getLangKey()).isEqualTo(UPDATED_LANGKEY);
+        List<Player> playerList = playerRepository.findAll();
+        assertThat(playerList).hasSize(databaseSizeBeforeUpdate);
+        Player testPlayer = playerList.get(playerList.size() - 1);
+        assertThat(testPlayer.getLogin()).isEqualTo(UPDATED_LOGIN);
+        assertThat(testPlayer.getFirstName()).isEqualTo(UPDATED_FIRSTNAME);
+        assertThat(testPlayer.getLastName()).isEqualTo(UPDATED_LASTNAME);
+        assertThat(testPlayer.getEmail()).isEqualTo(UPDATED_EMAIL);
+        assertThat(testPlayer.getImageUrl()).isEqualTo(UPDATED_IMAGEURL);
+        assertThat(testPlayer.getLangKey()).isEqualTo(UPDATED_LANGKEY);
     }
 
     @Test
     @Transactional
     public void updateUserExistingEmail() throws Exception {
         // Initialize the database with 2 users
-        userRepository.saveAndFlush(user);
-        mockUserSearchRepository.save(user);
+        playerRepository.saveAndFlush(player);
+        mockUserSearchRepository.save(player);
 
-        User anotherUser = new User();
-        anotherUser.setLogin("jhipster");
-        anotherUser.setPassword(RandomStringUtils.random(60));
-        anotherUser.setActivated(true);
-        anotherUser.setEmail("jhipster@localhost");
-        anotherUser.setFirstName("java");
-        anotherUser.setLastName("hipster");
-        anotherUser.setImageUrl("");
-        anotherUser.setLangKey("en");
-        userRepository.saveAndFlush(anotherUser);
-        mockUserSearchRepository.save(anotherUser);
+        Player anotherPlayer = new Player();
+        anotherPlayer.setLogin("jhipster");
+        anotherPlayer.setPassword(RandomStringUtils.random(60));
+        anotherPlayer.setActivated(true);
+        anotherPlayer.setEmail("jhipster@localhost");
+        anotherPlayer.setFirstName("java");
+        anotherPlayer.setLastName("hipster");
+        anotherPlayer.setImageUrl("");
+        anotherPlayer.setLangKey("en");
+        playerRepository.saveAndFlush(anotherPlayer);
+        mockUserSearchRepository.save(anotherPlayer);
 
         // Update the user
-        User updatedUser = userRepository.findById(user.getId()).get();
+        Player updatedPlayer = playerRepository.findById(player.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
-        managedUserVM.setId(updatedUser.getId());
-        managedUserVM.setLogin(updatedUser.getLogin());
-        managedUserVM.setPassword(updatedUser.getPassword());
-        managedUserVM.setFirstName(updatedUser.getFirstName());
-        managedUserVM.setLastName(updatedUser.getLastName());
+        managedUserVM.setId(updatedPlayer.getId());
+        managedUserVM.setLogin(updatedPlayer.getLogin());
+        managedUserVM.setPassword(updatedPlayer.getPassword());
+        managedUserVM.setFirstName(updatedPlayer.getFirstName());
+        managedUserVM.setLastName(updatedPlayer.getLastName());
         managedUserVM.setEmail("jhipster@localhost");// this email should already be used by anotherUser
-        managedUserVM.setActivated(updatedUser.getActivated());
-        managedUserVM.setImageUrl(updatedUser.getImageUrl());
-        managedUserVM.setLangKey(updatedUser.getLangKey());
-        managedUserVM.setCreatedBy(updatedUser.getCreatedBy());
-        managedUserVM.setCreatedDate(updatedUser.getCreatedDate());
-        managedUserVM.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        managedUserVM.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        managedUserVM.setActivated(updatedPlayer.getActivated());
+        managedUserVM.setImageUrl(updatedPlayer.getImageUrl());
+        managedUserVM.setLangKey(updatedPlayer.getLangKey());
+        managedUserVM.setCreatedBy(updatedPlayer.getCreatedBy());
+        managedUserVM.setCreatedDate(updatedPlayer.getCreatedDate());
+        managedUserVM.setLastModifiedBy(updatedPlayer.getLastModifiedBy());
+        managedUserVM.setLastModifiedDate(updatedPlayer.getLastModifiedDate());
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc.perform(put("/api/users")
@@ -444,38 +444,38 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUserExistingLogin() throws Exception {
         // Initialize the database
-        userRepository.saveAndFlush(user);
-        mockUserSearchRepository.save(user);
+        playerRepository.saveAndFlush(player);
+        mockUserSearchRepository.save(player);
 
-        User anotherUser = new User();
-        anotherUser.setLogin("jhipster");
-        anotherUser.setPassword(RandomStringUtils.random(60));
-        anotherUser.setActivated(true);
-        anotherUser.setEmail("jhipster@localhost");
-        anotherUser.setFirstName("java");
-        anotherUser.setLastName("hipster");
-        anotherUser.setImageUrl("");
-        anotherUser.setLangKey("en");
-        userRepository.saveAndFlush(anotherUser);
-        mockUserSearchRepository.save(anotherUser);
+        Player anotherPlayer = new Player();
+        anotherPlayer.setLogin("jhipster");
+        anotherPlayer.setPassword(RandomStringUtils.random(60));
+        anotherPlayer.setActivated(true);
+        anotherPlayer.setEmail("jhipster@localhost");
+        anotherPlayer.setFirstName("java");
+        anotherPlayer.setLastName("hipster");
+        anotherPlayer.setImageUrl("");
+        anotherPlayer.setLangKey("en");
+        playerRepository.saveAndFlush(anotherPlayer);
+        mockUserSearchRepository.save(anotherPlayer);
 
         // Update the user
-        User updatedUser = userRepository.findById(user.getId()).get();
+        Player updatedPlayer = playerRepository.findById(player.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
-        managedUserVM.setId(updatedUser.getId());
+        managedUserVM.setId(updatedPlayer.getId());
         managedUserVM.setLogin("jhipster");// this login should already be used by anotherUser
-        managedUserVM.setPassword(updatedUser.getPassword());
-        managedUserVM.setFirstName(updatedUser.getFirstName());
-        managedUserVM.setLastName(updatedUser.getLastName());
-        managedUserVM.setEmail(updatedUser.getEmail());
-        managedUserVM.setActivated(updatedUser.getActivated());
-        managedUserVM.setImageUrl(updatedUser.getImageUrl());
-        managedUserVM.setLangKey(updatedUser.getLangKey());
-        managedUserVM.setCreatedBy(updatedUser.getCreatedBy());
-        managedUserVM.setCreatedDate(updatedUser.getCreatedDate());
-        managedUserVM.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        managedUserVM.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        managedUserVM.setPassword(updatedPlayer.getPassword());
+        managedUserVM.setFirstName(updatedPlayer.getFirstName());
+        managedUserVM.setLastName(updatedPlayer.getLastName());
+        managedUserVM.setEmail(updatedPlayer.getEmail());
+        managedUserVM.setActivated(updatedPlayer.getActivated());
+        managedUserVM.setImageUrl(updatedPlayer.getImageUrl());
+        managedUserVM.setLangKey(updatedPlayer.getLangKey());
+        managedUserVM.setCreatedBy(updatedPlayer.getCreatedBy());
+        managedUserVM.setCreatedDate(updatedPlayer.getCreatedDate());
+        managedUserVM.setLastModifiedBy(updatedPlayer.getLastModifiedBy());
+        managedUserVM.setLastModifiedDate(updatedPlayer.getLastModifiedDate());
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc.perform(put("/api/users")
@@ -488,18 +488,18 @@ public class UserResourceIntTest {
     @Transactional
     public void deleteUser() throws Exception {
         // Initialize the database
-        userRepository.saveAndFlush(user);
-        mockUserSearchRepository.save(user);
-        int databaseSizeBeforeDelete = userRepository.findAll().size();
+        playerRepository.saveAndFlush(player);
+        mockUserSearchRepository.save(player);
+        int databaseSizeBeforeDelete = playerRepository.findAll().size();
 
         // Delete the user
-        restUserMockMvc.perform(delete("/api/users/{login}", user.getLogin())
+        restUserMockMvc.perform(delete("/api/users/{login}", player.getLogin())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<User> userList = userRepository.findAll();
-        assertThat(userList).hasSize(databaseSizeBeforeDelete - 1);
+        List<Player> playerList = playerRepository.findAll();
+        assertThat(playerList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test
@@ -517,16 +517,16 @@ public class UserResourceIntTest {
     @Test
     @Transactional
     public void testUserEquals() throws Exception {
-        TestUtil.equalsVerifier(User.class);
-        User user1 = new User();
-        user1.setId(1L);
-        User user2 = new User();
-        user2.setId(user1.getId());
-        assertThat(user1).isEqualTo(user2);
-        user2.setId(2L);
-        assertThat(user1).isNotEqualTo(user2);
-        user1.setId(null);
-        assertThat(user1).isNotEqualTo(user2);
+        TestUtil.equalsVerifier(Player.class);
+        Player player1 = new Player();
+        player1.setId(1L);
+        Player player2 = new Player();
+        player2.setId(player1.getId());
+        assertThat(player1).isEqualTo(player2);
+        player2.setId(2L);
+        assertThat(player1).isNotEqualTo(player2);
+        player1.setId(null);
+        assertThat(player1).isNotEqualTo(player2);
     }
 
     @Test
@@ -550,36 +550,36 @@ public class UserResourceIntTest {
         userDTO.setLastModifiedBy(DEFAULT_LOGIN);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
-        User user = userMapper.userDTOToUser(userDTO);
-        assertThat(user.getId()).isEqualTo(DEFAULT_ID);
-        assertThat(user.getLogin()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(user.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
-        assertThat(user.getLastName()).isEqualTo(DEFAULT_LASTNAME);
-        assertThat(user.getEmail()).isEqualTo(DEFAULT_EMAIL);
-        assertThat(user.getActivated()).isEqualTo(true);
-        assertThat(user.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
-        assertThat(user.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
-        assertThat(user.getCreatedBy()).isNull();
-        assertThat(user.getCreatedDate()).isNotNull();
-        assertThat(user.getLastModifiedBy()).isNull();
-        assertThat(user.getLastModifiedDate()).isNotNull();
-        assertThat(user.getAuthorities()).extracting("name").containsExactly(AuthoritiesConstants.USER);
+        Player player = userMapper.userDTOToUser(userDTO);
+        assertThat(player.getId()).isEqualTo(DEFAULT_ID);
+        assertThat(player.getLogin()).isEqualTo(DEFAULT_LOGIN);
+        assertThat(player.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
+        assertThat(player.getLastName()).isEqualTo(DEFAULT_LASTNAME);
+        assertThat(player.getEmail()).isEqualTo(DEFAULT_EMAIL);
+        assertThat(player.getActivated()).isEqualTo(true);
+        assertThat(player.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
+        assertThat(player.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
+        assertThat(player.getCreatedBy()).isNull();
+        assertThat(player.getCreatedDate()).isNotNull();
+        assertThat(player.getLastModifiedBy()).isNull();
+        assertThat(player.getLastModifiedDate()).isNotNull();
+        assertThat(player.getAuthorities()).extracting("name").containsExactly(AuthoritiesConstants.USER);
     }
 
     @Test
     public void testUserToUserDTO() {
-        user.setId(DEFAULT_ID);
-        user.setCreatedBy(DEFAULT_LOGIN);
-        user.setCreatedDate(Instant.now());
-        user.setLastModifiedBy(DEFAULT_LOGIN);
-        user.setLastModifiedDate(Instant.now());
+        player.setId(DEFAULT_ID);
+        player.setCreatedBy(DEFAULT_LOGIN);
+        player.setCreatedDate(Instant.now());
+        player.setLastModifiedBy(DEFAULT_LOGIN);
+        player.setLastModifiedDate(Instant.now());
         Set<Authority> authorities = new HashSet<>();
         Authority authority = new Authority();
         authority.setName(AuthoritiesConstants.USER);
         authorities.add(authority);
-        user.setAuthorities(authorities);
+        player.setAuthorities(authorities);
 
-        UserDTO userDTO = userMapper.userToUserDTO(user);
+        UserDTO userDTO = userMapper.userToUserDTO(player);
 
         assertThat(userDTO.getId()).isEqualTo(DEFAULT_ID);
         assertThat(userDTO.getLogin()).isEqualTo(DEFAULT_LOGIN);
@@ -590,9 +590,9 @@ public class UserResourceIntTest {
         assertThat(userDTO.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
         assertThat(userDTO.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
         assertThat(userDTO.getCreatedBy()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(userDTO.getCreatedDate()).isEqualTo(user.getCreatedDate());
+        assertThat(userDTO.getCreatedDate()).isEqualTo(player.getCreatedDate());
         assertThat(userDTO.getLastModifiedBy()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(userDTO.getLastModifiedDate()).isEqualTo(user.getLastModifiedDate());
+        assertThat(userDTO.getLastModifiedDate()).isEqualTo(player.getLastModifiedDate());
         assertThat(userDTO.getAuthorities()).containsExactly(AuthoritiesConstants.USER);
         assertThat(userDTO.toString()).isNotNull();
     }

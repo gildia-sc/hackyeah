@@ -2,7 +2,7 @@ package pl.epoint.hackyeah.service;
 import pl.epoint.hackyeah.config.Constants;
 
 import pl.epoint.hackyeah.HackyeahApp;
-import pl.epoint.hackyeah.domain.User;
+import pl.epoint.hackyeah.domain.Player;
 import io.github.jhipster.config.JHipsterProperties;
 import org.junit.Before;
 import org.junit.Test;
@@ -119,15 +119,15 @@ public class MailServiceIntTest {
 
     @Test
     public void testSendEmailFromTemplate() throws Exception {
-        User user = new User();
-        user.setLogin("john");
-        user.setEmail("john.doe@example.com");
-        user.setLangKey("en");
-        mailService.sendEmailFromTemplate(user, "mail/testEmail", "email.test.title");
+        Player player = new Player();
+        player.setLogin("john");
+        player.setEmail("john.doe@example.com");
+        player.setLangKey("en");
+        mailService.sendEmailFromTemplate(player, "mail/testEmail", "email.test.title");
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
         assertThat(message.getSubject()).isEqualTo("test title");
-        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
+        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(player.getEmail());
         assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
         assertThat(message.getContent().toString()).isEqualToNormalizingNewlines("<html>test title, http://127.0.0.1:8080, john</html>\n");
         assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
@@ -135,14 +135,14 @@ public class MailServiceIntTest {
 
     @Test
     public void testSendActivationEmail() throws Exception {
-        User user = new User();
-        user.setLangKey(Constants.DEFAULT_LANGUAGE);
-        user.setLogin("john");
-        user.setEmail("john.doe@example.com");
-        mailService.sendActivationEmail(user);
+        Player player = new Player();
+        player.setLangKey(Constants.DEFAULT_LANGUAGE);
+        player.setLogin("john");
+        player.setEmail("john.doe@example.com");
+        mailService.sendActivationEmail(player);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
-        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
+        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(player.getEmail());
         assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
         assertThat(message.getContent().toString()).isNotEmpty();
         assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
@@ -150,14 +150,14 @@ public class MailServiceIntTest {
 
     @Test
     public void testCreationEmail() throws Exception {
-        User user = new User();
-        user.setLangKey(Constants.DEFAULT_LANGUAGE);
-        user.setLogin("john");
-        user.setEmail("john.doe@example.com");
-        mailService.sendCreationEmail(user);
+        Player player = new Player();
+        player.setLangKey(Constants.DEFAULT_LANGUAGE);
+        player.setLogin("john");
+        player.setEmail("john.doe@example.com");
+        mailService.sendCreationEmail(player);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
-        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
+        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(player.getEmail());
         assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
         assertThat(message.getContent().toString()).isNotEmpty();
         assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
@@ -165,14 +165,14 @@ public class MailServiceIntTest {
 
     @Test
     public void testSendPasswordResetMail() throws Exception {
-        User user = new User();
-        user.setLangKey(Constants.DEFAULT_LANGUAGE);
-        user.setLogin("john");
-        user.setEmail("john.doe@example.com");
-        mailService.sendPasswordResetMail(user);
+        Player player = new Player();
+        player.setLangKey(Constants.DEFAULT_LANGUAGE);
+        player.setLogin("john");
+        player.setEmail("john.doe@example.com");
+        mailService.sendPasswordResetMail(player);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
-        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(user.getEmail());
+        assertThat(message.getAllRecipients()[0].toString()).isEqualTo(player.getEmail());
         assertThat(message.getFrom()[0].toString()).isEqualTo("test@localhost");
         assertThat(message.getContent().toString()).isNotEmpty();
         assertThat(message.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
