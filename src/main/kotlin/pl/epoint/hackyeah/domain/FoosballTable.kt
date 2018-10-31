@@ -15,8 +15,8 @@ class FoosballTable(
     val code: String,
 
     @Column(name = "team_a_color", nullable = false)
-    val teamAcolor: String,
+    val teamAlphacolor: String,
 
     @Column(name = "team_b_color", nullable = false)
-    val teamBcolor: String
+    val teamBetacolor: String
 )
