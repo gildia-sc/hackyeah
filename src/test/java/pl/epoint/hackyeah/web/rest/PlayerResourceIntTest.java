@@ -1,17 +1,5 @@
 package pl.epoint.hackyeah.web.rest;
 
-import pl.epoint.hackyeah.HackyeahApp;
-import pl.epoint.hackyeah.domain.Authority;
-import pl.epoint.hackyeah.domain.Player;
-import pl.epoint.hackyeah.repository.PlayerRepository;
-import pl.epoint.hackyeah.repository.search.UserSearchRepository;
-import pl.epoint.hackyeah.security.AuthoritiesConstants;
-import pl.epoint.hackyeah.service.MailService;
-import pl.epoint.hackyeah.service.UserService;
-import pl.epoint.hackyeah.service.dto.UserDTO;
-import pl.epoint.hackyeah.service.mapper.UserMapper;
-import pl.epoint.hackyeah.web.rest.errors.ExceptionTranslator;
-import pl.epoint.hackyeah.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,16 +13,35 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import pl.epoint.hackyeah.HackyeahApp;
+import pl.epoint.hackyeah.domain.Authority;
+import pl.epoint.hackyeah.domain.Player;
+import pl.epoint.hackyeah.repository.PlayerRepository;
+import pl.epoint.hackyeah.security.AuthoritiesConstants;
+import pl.epoint.hackyeah.service.MailService;
+import pl.epoint.hackyeah.service.UserService;
+import pl.epoint.hackyeah.service.dto.UserDTO;
+import pl.epoint.hackyeah.service.mapper.UserMapper;
+import pl.epoint.hackyeah.web.rest.errors.ExceptionTranslator;
+import pl.epoint.hackyeah.web.rest.vm.ManagedUserVM;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.hasItems;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the UserResource REST controller.
@@ -71,14 +78,6 @@ public class PlayerResourceIntTest {
     @Autowired
     private PlayerRepository playerRepository;
 
-    /**
-     * This repository is mocked in the pl.epoint.hackyeah.repository.search test package.
-     *
-     * @see pl.epoint.hackyeah.repository.search.UserSearchRepositoryMockConfiguration
-     */
-    @Autowired
-    private UserSearchRepository mockUserSearchRepository;
-
     @Autowired
     private MailService mailService;
 
@@ -106,7 +105,7 @@ public class PlayerResourceIntTest {
 
     @Before
     public void setup() {
-        UserResource userResource = new UserResource(userService, playerRepository, mailService, mockUserSearchRepository);
+        UserResource userResource = new UserResource(userService, playerRepository, mailService);
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -208,7 +207,6 @@ public class PlayerResourceIntTest {
     public void createUserWithExistingLogin() throws Exception {
         // Initialize the database
         playerRepository.saveAndFlush(player);
-        mockUserSearchRepository.save(player);
         int databaseSizeBeforeCreate = playerRepository.findAll().size();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
@@ -238,7 +236,6 @@ public class PlayerResourceIntTest {
     public void createUserWithExistingEmail() throws Exception {
         // Initialize the database
         playerRepository.saveAndFlush(player);
-        mockUserSearchRepository.save(player);
         int databaseSizeBeforeCreate = playerRepository.findAll().size();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
@@ -268,7 +265,6 @@ public class PlayerResourceIntTest {
     public void getAllUsers() throws Exception {
         // Initialize the database
         playerRepository.saveAndFlush(player);
-        mockUserSearchRepository.save(player);
 
         // Get all the users
         restUserMockMvc.perform(get("/api/users?sort=id,desc")
@@ -288,7 +284,6 @@ public class PlayerResourceIntTest {
     public void getUser() throws Exception {
         // Initialize the database
         playerRepository.saveAndFlush(player);
-        mockUserSearchRepository.save(player);
 
         // Get the user
         restUserMockMvc.perform(get("/api/users/{login}", player.getLogin()))
@@ -314,7 +309,6 @@ public class PlayerResourceIntTest {
     public void updateUser() throws Exception {
         // Initialize the database
         playerRepository.saveAndFlush(player);
-        mockUserSearchRepository.save(player);
         int databaseSizeBeforeUpdate = playerRepository.findAll().size();
 
         // Update the user
@@ -357,7 +351,6 @@ public class PlayerResourceIntTest {
     public void updateUserLogin() throws Exception {
         // Initialize the database
         playerRepository.saveAndFlush(player);
-        mockUserSearchRepository.save(player);
         int databaseSizeBeforeUpdate = playerRepository.findAll().size();
 
         // Update the user
@@ -401,7 +394,6 @@ public class PlayerResourceIntTest {
     public void updateUserExistingEmail() throws Exception {
         // Initialize the database with 2 users
         playerRepository.saveAndFlush(player);
-        mockUserSearchRepository.save(player);
 
         Player anotherPlayer = new Player();
         anotherPlayer.setLogin("jhipster");
@@ -413,7 +405,6 @@ public class PlayerResourceIntTest {
         anotherPlayer.setImageUrl("");
         anotherPlayer.setLangKey("en");
         playerRepository.saveAndFlush(anotherPlayer);
-        mockUserSearchRepository.save(anotherPlayer);
 
         // Update the user
         Player updatedPlayer = playerRepository.findById(player.getId()).get();
@@ -445,7 +436,6 @@ public class PlayerResourceIntTest {
     public void updateUserExistingLogin() throws Exception {
         // Initialize the database
         playerRepository.saveAndFlush(player);
-        mockUserSearchRepository.save(player);
 
         Player anotherPlayer = new Player();
         anotherPlayer.setLogin("jhipster");
@@ -457,7 +447,6 @@ public class PlayerResourceIntTest {
         anotherPlayer.setImageUrl("");
         anotherPlayer.setLangKey("en");
         playerRepository.saveAndFlush(anotherPlayer);
-        mockUserSearchRepository.save(anotherPlayer);
 
         // Update the user
         Player updatedPlayer = playerRepository.findById(player.getId()).get();
@@ -489,7 +478,6 @@ public class PlayerResourceIntTest {
     public void deleteUser() throws Exception {
         // Initialize the database
         playerRepository.saveAndFlush(player);
-        mockUserSearchRepository.save(player);
         int databaseSizeBeforeDelete = playerRepository.findAll().size();
 
         // Delete the user

@@ -50,11 +50,6 @@ spring:
             hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
-    data:
-        elasticsearch:
-            properties:
-                path:
-                    home: build/elasticsearch
     liquibase:
         contexts: dev
     mail:

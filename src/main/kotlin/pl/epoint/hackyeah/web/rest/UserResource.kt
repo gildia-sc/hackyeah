@@ -1,9 +1,15 @@
 package pl.epoint.hackyeah.web.rest
 
 import com.codahale.metrics.annotation.Timed
+import io.github.jhipster.web.util.ResponseUtil
+import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.*
 import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.repository.PlayerRepository
-import pl.epoint.hackyeah.repository.search.UserSearchRepository
 import pl.epoint.hackyeah.service.MailService
 import pl.epoint.hackyeah.service.UserService
 import pl.epoint.hackyeah.service.dto.UserDTO
@@ -12,28 +18,9 @@ import pl.epoint.hackyeah.web.rest.errors.EmailAlreadyUsedException
 import pl.epoint.hackyeah.web.rest.errors.LoginAlreadyUsedException
 import pl.epoint.hackyeah.web.rest.util.HeaderUtil
 import pl.epoint.hackyeah.web.rest.util.PaginationUtil
-import io.github.jhipster.web.util.ResponseUtil
-import org.slf4j.LoggerFactory
-import org.springframework.data.domain.Pageable
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-
-import javax.validation.Valid
 import java.net.URI
 import java.net.URISyntaxException
-import java.util.stream.Collectors
-import java.util.stream.StreamSupport
-
-import org.elasticsearch.index.query.QueryBuilders.queryStringQuery
+import javax.validation.Valid
 
 /**
  * REST controller for managing users.
@@ -65,7 +52,7 @@ import org.elasticsearch.index.query.QueryBuilders.queryStringQuery
  */
 @RestController
 @RequestMapping("/api")
-class UserResource(private val userService: UserService, private val playerRepository: PlayerRepository, private val mailService: MailService, private val userSearchRepository: UserSearchRepository) {
+class UserResource(private val userService: UserService, private val playerRepository: PlayerRepository, private val mailService: MailService) {
 
     private val log = LoggerFactory.getLogger(UserResource::class.java)
 
@@ -195,8 +182,6 @@ class UserResource(private val userService: UserService, private val playerRepos
     @GetMapping("/_search/users/{query}")
     @Timed
     fun search(@PathVariable query: String): List<Player> {
-        return StreamSupport
-                .stream(userSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-                .collect(Collectors.toList())
+        return playerRepository.findAllByLogin(query)
     }
 }

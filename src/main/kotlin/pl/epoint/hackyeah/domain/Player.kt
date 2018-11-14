@@ -31,7 +31,6 @@ import java.util.Objects
  */
 @Entity
 @Table(name = "player")
-@org.springframework.data.elasticsearch.annotations.Document(indexName = "player")
 class Player : AbstractAuditingEntity(), Serializable {
 
     @Id

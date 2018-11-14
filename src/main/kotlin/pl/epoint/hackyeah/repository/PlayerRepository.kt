@@ -36,4 +36,6 @@ interface PlayerRepository : JpaRepository<Player, Long> {
     fun findOneWithAuthoritiesByEmail(email: String): Optional<Player>
 
     fun findAllByLoginNot(pageable: Pageable, login: String): Page<Player>
+
+    fun findAllByLogin(login: String): List<Player>
 }

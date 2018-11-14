@@ -6,7 +6,6 @@ import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.repository.AuthorityRepository
 import pl.epoint.hackyeah.repository.PersistentTokenRepository
 import pl.epoint.hackyeah.repository.PlayerRepository
-import pl.epoint.hackyeah.repository.search.UserSearchRepository
 import pl.epoint.hackyeah.security.AuthoritiesConstants
 import pl.epoint.hackyeah.security.SecurityUtils
 import pl.epoint.hackyeah.service.dto.UserDTO
@@ -36,7 +35,6 @@ import java.util.stream.Collectors
 @Transactional
 class UserService(val playerRepository: PlayerRepository,
                   val passwordEncoder: PasswordEncoder,
-                  val userSearchRepository: UserSearchRepository,
                   val persistentTokenRepository: PersistentTokenRepository,
                   val authorityRepository: AuthorityRepository) {
 
@@ -60,7 +58,6 @@ class UserService(val playerRepository: PlayerRepository,
                 // activate given user for the registration key.
                 user.activated = true
                 user.activationKey = null
-                userSearchRepository.save(user)
                 log.debug("Activated user: {}", user)
                 user
             }
@@ -119,7 +116,6 @@ class UserService(val playerRepository: PlayerRepository,
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent { authorities.add(it) }
         newUser.authorities = authorities
         playerRepository.save(newUser)
-        userSearchRepository.save(newUser)
         log.debug("Created Information for User: {}", newUser)
         return newUser
     }
@@ -159,7 +155,6 @@ class UserService(val playerRepository: PlayerRepository,
             user.authorities = authorities
         }
         playerRepository.save(user)
-        userSearchRepository.save(user)
         log.debug("Created Information for User: {}", user)
         return user
     }
@@ -182,7 +177,6 @@ class UserService(val playerRepository: PlayerRepository,
                 user.email = email.toLowerCase()
                 user.langKey = langKey
                 user.imageUrl = imageUrl
-                userSearchRepository.save<Player>(user)
                 log.debug("Changed Information for User: {}", user)
             }
     }
@@ -213,7 +207,6 @@ class UserService(val playerRepository: PlayerRepository,
                     .filter { it.isPresent }
                     .map { it.get() }
                     .forEach { managedAuthorities.add(it) }
-                userSearchRepository.save(user)
                 log.debug("Changed Information for User: {}", user)
                 user
             }
@@ -223,7 +216,6 @@ class UserService(val playerRepository: PlayerRepository,
     fun deleteUser(login: String) {
         playerRepository.findOneByLogin(login).ifPresent { user ->
             playerRepository.delete(user)
-            userSearchRepository.delete(user)
             log.debug("Deleted User: {}", user)
         }
     }
@@ -289,7 +281,6 @@ class UserService(val playerRepository: PlayerRepository,
             .forEach { user ->
                 log.debug("Deleting not activated user {}", user.login)
                 playerRepository.delete(user)
-                userSearchRepository.delete(user)
             }
     }
 }

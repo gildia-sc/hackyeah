@@ -1,15 +1,5 @@
 package pl.epoint.hackyeah.service;
 
-import pl.epoint.hackyeah.HackyeahApp;
-import pl.epoint.hackyeah.config.Constants;
-import pl.epoint.hackyeah.domain.PersistentToken;
-import pl.epoint.hackyeah.domain.Player;
-import pl.epoint.hackyeah.repository.PersistentTokenRepository;
-import pl.epoint.hackyeah.repository.search.UserSearchRepository;
-import pl.epoint.hackyeah.repository.PlayerRepository;
-import pl.epoint.hackyeah.service.dto.UserDTO;
-import pl.epoint.hackyeah.service.util.RandomUtil;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,18 +13,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import pl.epoint.hackyeah.HackyeahApp;
+import pl.epoint.hackyeah.config.Constants;
+import pl.epoint.hackyeah.domain.PersistentToken;
+import pl.epoint.hackyeah.domain.Player;
+import pl.epoint.hackyeah.repository.PersistentTokenRepository;
+import pl.epoint.hackyeah.repository.PlayerRepository;
+import pl.epoint.hackyeah.service.dto.UserDTO;
+import pl.epoint.hackyeah.service.util.RandomUtil;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -55,14 +50,6 @@ public class PlayerServiceIntTest {
 
     @Autowired
     private UserService userService;
-
-    /**
-     * This repository is mocked in the pl.epoint.hackyeah.repository.search test package.
-     *
-     * @see pl.epoint.hackyeah.repository.search.UserSearchRepositoryMockConfiguration
-     */
-    @Autowired
-    private UserSearchRepository mockUserSearchRepository;
 
     @Autowired
     private AuditingHandler auditingHandler;
@@ -190,9 +177,6 @@ public class PlayerServiceIntTest {
         userService.removeNotActivatedUsers();
         players = playerRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minus(3, ChronoUnit.DAYS));
         assertThat(players).isEmpty();
-
-        // Verify Elasticsearch mock
-        verify(mockUserSearchRepository, times(1)).delete(player);
     }
 
     private void generateUserToken(Player player, String tokenSeries, LocalDate localDate) {
@@ -233,9 +217,6 @@ public class PlayerServiceIntTest {
         assertThat(playerRepository.findOneByLogin("johndoe")).isPresent();
         userService.removeNotActivatedUsers();
         assertThat(playerRepository.findOneByLogin("johndoe")).isNotPresent();
-
-        // Verify Elasticsearch mock
-        verify(mockUserSearchRepository, times(1)).delete(player);
     }
 
 }

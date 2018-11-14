@@ -16,7 +16,7 @@
     "databaseType": "sql",
     "devDatabaseType": "postgresql",
     "prodDatabaseType": "postgresql",
-    "searchEngine": "elasticsearch",
+    "searchEngine": false,
     "messageBroker": false,
     "serviceDiscoveryType": false,
     "buildTool": "gradle",
@@ -32,6 +32,8 @@
     "languages": [
       "pl",
       "en"
-    ]
+    ],
+    "herokuAppName": "gildia-hackyeah",
+    "herokuDeployType": "jar"
   }
 }
