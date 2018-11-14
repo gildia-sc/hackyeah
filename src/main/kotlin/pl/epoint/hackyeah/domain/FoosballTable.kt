@@ -1,5 +1,7 @@
 package pl.epoint.hackyeah.domain
 
+import pl.epoint.hackyeah.service.TeamColor
+import pl.epoint.hackyeah.service.dto.FoosballTableDto
 import javax.persistence.*
 import javax.persistence.Table
 
@@ -15,8 +17,21 @@ class FoosballTable(
     val code: String,
 
     @Column(name = "team_a_color", nullable = false)
-    val teamAlphacolor: String,
+    val teamAlphaColor: String,
 
     @Column(name = "team_b_color", nullable = false)
-    val teamBetacolor: String
-)
+    val teamBetaColor: String
+) {
+
+    fun toDto(): FoosballTableDto {
+        return FoosballTableDto(code, teamAlphaColor, teamBetaColor)
+    }
+
+    fun updateTeamAlphaColor(color: TeamColor): FoosballTable {
+        return FoosballTable(id, code, color.raw, teamBetaColor)
+    }
+
+    fun updateTeamBetaColor(color: TeamColor): FoosballTable {
+        return FoosballTable(id, code, teamAlphaColor, color.raw)
+    }
+}
