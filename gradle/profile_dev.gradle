@@ -20,11 +20,11 @@ bootRun {
 }
 
 task webpackBuildDev(type: NpmTask, dependsOn: 'npm_install') {
-    inputs.dir("src/main/webapp/")
+    inputs.dir("./frontend/")
     inputs.files(fileTree('src/main/webapp/'))
     outputs.dir("build/www/")
     outputs.file("build/www/app/main.bundle.js")
-    args = ["run", "webpack:build"]
+    args = ["run-script", "build", "--prefix", "frontend/"]
 }
 
 war {
@@ -47,7 +47,13 @@ processResources {
     }
 }
 
-processResources.dependsOn webpackBuildDev
+task copyApp(type: Copy) {
+  from 'frontend/dist/frontend/'
+  into 'build/www/'
+}
+
+copyApp.dependsOn webpackBuildDev
+processResources.dependsOn copyApp
 copyIntoStatic.dependsOn processResources
 bootJar.dependsOn copyIntoStatic
 
