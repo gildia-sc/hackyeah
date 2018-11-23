@@ -1,0 +1,23 @@
+<div class="table-list">
+  <mat-accordion *ngFor="let table of tables">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{table.code}}</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
+        <button mat-button>
+          <mat-icon>stars</mat-icon>&nbsp;Graj
+        </button>
+        <button mat-button>
+          <mat-icon>edit</mat-icon>&nbsp;Edytuj
+        </button>
+        <button mat-button>
+          <mat-icon>delete</mat-icon>&nbsp;Usuń
+        </button>
+        <button mat-button>
+          <mat-icon>link</mat-icon>&nbsp;Linki
+        </button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
