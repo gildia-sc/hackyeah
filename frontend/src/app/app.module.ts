@@ -23,12 +23,14 @@ import {
   MatSnackBarModule,
   MatToolbarModule
 } from '@angular/material';
+import { MatchComponent } from "./match/single/match.component";
 
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'tables', component: TableListComponent }
+  { path: 'tables', component: TableListComponent },
+  { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -37,7 +39,8 @@ const ROUTES: Route[] = [
     TableListComponent,
     RegisterComponent,
     LoginComponent,
-    HomepageComponent
+    HomepageComponent,
+    MatchComponent
   ],
   imports: [
     BrowserModule,

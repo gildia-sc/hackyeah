@@ -1,17 +1,17 @@
 package pl.epoint.hackyeah.service.match
 
-import com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import pl.epoint.hackyeah.domain.Match
 import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.repository.FoosballTableRepository
 import pl.epoint.hackyeah.repository.MatchRepository
-import sun.audio.AudioPlayer.player
 
 /**
  * @author Piotr Wolny
  */
 @Service
+@Transactional
 class MatchService(val tableRepository: FoosballTableRepository,
                    val matchRepository: MatchRepository) {
 
@@ -35,7 +35,7 @@ class MatchService(val tableRepository: FoosballTableRepository,
                 Position.GOALKEEPER -> match.playerBetaGoalkeeper = player
             }
         }
-        return match
+        return matchRepository.save(match)
     }
 
     fun score(tableCode: String, team: Team, position: Position?): Match {
