@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Player } from "../../model/player.model";
 import { Match, MatchService } from "../match.service";
 import { ActivatedRoute } from "@angular/router";
 
@@ -12,64 +11,61 @@ export class MatchComponent implements OnInit {
   private tableCode: string;
 
   match: Match;
-
-  timerSeconds = 60;
-  matchStarted = true;
-
   alphaScore = 0;
   betaScore = 0;
+
+  matchStarted = false;
+  matchEnded = false;
 
   constructor(private matchService: MatchService,
               private route: ActivatedRoute) {
   }
 
-  incScore(team: string, position?: string) {
-    if (team === 'alpha') {
-      this.match.alphaScore++;
+  scoreGoal(team: string, position?: string) {
+    if (this.matchStarted && !this.matchEnded) {
+      this.matchService.scoreGoal(this.tableCode, team, position)
+        .subscribe(match => {
+          if (match) {
+            this.alphaScore = match.alphaScore;
+            this.betaScore = match.betaScore;
+          }
+        });
     }
-
-    if (team === 'beta') {
-      this.match.betaScore++;
-    }
-
-    this.matchService.scoreGoal(this.tableCode, team, position)
-      .subscribe(match => {
-        if (match) {
-          this.match = match;
-        }
-      });
   }
 
   takePosition(team: string, position: string) {
-    this.matchService.takePosition(this.tableCode, team, position)
-      .subscribe(match => {
-        if (match) {
-          this.match = match;
-        }
-      })
+    if (!this.matchStarted) {
+      this.matchService.takePosition(this.tableCode, team, position)
+        .subscribe(match => {
+          if (match) {
+            this.match = match;
+            this.matchStarted = match.started;
+          }
+        })
+    }
   }
 
   freePosition(team: string, position: string) {
-    this.matchService.freePosition(this.tableCode, team, position)
-      .subscribe(match => {
-        if (match) {
-          this.match = match;
-        }
-      })
-  }
-
-  switchPositions(team: string) {
-    this.matchService.switchPositions(this.tableCode, team)
-      .subscribe(match => {
+    if (!this.matchStarted) {
+      this.matchService.freePosition(this.tableCode, team, position)
+        .subscribe(match => {
           if (match) {
             this.match = match;
           }
-        }
-      )
+        })
+    }
   }
 
-  private clearCurrentPosition(player: Player) {
-
+  switchPositions(team: string) {
+    if (!this.matchStarted) {
+      this.matchService.switchPositions(this.tableCode, team)
+        .subscribe(match => {
+            if (match) {
+              this.match = match;
+            }
+          }
+        )
+    }
   }
 
   ngOnInit() {
@@ -78,12 +74,12 @@ export class MatchComponent implements OnInit {
       this.matchService.getMatch(this.tableCode).subscribe(match => {
         if (match) {
           this.match = match;
+          this.alphaScore = match.alphaScore;
+          this.betaScore = match.betaScore;
+          this.matchStarted = match.started;
         }
       })
     })
   }
 
-  private isPositionFree(team: string, position: string) {
-    return true;
-  }
 }

@@ -20,7 +20,7 @@
               <mat-chip class="table-single-player-position" *ngIf="match && match.alphaAttacker" (click)="freePosition('alpha', 'attacker')">
                 <span>{{match.alphaAttacker.name}}</span>
               </mat-chip>
-              <mat-chip class="table-single-player-position" *ngIf="!match || match.alphaAttacker" (click)="takePosition('alpha', 'attacker')">
+              <mat-chip class="table-single-player-position" *ngIf="!match || !match.alphaAttacker" (click)="takePosition('alpha', 'attacker')">
                 <span>Take position</span>
               </mat-chip>
             </div>
@@ -33,7 +33,7 @@
               <mat-chip class="table-single-player-position" *ngIf="match && match.alphaGoalkeeper" (click)="freePosition('alpha', 'goalkeeper')">
                 <span>{{match.alphaGoalkeeper.name}}</span>
               </mat-chip>
-              <mat-chip class="table-single-player-position" *ngIf="!match || match.alphaGoalkeeper" (click)="takePosition('alpha', 'goalkeeper')">
+              <mat-chip class="table-single-player-position" *ngIf="!match || !match.alphaGoalkeeper" (click)="takePosition('alpha', 'goalkeeper')">
                 <span>Take position</span>
               </mat-chip>
             </div>
@@ -42,11 +42,11 @@
         </section>
         <section>
           <div>
-            <button mat-button class="score blue" (click)="incScore('alpha')">
+            <button mat-button class="score blue" (click)="scoreGoal('alpha')">
               <span class="score-value">{{alphaScore}}</span>
             </button>
             <div class="table-single-background">tutaj będzie obrazek</div>
-            <button mat-button class="score red" (click)="incScore('beta')">
+            <button mat-button class="score red" (click)="scoreGoal('beta')">
               <span class="score-value">{{betaScore}}</span>
             </button>
           </div>
@@ -56,19 +56,19 @@
           <mat-chip-list>
 
 
-            <mat-chip class="table-single-player-position" *ngIf="match && match.betaAttacker" (click)="freePosition('beta', 'attacker')">
+            <mat-chip class="table-single-player-position" *ngIf="match && match.betaAttacker" (click)="freePosition('beta', 'Attacker')">
               <span>{{match.betaAttacker.name}}</span>
             </mat-chip>
-            <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaAttacker" (click)="takePosition('beta', 'attacker')">
+            <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaAttacker" (click)="takePosition('beta', 'Attacker')">
               <span>Take position</span>
             </mat-chip>
 
             <mat-chip class="round" (click)="switchPositions('beta')"><- -></mat-chip>
 
-            <mat-chip class="table-single-player-position" *ngIf="match && match.betaGoalkeeper" (click)="freePosition('beta', 'goalkeeper')">
+            <mat-chip class="table-single-player-position" *ngIf="match && match.betaGoalkeeper" (click)="freePosition('beta', 'Goalkeeper')">
               <span>{{match.betaGoalkeeper.name}}</span>
             </mat-chip>
-            <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaGoalkeeper" (click)="takePosition('beta', 'goalkeeper')">
+            <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaGoalkeeper" (click)="takePosition('beta', 'Goalkeeper')">
               <span>Take position</span>
             </mat-chip>
             

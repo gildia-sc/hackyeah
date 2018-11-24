@@ -27,11 +27,11 @@ export class MatchService {
   }
 
   switchPositions(tableCode: string, team: string): Observable<Match> {
-    return this.httpClient.post<Match>(this.resourceUrl.concat(`/${tableCode}/${team.toUpperCase()}`), null);
+    return this.httpClient.post<Match>(this.resourceUrl.concat(`/${tableCode}/${team.toUpperCase()}/switch`), null);
   }
 
   freePosition(tableCode: string, team: string, position: string) {
-    return this.httpClient.post<Match>(this.resourceUrl.concat(`/${tableCode}/${team.toUpperCase()}`), null, {
+    return this.httpClient.post<Match>(this.resourceUrl.concat(`/${tableCode}/${team.toUpperCase()}/free`), null, {
       params: new HttpParams().append('position', position.toUpperCase())
     });
   }
@@ -44,6 +44,7 @@ export class Match {
   alphaGoalkeeper: Player;
   betaAttacker: Player;
   betaGoalkeeper: Player;
+  started: boolean;
   alphaScore: number;
   betaScore: number;
 }
