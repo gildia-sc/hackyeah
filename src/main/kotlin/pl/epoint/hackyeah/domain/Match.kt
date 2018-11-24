@@ -7,59 +7,58 @@ import javax.persistence.Table
 @Entity
 @Table(name = "match")
 class Match(
+    @OneToOne(optional = false)
+    @JoinColumn(name = "foosball_table_id", unique = false, nullable = false, updatable = false)
+    val table: FoosballTable
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
-    val id: Long = 0,
+    var id: Long? = null
 
-    @Column(nullable = false)
-    val startTime: LocalDateTime,
+    var startTime: LocalDateTime? = null
 
-    val endTime: LocalDateTime?,
-
-    @OneToOne(optional = false)
-    @JoinColumn(name = "foosball_table_id", unique = false, nullable = false, updatable = false)
-    val table: FoosballTable,
+    var endTime: LocalDateTime? = null
 
     @OneToOne
     @JoinColumn(name = "player_a_attacker_id")
-    val playerAlphaAttacker: Player?,
+    var playerAlphaAttacker: Player? = null
 
     @OneToOne
     @JoinColumn(name = "player_b_attacker_id")
-    val playerBetaAttacker: Player?,
+    var playerBetaAttacker: Player? = null
 
     @OneToOne
     @JoinColumn(name = "player_a_goalkeeper_id")
-    val playerAlphaGoalkeeper: Player?,
+    var playerAlphaGoalkeeper: Player? = null
 
     @OneToOne
     @JoinColumn(name = "player_b_goalkeeper_id")
-    val playerBetaGoalkeeper: Player?,
+    var playerBetaGoalkeeper: Player? = null
 
     @OneToOne
     @JoinColumn(name = "team_a_id")
-    val teamAlpha: Team?,
+    var teamAlpha: Team? = null
 
     @OneToOne
     @JoinColumn(name = "team_b_id")
-    val teamBeta: Team?,
+    var teamBeta: Team? = null
 
     @Column(name = "player_a_attacker_score")
-    val playerAlphaAttackerScore: Int?,
+    var playerAlphaAttackerScore: Int = 0
 
     @Column(name = "player_b_attacker_score")
-    val playerBetaAttackerScore: Int?,
+    var playerBetaAttackerScore: Int = 0
 
     @Column(name = "player_a_goalkeeper_score")
-    val playerAlphaGoalkeeperScore: Int?,
+    var playerAlphaGoalkeeperScore: Int = 0
 
     @Column(name = "player_b_goalkeeper_score")
-    val playerBetaGoalkeeperScore: Int?,
+    var playerBetaGoalkeeperScore: Int = 0
 
     @Column(name = "team_a_score")
-    val teamAlphaScore: Int = 0,
+    var teamAlphaScore: Int = 0
 
     @Column(name = "team_b_score")
-    val teamBetaScore: Int = 0
-)
+    var teamBetaScore: Int = 0
+}
