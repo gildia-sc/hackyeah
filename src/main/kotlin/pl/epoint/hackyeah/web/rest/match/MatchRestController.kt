@@ -17,7 +17,7 @@ class MatchRestController(val matchService: MatchService,
 
     @GetMapping
     fun getMatchForTable(@PathVariable tableCode: String): ResponseEntity<MatchDto> {
-        val match = matchService.getMatch(tableCode)
+        val match = matchService.getCurrentMatch(tableCode)
         return if (match != null) return ResponseEntity.ok(MatchDto(match))
             else ResponseEntity.notFound().build<MatchDto>()
     }

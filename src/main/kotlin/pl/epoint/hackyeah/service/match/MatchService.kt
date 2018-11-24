@@ -6,6 +6,7 @@ import pl.epoint.hackyeah.domain.Match
 import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.repository.FoosballTableRepository
 import pl.epoint.hackyeah.repository.MatchRepository
+import java.time.LocalDateTime
 
 /**
  * @author Piotr Wolny
@@ -15,13 +16,13 @@ import pl.epoint.hackyeah.repository.MatchRepository
 class MatchService(val tableRepository: FoosballTableRepository,
                    val matchRepository: MatchRepository) {
 
-    fun getMatch(tableCode: String): Match? {
-        return matchRepository.findByTableCode(tableCode)
+    fun getCurrentMatch(tableCode: String): Match? {
+        return matchRepository.findByTableCodeAndEndTimeNull(tableCode)
     }
 
     fun takePosition(tableCode: String, player: Player, team: Team, position: Position): Match {
         val table = tableRepository.findByCode(tableCode)!!
-        var match = matchRepository.findByTableCode(tableCode)
+        var match = matchRepository.findByTableCodeAndEndTimeNull(tableCode)
         if (match == null) {
             match = Match(table)
         }
@@ -35,11 +36,15 @@ class MatchService(val tableRepository: FoosballTableRepository,
                 Position.GOALKEEPER -> match.playerBetaGoalkeeper = player
             }
         }
+        if (match.playerAlphaAttacker != null && match.playerAlphaGoalkeeper != null
+            && match.playerBetaAttacker != null && match.playerBetaGoalkeeper != null) {
+            match.startTime = LocalDateTime.now()
+        }
         return matchRepository.save(match)
     }
 
     fun score(tableCode: String, team: Team, position: Position?): Match {
-        val match = matchRepository.findByTableCode(tableCode)!!
+        val match = matchRepository.findByTableCodeAndEndTimeNull(tableCode)!!
         when (team) {
             Team.ALPHA -> {
                 match.teamAlphaScore++
@@ -56,11 +61,14 @@ class MatchService(val tableRepository: FoosballTableRepository,
                 }
             }
         }
+        if (match.teamAlphaScore == 10 || match.teamBetaScore == 10) {
+            match.endTime = LocalDateTime.now()
+        }
         return match
     }
 
     fun clearPosition(tableCode: String, team: Team, position: Position): Match {
-        val match = matchRepository.findByTableCode(tableCode)!!
+        val match = matchRepository.findByTableCodeAndEndTimeNull(tableCode)!!
         when (team) {
             Team.ALPHA -> when (position) {
                 Position.ATTACKER -> match.playerAlphaAttacker = null
@@ -75,7 +83,7 @@ class MatchService(val tableRepository: FoosballTableRepository,
     }
 
     fun switchPositions(tableCode: String, team: Team): Match {
-        val match = matchRepository.findByTableCode(tableCode)!!
+        val match = matchRepository.findByTableCodeAndEndTimeNull(tableCode)!!
         when (team) {
             Team.ALPHA -> {
                 val attacker = match.playerAlphaAttacker

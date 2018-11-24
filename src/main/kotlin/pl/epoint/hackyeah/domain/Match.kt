@@ -7,7 +7,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "match")
 class Match(
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "foosball_table_id", unique = false, nullable = false, updatable = false)
     val table: FoosballTable
 ) {
@@ -20,27 +20,27 @@ class Match(
 
     var endTime: LocalDateTime? = null
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "player_a_attacker_id")
     var playerAlphaAttacker: Player? = null
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "player_b_attacker_id")
     var playerBetaAttacker: Player? = null
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "player_a_goalkeeper_id")
     var playerAlphaGoalkeeper: Player? = null
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "player_b_goalkeeper_id")
     var playerBetaGoalkeeper: Player? = null
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "team_a_id")
     var teamAlpha: Team? = null
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "team_b_id")
     var teamBeta: Team? = null
 

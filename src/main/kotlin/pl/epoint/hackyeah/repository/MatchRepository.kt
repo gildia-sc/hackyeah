@@ -5,5 +5,5 @@ import pl.epoint.hackyeah.domain.Match
 
 interface MatchRepository : JpaRepository<Match, Long> {
 
-    fun findByTableCode(tableCode: String): Match?
+    fun findByTableCodeAndEndTimeNull(tableCode: String): Match?
 }
