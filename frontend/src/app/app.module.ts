@@ -21,11 +21,13 @@ import {
 } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import {LoginComponent} from "./login/login.component";
+import { HomepageComponent } from './homepage/homepage.component';
 
 const ROUTES: Route[] = [
-  { path: '', component: TableListComponent },
+  { path: '', component: HomepageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'tables', component: TableListComponent },
 ];
 
 @NgModule({
@@ -33,7 +35,8 @@ const ROUTES: Route[] = [
     AppComponent,
     TableListComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    HomepageComponent
   ],
   imports: [
     BrowserModule,
