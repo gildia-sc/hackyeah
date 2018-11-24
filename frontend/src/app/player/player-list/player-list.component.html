@@ -21,7 +21,7 @@
         <button mat-button [routerLink]="['/players/' + player.id]">
           <mat-icon>edit</mat-icon>&nbsp;EDIT
         </button>
-        <button mat-button>
+        <button mat-button (click)="openDeleteDialog(player.id)">
           <mat-icon>delete</mat-icon>&nbsp;DELETE
         </button>
       </div>

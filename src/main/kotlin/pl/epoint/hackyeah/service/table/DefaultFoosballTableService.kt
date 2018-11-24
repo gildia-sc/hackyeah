@@ -21,7 +21,9 @@ class DefaultFoosballTableService(private val foosballTableRepository: FoosballT
 
     @Transactional(readOnly = true)
     override fun findAll(): List<FoosballTableDto> {
-        return foosballTableRepository.findAll().map { it.toDto() }
+        return foosballTableRepository.findAll()
+            .filter { it.activated }
+            .map { it.toDto() }
     }
 
     override fun findByCode(tableCode: FoosballTableCode): FoosballTableDto? {
@@ -29,7 +31,7 @@ class DefaultFoosballTableService(private val foosballTableRepository: FoosballT
     }
 
     override fun updateTable(tableCode: FoosballTableCode, teamAlphaColor: TeamColor,
-                                      teamBetaColor: TeamColor): FoosballTableDto {
+                             teamBetaColor: TeamColor): FoosballTableDto {
         return foosballTableRepository.findByCode(tableCode.raw)
             ?.let { foosballTableRepository.save(it.updateTeamAlphaColor(teamAlphaColor).updateTeamBetaColor(teamBetaColor)) }
             ?.let { it.toDto() }
@@ -37,6 +39,9 @@ class DefaultFoosballTableService(private val foosballTableRepository: FoosballT
     }
 
     override fun deleteByCode(foosballTableCode: FoosballTableCode) {
-        foosballTableRepository.findByCode(foosballTableCode.raw)?.let { foosballTableRepository.delete(it) }
+        foosballTableRepository.findByCode(foosballTableCode.raw)?.let {
+            it.activated = false;
+            foosballTableRepository.save(it)
+        }
     }
 }

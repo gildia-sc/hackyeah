@@ -11,4 +11,5 @@ interface PlayerViewService {
     fun findTeamsByPlayerId(playerId: Long): List<PlayerTeamView>
 
     fun findMatchesByPlayerId(playerId: Long): List<PlayerMatchView>
+    fun deleteByPlayerId(id: Long)
 }

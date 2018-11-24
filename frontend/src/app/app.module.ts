@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Route, RouterModule } from '@angular/router';
-import { DeleteTableDialog} from './table/table-list/table-list.component';
+import { DeleteDialog} from './util/delete-dialog/delete-dialog.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -55,7 +55,7 @@ const ROUTES: Route[] = [
   declarations: [
     AppComponent,
     TableListComponent,
-    DeleteTableDialog,
+    DeleteDialog,
     RegisterComponent,
     LoginComponent,
     HomepageComponent,
@@ -95,7 +95,7 @@ const ROUTES: Route[] = [
     { provide: HTTP_INTERCEPTORS, useClass: PendingRequestInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DeleteTableDialog]
+  entryComponents: [DeleteDialog]
 })
 export class AppModule {
 }

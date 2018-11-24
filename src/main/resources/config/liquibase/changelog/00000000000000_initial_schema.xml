@@ -87,6 +87,9 @@
             <column name="team_b_color" type="varchar(7)">
                 <constraints nullable="false"/>
             </column>
+            <column name="activated" type="boolean" valueBoolean="false">
+                <constraints nullable="false" />
+            </column>
         </createTable>
 
         <createTable tableName="match">

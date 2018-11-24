@@ -4,27 +4,34 @@ import { Observable } from 'rxjs';
 import { PlayerView } from "./view/player-view.model";
 import { PlayerTeamView } from './view/player-team-view.model';
 import { PlayerMatchView } from './view/player-match-view.model';
+import { Player } from '../model/player.model';
 
 @Injectable({
     providedIn: 'root'
 })
-export class PlayerViewService {
+export class PlayerService {
 
-    private playersUrl = '/api/players/view';
+    private playersUrl = '/api/players';
 
-    constructor(private http: HttpClient) { }
+    private playersViewUrl = this.playersUrl + '/view';
+
+    constructor(private httpClient: HttpClient) { }
 
     getAllPlayers(): Observable<PlayerView[]> {
-        return this.http.get<PlayerView[]>(this.playersUrl);
+        return this.httpClient.get<PlayerView[]>(this.playersViewUrl);
     }
 
     getPlayerTeams(id: number): Observable<PlayerTeamView[]> {
-        const url = `${this.playersUrl}/${id}/teams`;
-        return this.http.get<PlayerTeamView[]>(url);
+        const url = `${this.playersViewUrl}/${id}/teams`;
+        return this.httpClient.get<PlayerTeamView[]>(url);
     }
 
     getPlayerMatches(id: number): Observable<PlayerMatchView[]> {
-        const url = `${this.playersUrl}/${id}/matches`;
-        return this.http.get<PlayerMatchView[]>(url);
+        const url = `${this.playersViewUrl}/${id}/matches`;
+        return this.httpClient.get<PlayerMatchView[]>(url);
     }
+
+    deletePlayer(id: number) {
+        return this.httpClient.delete<Player>(`${this.playersUrl}/${id}`)
+      }
 }

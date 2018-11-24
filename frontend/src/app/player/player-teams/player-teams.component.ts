@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { PlayerViewService } from '../player.service';
+import { PlayerService } from '../player.service';
 import { PlayerTeamView } from '../view/player-team-view.model';
 import { Observable } from "rxjs";
 
@@ -15,14 +15,14 @@ export class PlayerTeamsComponent implements OnInit {
     playerTeams: Observable<PlayerTeamView[]>
    
     constructor(
-      private playerViewService: PlayerViewService,
+      private playerService: PlayerService,
       private route: ActivatedRoute,
       private location: Location
     ) {}
    
     ngOnInit(): void {
       const id = +this.route.snapshot.paramMap.get('id');
-      this.playerTeams = this.playerViewService.getPlayerTeams(id)
+      this.playerTeams = this.playerService.getPlayerTeams(id)
     }
    
     goBack(): void {

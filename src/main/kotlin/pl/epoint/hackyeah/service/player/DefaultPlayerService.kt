@@ -2,7 +2,6 @@ package pl.epoint.hackyeah.service.player
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.repository.MatchRepository
 import pl.epoint.hackyeah.repository.PlayerRepository
 import pl.epoint.hackyeah.repository.TeamRepository
@@ -12,15 +11,14 @@ import pl.epoint.hackyeah.service.view.PlayerView
 
 @Service
 @Transactional
-class DefaultPlayerViewService(private val playerRepository: PlayerRepository,
-                               private val teamRepository: TeamRepository,
-                               private val matchRepository: MatchRepository) : PlayerViewService {
+class DefaultPlayerService(private val playerRepository: PlayerRepository,
+                           private val teamRepository: TeamRepository,
+                           private val matchRepository: MatchRepository) : PlayerViewService {
     @Transactional(readOnly = true)
     override fun findAll(): List<PlayerView> {
-        return playerRepository.findAll().map {
-            PlayerView(it, teamRepository.findByPlayer(it),
-                matchRepository.findByPlayer(it))
-        }
+        return playerRepository.findAll()
+            .filter { it.activated }
+            .map { PlayerView(it, teamRepository.findByPlayer(it), matchRepository.findByPlayer(it)) }
     }
 
     @Transactional(readOnly = true)
@@ -39,6 +37,14 @@ class DefaultPlayerViewService(private val playerRepository: PlayerRepository,
             return emptyList()
         }
         return matchRepository.findByPlayer(player.get()).map { PlayerMatchView(it) }
+    }
+
+    override fun deleteByPlayerId(id: Long) {
+        val player = playerRepository.findById(id)
+        if (player.isPresent){
+            player.get().activated = false
+            playerRepository.save(player.get())
+        }
     }
 
 }

@@ -3,6 +3,7 @@ import {Table, TablesService} from "../tables.service";
 import {Observable} from "rxjs";
 import {MatDialog, MatDialogRef, MatSnackBar} from "@angular/material";
 import {Router} from "@angular/router";
+import {DeleteDialog} from '../../util/delete-dialog/delete-dialog.component'
 
 @Component({
   selector: 'app-table-list',
@@ -23,7 +24,7 @@ export class TableListComponent implements OnInit {
   }
 
   openDeleteDialog(tableCode: string): void {
-    const dialogRef = this.dialog.open(DeleteTableDialog, {
+    const dialogRef = this.dialog.open(DeleteDialog, {
       width: '250px'
     });
 
@@ -42,21 +43,5 @@ export class TableListComponent implements OnInit {
   }
 }
 
-@Component({
-  selector: 'delete-table-dialog',
-  templateUrl: 'delete-table-dialog.html',
-})
-export class DeleteTableDialog {
-
-  constructor(public dialogRef: MatDialogRef<DeleteTableDialog>) {}
-
-  onCancelClick() {
-    this.dialogRef.close(false);
-  }
-
-  onDeleteClick() {
-    this.dialogRef.close(true);
-  }
-}
 
 

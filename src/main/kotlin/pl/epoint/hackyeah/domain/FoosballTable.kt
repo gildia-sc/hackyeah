@@ -4,6 +4,7 @@ import pl.epoint.hackyeah.service.TeamColor
 import pl.epoint.hackyeah.service.dto.FoosballTableDto
 import javax.persistence.*
 import javax.persistence.Table
+import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "foosball_table")
@@ -20,7 +21,11 @@ class FoosballTable(
     val teamAlphaColor: String,
 
     @Column(name = "team_b_color", nullable = false)
-    val teamBetaColor: String
+    val teamBetaColor: String,
+
+    @NotNull
+    @Column(nullable = false)
+    var activated: Boolean = true
 ) {
 
     fun toDto(): FoosballTableDto {
