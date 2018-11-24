@@ -1,21 +1,21 @@
 <div class="table-list">
-  <mat-accordion *ngFor="let table of tables">
-    <mat-expansion-panel>
+  <mat-accordion multi="false">
+    <mat-expansion-panel *ngFor="let table of tables | async">
       <mat-expansion-panel-header>
         <mat-panel-title>{{table.code}}</mat-panel-title>
       </mat-expansion-panel-header>
       <div>
         <button mat-button>
-          <mat-icon>stars</mat-icon>&nbsp;Graj
+          <mat-icon>stars</mat-icon>&nbsp;PLAY
+        </button>
+        <button mat-button [routerLink]="['/tables/' + table.code]">
+          <mat-icon>edit</mat-icon>&nbsp;EDIT
         </button>
         <button mat-button>
-          <mat-icon>edit</mat-icon>&nbsp;Edytuj
+          <mat-icon>delete</mat-icon>&nbsp;DELETE
         </button>
         <button mat-button>
-          <mat-icon>delete</mat-icon>&nbsp;Usuń
-        </button>
-        <button mat-button>
-          <mat-icon>link</mat-icon>&nbsp;Linki
+          <mat-icon>link</mat-icon>&nbsp;LINKS
         </button>
       </div>
     </mat-expansion-panel>

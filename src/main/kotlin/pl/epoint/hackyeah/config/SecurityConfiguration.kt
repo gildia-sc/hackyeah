@@ -86,6 +86,7 @@ class SecurityConfiguration(private val authenticationManagerBuilder: Authentica
 
     @Throws(Exception::class)
     public override fun configure(http: HttpSecurity) {
+
         http
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -120,6 +121,8 @@ class SecurityConfiguration(private val authenticationManagerBuilder: Authentica
                 .authorizeRequests()
                 .antMatchers("/api/register").permitAll()
                 .antMatchers("/api/activate").permitAll()
+                .antMatchers("/api/tables").permitAll()
+                .antMatchers("/api/tables/**").permitAll()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/account/reset-password/init").permitAll()
                 .antMatchers("/api/account/reset-password/finish").permitAll()
