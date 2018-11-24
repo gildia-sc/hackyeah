@@ -5,7 +5,7 @@
         <mat-panel-title>{{table.code}}</mat-panel-title>
       </mat-expansion-panel-header>
       <div>
-        <button mat-button>
+        <button mat-button [routerLink]="['/matches/' + table.code]">
           <mat-icon>stars</mat-icon>&nbsp;PLAY
         </button>
         <button mat-button [routerLink]="['/tables/' + table.code]">
