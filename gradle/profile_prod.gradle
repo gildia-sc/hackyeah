@@ -24,7 +24,11 @@ task webpack_test(type: NpmTask, dependsOn: 'npm_install') {
 }
 
 task webpack(type: NpmTask, dependsOn: 'npm_install') {
-    args = ["run", "webpack:prod"]
+    inputs.dir("./frontend/")
+    inputs.files(fileTree('src/main/webapp/'))
+    outputs.dir("build/www/")
+    outputs.file("build/www/app/main.bundle.js")
+    args = ["run-script", "build", "--prefix", "frontend/"]
 }
 
 war {
@@ -57,7 +61,14 @@ gitProperties {
     keys = ['git.branch', 'git.commit.id.abbrev', 'git.commit.id.describe']
 }
 
+task copyApp(type: Copy) {
+    from 'frontend/dist/frontend/'
+    into 'build/www/'
+}
+
+copyApp.dependsOn webpack
+processResources.dependsOn copyApp
+
 test.dependsOn webpack_test
-processResources.dependsOn webpack
 copyIntoStatic.dependsOn processResources
 bootJar.dependsOn copyIntoStatic
