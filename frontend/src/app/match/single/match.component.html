@@ -26,7 +26,9 @@
             </div>
 
             <div>
-              <mat-chip class="round" (click)="switchPositions('alpha')"><- -></mat-chip>
+              <button mat-mini-fab (click)="switchPositions('alpha')">
+                <mat-icon>sync</mat-icon>
+              </button>
             </div>
 
             <div>
@@ -65,7 +67,9 @@
               <span>Take position</span>
             </mat-chip>
 
-            <mat-chip class="round" (click)="switchPositions('beta')"><- -></mat-chip>
+            <button mat-mini-fab (click)="switchPositions('beta')">
+              <mat-icon>sync</mat-icon>
+            </button>
 
             <mat-chip class="table-single-player-position" *ngIf="match && match.betaGoalkeeper" (click)="freePosition('beta', 'Goalkeeper')">
               <span>{{match.betaGoalkeeper.name}}</span>
