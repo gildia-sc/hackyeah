@@ -23,7 +23,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.requestPendingService.requestPendingSubject.subscribe(value => {
-      this.progressBarMode = value ? 'indeterminate' : 'determinate';
+      setTimeout(() => {
+        this.progressBarMode = value ? 'indeterminate' : 'determinate';
+      });
     });
   }
 
