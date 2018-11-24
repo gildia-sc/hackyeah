@@ -22,8 +22,8 @@ export class TableEditComponent implements OnInit {
     code: ['', [Validators.required, Validators.maxLength(50)],
       // [uniqueValidator(this.httpClient, '/api/table-code-taken')]
     ],
-    teamAlphaColor: ['', [Validators.required, Validators.pattern('[0-9a-fA-F]{6}')]],
-    teamBetaColor: ['', [Validators.required, Validators.pattern('[0-9a-fA-F]{6}')]],
+    teamAlphaColor: ['', [Validators.required, Validators.pattern('#[0-9a-fA-F]{6}')]],
+    teamBetaColor: ['', [Validators.required, Validators.pattern('#[0-9a-fA-F]{6}')]],
   });
 
   constructor(private readonly formBuilder: FormBuilder,

@@ -6,12 +6,12 @@
     <mat-error *ngIf="tableForm.get('code').hasError('pattern')">Code must contains only characters: 0...9, a...f or A...F (without spaces)</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput required placeholder="Alpha team color" formControlName="teamAlphaColor">
+    <input matInput type="color" required placeholder="Alpha team color" formControlName="teamAlphaColor">
     <mat-error *ngIf="tableForm.get('teamAlphaColor').hasError('required')">Alpha team color is required</mat-error>
     <mat-error *ngIf="tableForm.get('teamAlphaColor').hasError('pattern')">Alpha team color must contains exactly 6 characters: 0...9, a...f or A...F</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput required placeholder="Beta team color" formControlName="teamBetaColor">
+    <input matInput type="color" required placeholder="Beta team color" formControlName="teamBetaColor">
     <mat-error *ngIf="tableForm.get('teamBetaColor').hasError('required')">Beta team color is required</mat-error>
     <mat-error *ngIf="tableForm.get('teamBetaColor').hasError('pattern')">Beta  team color must contains exactly 6 characters: 0...9, a...f or A...F</mat-error>
   </mat-form-field>

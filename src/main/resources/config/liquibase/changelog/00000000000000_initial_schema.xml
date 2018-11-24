@@ -81,10 +81,10 @@
             <column name="code" type="varchar(50)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="team_a_color" type="varchar(6)">
+            <column name="team_a_color" type="varchar(7)">
                 <constraints nullable="false"/>
             </column>
-            <column name="team_b_color" type="varchar(6)">
+            <column name="team_b_color" type="varchar(7)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
