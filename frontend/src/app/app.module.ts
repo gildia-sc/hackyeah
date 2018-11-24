@@ -4,12 +4,15 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Route, RouterModule } from '@angular/router';
-import { TableListComponent } from './table/table-list/table-list.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from "./login/login.component";
 import { HomepageComponent } from "./homepage/homepage.component";
+import { TableListComponent } from "./table/table-list/table-list.component";
+import { PlayerListComponent } from './player/player-list/player-list.component';
+import { PlayerTeamsComponent } from './player/player-teams/player-teams.component';
+import { PlayerMatchesComponent } from './player/player-matches/player-matches.component';
 
 import {
   MatButtonModule,
@@ -26,13 +29,18 @@ import {
 import { MatchComponent } from "./match/single/match.component";
 import { TableEditComponent } from './table/table-edit/table-edit.component';
 
+
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'tables', component: TableListComponent },
-  { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' }
+  { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' },
   { path: 'tables/:tableCode', component: TableEditComponent },
+  { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' },
+  { path: 'players', component: PlayerListComponent },
+  { path: 'players/:id/teams', component: PlayerTeamsComponent },
+  { path: 'players/:id/matches', component: PlayerMatchesComponent }
 ];
 
 @NgModule({
@@ -43,7 +51,10 @@ const ROUTES: Route[] = [
     LoginComponent,
     HomepageComponent,
     MatchComponent,
-    TableEditComponent
+    TableEditComponent,
+    PlayerListComponent,
+    PlayerTeamsComponent,
+    PlayerMatchesComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,30 @@
+<div class="player-list">
+  <mat-accordion *ngFor="let player of players | async">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        {{player.firstName}}
+        <mat-icon>account_circle</mat-icon>
+        <mat-panel-title>{{player.displayName}}</mat-panel-title>
+        <mat-panel-description>
+          <p>{{player.teams}}</p>
+          <p>Won:{{player.numberOfWins}}</p>
+          <p>Lost:{{player.numberOfLoses}}</p>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div>
+        <button mat-button [routerLink]="['/players/' + player.id + '/teams']">
+          <mat-icon>group</mat-icon>&nbsp;TEAMS
+        </button>
+        <button mat-button [routerLink]="['/players/' + player.id + '/matches']">
+          <mat-icon>history</mat-icon>&nbsp;MATCHES
+        </button>
+        <button mat-button [routerLink]="['/players/' + player.id]">
+          <mat-icon>edit</mat-icon>&nbsp;EDIT
+        </button>
+        <button mat-button>
+          <mat-icon>delete</mat-icon>&nbsp;DELETE
+        </button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
