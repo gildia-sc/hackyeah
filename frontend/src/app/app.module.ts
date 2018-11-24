@@ -7,7 +7,7 @@ import { Route, RouterModule } from '@angular/router';
 import { DeleteTableDialog} from './table/table-list/table-list.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from "./login/login.component";
 import { HomepageComponent } from "./homepage/homepage.component";
 import { TableListComponent } from "./table/table-list/table-list.component";
@@ -23,7 +23,8 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
-  MatMenuModule, MatProgressBarModule,
+  MatMenuModule,
+  MatProgressBarModule,
   MatSnackBarModule,
   MatToolbarModule,
   MatDialogModule,
@@ -32,7 +33,8 @@ import {
 import { MatchComponent } from "./match/single/match.component";
 import { TableEditComponent } from './table/table-edit/table-edit.component';
 import { TableLinksComponent } from './table/table-links/table-links.component';
-
+import { PendingRequestInterceptor } from './request-pending/pending-request.interceptor';
+import { RequestPendingService } from './request-pending/request-pending.service';
 
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
@@ -86,7 +88,11 @@ const ROUTES: Route[] = [
     MatDialogModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [],
+  providers: [
+    RequestPendingService,
+
+    { provide: HTTP_INTERCEPTORS, useClass: PendingRequestInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
   entryComponents: [DeleteTableDialog]
 })
