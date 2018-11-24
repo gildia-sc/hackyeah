@@ -13,3 +13,19 @@ body {
 .toolbar-spacer {
   flex: 1 1 auto;
 }
+
+/* Kształty */
+.round {
+  border-radius: 50%;
+}
+
+/* Dodatkowe kolory */
+.blue {
+  color: #ffffff;
+  background-color: #3f51b5;
+}
+
+.red {
+  color: #ffffff;
+  background-color: #ff4081;
+}

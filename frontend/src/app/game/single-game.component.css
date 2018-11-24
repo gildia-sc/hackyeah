@@ -1,0 +1,35 @@
+.ts-team-name {
+  text-align: center;
+  margin: 0 auto;
+  min-width: 200px;
+}
+
+.table-single {
+  margin: 0 auto;
+}
+
+.table-single-waiting {
+  margin-bottom: 10px;
+}
+
+.table-single-background {
+  float: left;
+}
+
+.score {
+  float: left;
+  width: 100px;
+  height: 100px;
+
+  font-size: 3em;
+  font-weight: bold;
+
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.score .score-value {
+  min-width: 40px;
+  margin: 0 auto;
+}

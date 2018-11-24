@@ -1,0 +1,79 @@
+<mat-card>
+  <mat-card-content>
+    <div class="table-single">
+      <section>
+        <mat-progress-bar class="table-single-waiting"
+                          mode="indeterminate"
+                          color="warn"></mat-progress-bar>
+      </section>
+      <div>
+        <section>
+          <mat-chip-list>
+            <mat-chip class="ts-team-name" color="primary" selected>Team Alpha</mat-chip>
+          </mat-chip-list>
+        </section>
+
+        <section>
+          <mat-chip-list>
+
+            <mat-chip class="table-single-player-position" *ngIf="positions.get('teamAlphaAttacker').taken" (click)="freePosition('teamAlphaAttacker')">
+              <span>{{positions.get('teamAlphaAttacker').player.name}}</span>
+            </mat-chip>
+            <mat-chip class="table-single-player-position" *ngIf="!positions.get('teamAlphaAttacker').taken" (click)="takePosition('teamAlphaAttacker', currentPlayer)">
+              <span>Take position</span>
+            </mat-chip>
+
+            <mat-chip class="round" (click)="switchPositions('alpha')"><- -></mat-chip>
+
+            <mat-chip class="table-single-player-position" *ngIf="positions.get('teamAlphaGoalkeeper').taken" (click)="freePosition('teamAlphaGoalkeeper')">
+              <span>{{positions.get('teamAlphaGoalkeeper').player.name}}</span>
+            </mat-chip>
+            <mat-chip class="table-single-player-position" *ngIf="!positions.get('teamAlphaGoalkeeper').taken" (click)="takePosition('teamAlphaGoalkeeper', currentPlayer)">
+              <span>Take position</span>
+            </mat-chip>
+
+          </mat-chip-list>
+        </section>
+        <section>
+          <div>
+            <button mat-button class="score blue" (click)="incScore('alpha')">
+              <span class="score-value">{{teamAlphaScore}}</span>
+            </button>
+            <div class="table-single-background">tutaj będzie obrazek</div>
+            <button mat-button class="score red" (click)="incScore('beta')">
+              <span class="score-value">{{teamBetaScore}}</span>
+            </button>
+          </div>
+        </section>
+
+        <section style="clear: both">
+          <mat-chip-list>
+
+            <mat-chip *ngIf="positions.get('teamBetaAttacker').taken" (click)="freePosition('teamBetaAttacker')">
+              <span>{{positions.get('teamBetaAttacker').player.name}}</span>
+            </mat-chip>
+            <mat-chip *ngIf="!positions.get('teamBetaAttacker').taken" (click)="takePosition('teamBetaAttacker', currentPlayer)">
+              <span>Take position</span>
+            </mat-chip>
+            
+            <mat-chip (click)="switchPositions('beta')"><- -></mat-chip>
+            
+            <mat-chip *ngIf="positions.get('teamBetaGoalkeeper').taken" (click)="freePosition('teamBetaGoalkeeper')">
+              <span>{{positions.get('teamBetaGoalkeeper').player.name}}</span>
+            </mat-chip>
+            <mat-chip *ngIf="!positions.get('teamBetaGoalkeeper').taken" (click)="takePosition('teamBetaGoalkeeper', currentPlayer)">
+              <span>Take position</span>
+            </mat-chip>
+            
+          </mat-chip-list>
+        </section>
+
+        <section>
+          <mat-chip-list>
+            <mat-chip class="ts-team-name" color="accent" selected>Team Beta</mat-chip>
+          </mat-chip-list>
+        </section>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
