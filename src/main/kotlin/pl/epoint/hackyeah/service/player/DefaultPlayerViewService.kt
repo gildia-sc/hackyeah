@@ -2,9 +2,11 @@ package pl.epoint.hackyeah.service.player
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.repository.MatchRepository
 import pl.epoint.hackyeah.repository.PlayerRepository
 import pl.epoint.hackyeah.repository.TeamRepository
+import pl.epoint.hackyeah.service.view.PlayerMatchView
 import pl.epoint.hackyeah.service.view.PlayerTeamView
 import pl.epoint.hackyeah.service.view.PlayerView
 
@@ -28,6 +30,15 @@ class DefaultPlayerViewService(private val playerRepository: PlayerRepository,
             return emptyList()
         }
         return teamRepository.findByPlayer(player.get()).map { PlayerTeamView(player.get(), it) }
+    }
+
+    @Transactional(readOnly = true)
+    override fun findMatchesByPlayerId(playerId: Long): List<PlayerMatchView> {
+        val player = playerRepository.findById(playerId)
+        if (!player.isPresent) {
+            return emptyList()
+        }
+        return matchRepository.findByPlayer(player.get()).map { PlayerMatchView(it) }
     }
 
 }
