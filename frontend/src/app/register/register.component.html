@@ -1,18 +1,18 @@
 <form class="container" [formGroup]="registerForm" (submit)="register()">
   <mat-form-field>
-    <input matInput placeholder="Login" formControlName="login">
+    <input matInput required placeholder="Login" formControlName="login">
   </mat-form-field>
   <mat-form-field>
-    <input matInput type="password" placeholder="Password" formControlName="password">
+    <input matInput type="password" required placeholder="Password" formControlName="password">
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="E-mail" formControlName="email">
+    <input matInput type="email" required placeholder="E-mail" formControlName="email">
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="First name" formControlName="firstName">
+    <input matInput required placeholder="First name" formControlName="firstName">
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Last name" formControlName="lastName">
+    <input matInput required placeholder="Last name" formControlName="lastName">
   </mat-form-field>
-  <button mat-raised-button>Register</button>
+  <button mat-raised-button [disabled]="!registerForm.valid">Register</button>
 </form>
