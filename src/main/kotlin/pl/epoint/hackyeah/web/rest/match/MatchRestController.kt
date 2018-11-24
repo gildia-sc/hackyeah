@@ -26,9 +26,22 @@ class MatchRestController {
     @PostMapping("/{team}/goal")
     fun scoreGoal(@PathVariable tableCode: String,
                   @PathVariable team: String,
-                  @RequestParam(required = false) playerId: String?): ResponseEntity<MatchDto> {
+                  @RequestParam(required = false) position: String?): ResponseEntity<MatchDto> {
         return ResponseEntity
             .ok(MatchDto(1L, tableCode, null, null, null, null, 2, 3))
+    }
+
+    @PostMapping("/{team}/free")
+    fun clearPosition(@PathVariable tableCode: String,
+                      @PathVariable team: String,
+                      @RequestParam position: String): ResponseEntity<MatchDto> {
+        TODO()
+    }
+
+    @PostMapping("/{team}/switch")
+    fun switchPositions(@PathVariable tableCode: String,
+                        @PathVariable team: String): ResponseEntity<MatchDto> {
+        TODO()
     }
 
 }
