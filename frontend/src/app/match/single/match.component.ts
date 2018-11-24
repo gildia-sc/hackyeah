@@ -71,11 +71,11 @@ export class MatchComponent implements OnInit {
   }
 
   get matchStarted() {
-    return this.match.started;
+    return this.match != null ? this.match.started : false;
   }
 
   get matchEnded() {
-    return this.match.endTime != null;
+    return this.match != null ? this.match.endTime != null : false;
   }
 
 }

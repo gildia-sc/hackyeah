@@ -1,6 +1,5 @@
 package pl.epoint.hackyeah.config
 
-import pl.epoint.hackyeah.security.AuthoritiesConstants
 import io.github.jhipster.config.JHipsterProperties
 import io.github.jhipster.security.AjaxAuthenticationFailureHandler
 import io.github.jhipster.security.AjaxAuthenticationSuccessHandler
@@ -21,11 +20,10 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.RememberMeServices
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.csrf.CsrfFilter
 import org.springframework.web.filter.CorsFilter
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport
-
+import pl.epoint.hackyeah.security.AuthoritiesConstants
 import javax.annotation.PostConstruct
 
 @Configuration
