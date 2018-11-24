@@ -30,6 +30,7 @@ import {
 } from '@angular/material';
 import { MatchComponent } from "./match/single/match.component";
 import { TableEditComponent } from './table/table-edit/table-edit.component';
+import { TableLinksComponent } from './table/table-links/table-links.component';
 
 
 const ROUTES: Route[] = [
@@ -39,6 +40,7 @@ const ROUTES: Route[] = [
   { path: 'tables', component: TableListComponent },
   { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' },
   { path: 'tables/:tableCode', component: TableEditComponent },
+  { path: 'tables/:tableCode/links', component: TableLinksComponent },
   { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' },
   { path: 'players', component: PlayerListComponent },
   { path: 'players/:id/teams', component: PlayerTeamsComponent },
@@ -57,7 +59,8 @@ const ROUTES: Route[] = [
     TableEditComponent,
     PlayerListComponent,
     PlayerTeamsComponent,
-    PlayerMatchesComponent
+    PlayerMatchesComponent,
+    TableLinksComponent
   ],
   imports: [
     BrowserModule,

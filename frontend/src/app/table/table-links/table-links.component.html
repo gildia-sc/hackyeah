@@ -1,0 +1,18 @@
+<form class="container" [formGroup]="tableLinksForm" >
+  <mat-form-field>
+    <input matInput required placeholder="Code" formControlName="code">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Team alpha attacker URL" formControlName="teamAlphaAttacker">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Team alpha goalkeeper URL" formControlName="teamAlphaGoalkeeper">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Team beta attacker URL" formControlName="teamAlphaAttacker">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Team beta goalkeeper URL" formControlName="teamAlphaAttacker">
+  </mat-form-field>
+  <button [routerLink]="['/tables']">Back</button>
+</form>

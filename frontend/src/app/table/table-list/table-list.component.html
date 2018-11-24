@@ -14,7 +14,7 @@
         <button mat-button (click)="openDeleteDialog(table.code)">
           <mat-icon>delete</mat-icon>&nbsp;DELETE
         </button>
-        <button mat-button>
+        <button mat-button [routerLink]="['/tables/' + table.code + '/links']">
           <mat-icon>link</mat-icon>&nbsp;LINKS
         </button>
       </div>
