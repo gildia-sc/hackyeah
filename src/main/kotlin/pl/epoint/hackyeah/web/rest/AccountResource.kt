@@ -153,7 +153,7 @@ class AccountResource(private val playerRepository: PlayerRepository,
             throw InternalServerErrorException("User could not be found")
         }
         userService.updateUser(userDTO.firstName!!, userDTO.lastName!!, userDTO.email!!,
-                userDTO.langKey!!, userDTO.imageUrl!!)
+                userDTO.langKey!!, userDTO.image!!)
     }
 
     /**

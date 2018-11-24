@@ -37,7 +37,7 @@ class UserMapper {
             user.firstName = userDTO.firstName
             user.lastName = userDTO.lastName
             user.email = userDTO.email
-            user.imageUrl = userDTO.imageUrl
+            user.image = userDTO.image
             user.activated = userDTO.isActivated
             user.langKey = userDTO.langKey
             val authorities = this.authoritiesFromStrings(userDTO.authorities)

@@ -106,7 +106,7 @@ class UserService(val playerRepository: PlayerRepository,
         newUser.firstName = userDTO.firstName
         newUser.lastName = userDTO.lastName
         newUser.email = userDTO.email!!.toLowerCase()
-        newUser.imageUrl = userDTO.imageUrl
+        newUser.image = userDTO.image
         newUser.langKey = userDTO.langKey
         // new user is not active
         newUser.activated = true
@@ -135,7 +135,7 @@ class UserService(val playerRepository: PlayerRepository,
         user.firstName = userDTO.firstName
         user.lastName = userDTO.lastName
         user.email = userDTO.email!!.toLowerCase()
-        user.imageUrl = userDTO.imageUrl
+        user.image = userDTO.image
         if (userDTO.langKey == null) {
             user.langKey = Constants.DEFAULT_LANGUAGE // default language
         } else {
@@ -166,9 +166,9 @@ class UserService(val playerRepository: PlayerRepository,
      * @param lastName last name of user
      * @param email email id of user
      * @param langKey language key
-     * @param imageUrl image URL of user
+     * @param image image URL of user
      */
-    fun updateUser(firstName: String, lastName: String, email: String, langKey: String, imageUrl: String) {
+    fun updateUser(firstName: String, lastName: String, email: String, langKey: String, image: String) {
         SecurityUtils.currentUserLogin
             .flatMap { playerRepository.findOneByLogin(it) }
             .ifPresent { user ->
@@ -176,7 +176,7 @@ class UserService(val playerRepository: PlayerRepository,
                 user.lastName = lastName
                 user.email = email.toLowerCase()
                 user.langKey = langKey
-                user.imageUrl = imageUrl
+                user.image = image
                 log.debug("Changed Information for User: {}", user)
             }
     }
@@ -197,7 +197,7 @@ class UserService(val playerRepository: PlayerRepository,
                 user.firstName = userDTO.firstName
                 user.lastName = userDTO.lastName
                 user.email = userDTO.email!!.toLowerCase()
-                user.imageUrl = userDTO.imageUrl
+                user.image = userDTO.image
                 user.activated = userDTO.isActivated
                 user.langKey = userDTO.langKey
                 val managedAuthorities = user.authorities

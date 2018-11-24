@@ -31,8 +31,7 @@ open class UserDTO {
     @Size(min = 5, max = 254)
     var email: String? = null
 
-    @Size(max = 256)
-    var imageUrl: String? = null
+    var image: String? = null
 
     var isActivated = false
 
@@ -60,7 +59,7 @@ open class UserDTO {
         this.lastName = player.lastName
         this.email = player.email
         this.isActivated = player.activated
-        this.imageUrl = player.imageUrl
+        this.image = player.image
         this.langKey = player.langKey
         this.createdBy = player.createdBy
         this.createdDate = player.createdDate
@@ -77,7 +76,7 @@ open class UserDTO {
                 ", firstName='" + firstName + '\''.toString() +
                 ", lastName='" + lastName + '\''.toString() +
                 ", email='" + email + '\''.toString() +
-                ", imageUrl='" + imageUrl + '\''.toString() +
+                ", image='" + image + '\''.toString() +
                 ", activated=" + isActivated +
                 ", langKey='" + langKey + '\''.toString() +
                 ", createdBy=" + createdBy +

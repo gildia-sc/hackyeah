@@ -31,7 +31,7 @@
             <column name="email" type="varchar(254)">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_user_email"/>
             </column>
-            <column name="image_url" type="varchar(256)"/>
+            <column name="image" type="text"/>
             <column name="activated" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
             </column>

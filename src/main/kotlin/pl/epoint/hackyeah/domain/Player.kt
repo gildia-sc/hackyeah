@@ -75,9 +75,7 @@ class Player : AbstractAuditingEntity(), Serializable {
     @Column(name = "lang_key", length = 6)
     var langKey: String? = null
 
-    @Size(max = 256)
-    @Column(name = "image_url", length = 256)
-    var imageUrl: String? = null
+    var image: String? = null
 
     @Size(max = 20)
     @Column(name = "activation_key", length = 20)
@@ -126,7 +124,7 @@ class Player : AbstractAuditingEntity(), Serializable {
                 ", firstName='" + firstName + '\''.toString() +
                 ", lastName='" + lastName + '\''.toString() +
                 ", email='" + email + '\''.toString() +
-                ", imageUrl='" + imageUrl + '\''.toString() +
+                ", image='" + image + '\''.toString() +
                 ", activated='" + activated + '\''.toString() +
                 ", langKey='" + langKey + '\''.toString() +
                 ", activationKey='" + activationKey + '\''.toString() +
