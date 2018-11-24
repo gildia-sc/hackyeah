@@ -109,7 +109,7 @@ class UserService(val playerRepository: PlayerRepository,
         newUser.imageUrl = userDTO.imageUrl
         newUser.langKey = userDTO.langKey
         // new user is not active
-        newUser.activated = false
+        newUser.activated = true
         // new user gets registration key
         newUser.activationKey = RandomUtil.generateActivationKey()
         val authorities = HashSet<Authority>()

@@ -120,6 +120,8 @@ class SecurityConfiguration(private val authenticationManagerBuilder: Authentica
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/register").permitAll()
+                .antMatchers("/api/login-taken").permitAll()
+                .antMatchers("/api/email-taken").permitAll()
                 .antMatchers("/api/activate").permitAll()
                 .antMatchers("/api/tables").permitAll()
                 .antMatchers("/api/tables/**").permitAll()
