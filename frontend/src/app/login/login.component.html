@@ -1,0 +1,10 @@
+<form class="container" [formGroup]="loginForm" (submit)="login()">
+  <mat-form-field>
+    <input matInput placeholder="Login" required formControlName="login">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="password" placeholder="Password" required formControlName="password">
+  </mat-form-field>
+  <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
+  <button mat-raised-button [disabled]="!loginForm.valid">Login</button>
+</form>

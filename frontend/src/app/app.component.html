@@ -30,6 +30,14 @@
           <mat-icon>flag</mat-icon>
           <span>Account</span>
         </button>
+        <button *ngIf="isAnonymous()" mat-menu-item [routerLink]="['/login']">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Login</span>
+        </button>
+        <button *ngIf="isAuthenticated()" mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Logout</span>
+        </button>
       </mat-menu>
 
     </mat-toolbar-row>

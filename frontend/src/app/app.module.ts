@@ -9,27 +9,31 @@ import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   MatButtonModule,
-  MatCardModule,
+  MatCardModule, MatCheckboxModule,
   MatDividerModule,
   MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
   MatMenuModule,
+  MatSnackBarModule,
   MatToolbarModule,
 } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
+import {LoginComponent} from "./login/login.component";
 
 const ROUTES: Route[] = [
   { path: '', component: TableListComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent },
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     TableListComponent,
-    RegisterComponent
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +50,8 @@ const ROUTES: Route[] = [
     MatToolbarModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCheckboxModule,
+    MatSnackBarModule,
     RouterModule.forRoot(ROUTES)
   ],
   providers: [],
