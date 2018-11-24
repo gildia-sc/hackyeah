@@ -87,11 +87,22 @@ class AccountResource(private val playerRepository: PlayerRepository,
     @Timed
     @ResponseStatus(HttpStatus.CREATED)
     fun registerAccount(@Valid @RequestBody managedUserVM: ManagedUserVM) {
+        managedUserVM.langKey = "en"
         if (!checkPasswordLength(managedUserVM.password)) {
             throw InvalidPasswordException()
         }
         val user = userService.registerUser(managedUserVM, managedUserVM.password!!)
-        mailService.sendActivationEmail(user)
+//        mailService.sendActivationEmail(user)
+    }
+
+    @PostMapping("/login-taken")
+    fun loginTaken(@RequestBody login: String): Boolean {
+        return playerRepository.findOneByLogin(login.toLowerCase()).map { true }.orElse(false);
+    }
+
+    @PostMapping("/email-taken")
+    fun emailTaken(@RequestBody email: String): Boolean {
+        return playerRepository.findOneByEmailIgnoreCase(email).map { true }.orElse(false);
     }
 
     /**

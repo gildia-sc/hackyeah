@@ -36,6 +36,10 @@
           <mat-icon>exit_to_app</mat-icon>
           <span>Login</span>
         </button>
+        <button *ngIf="isAnonymous()" mat-menu-item [routerLink]="['/register']">
+          <mat-icon>person_add</mat-icon>
+          <span>Register</span>
+        </button>
         <button *ngIf="isAuthenticated()" mat-menu-item (click)="logout()">
           <mat-icon>exit_to_app</mat-icon>
           <span>Logout</span>
