@@ -9,13 +9,26 @@
       </button>
 
       <mat-menu #appMenu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item [routerLink]="['/tables']">
           <mat-icon>tablet</mat-icon>
-          <span>Stoły</span>
+          <span>Tables</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item [routerLink]="['/matches']">
+          <mat-icon>list</mat-icon>
+          <span>Matches History</span>
+        </button>
+        <button mat-menu-item [routerLink]="['/players']">
+          <mat-icon>contact_mail</mat-icon>
+          <span>Players</span>
+        </button>
+        <button mat-menu-item [routerLink]="['/conquests']">
           <mat-icon>account_box</mat-icon>
-          <span>Konto</span>
+          <span>Conquests</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item [routerLink]="['/account']">
+          <mat-icon>flag</mat-icon>
+          <span>Account</span>
         </button>
       </mat-menu>
 
