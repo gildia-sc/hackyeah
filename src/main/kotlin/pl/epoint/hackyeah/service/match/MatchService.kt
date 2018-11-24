@@ -26,6 +26,16 @@ class MatchService(val tableRepository: FoosballTableRepository,
         if (match == null) {
             match = Match(table)
         }
+        clearPlayerOldPosition(player, match)
+        setPlayerNewPosition(team, position, match, player)
+        if (match.playerAlphaAttacker != null && match.playerAlphaGoalkeeper != null
+            && match.playerBetaAttacker != null && match.playerBetaGoalkeeper != null) {
+            match.startTime = LocalDateTime.now()
+        }
+        return matchRepository.save(match)
+    }
+
+    private fun setPlayerNewPosition(team: Team, position: Position, match: Match, player: Player) {
         when (team) {
             Team.ALPHA -> when (position) {
                 Position.ATTACKER -> match.playerAlphaAttacker = player
@@ -36,11 +46,21 @@ class MatchService(val tableRepository: FoosballTableRepository,
                 Position.GOALKEEPER -> match.playerBetaGoalkeeper = player
             }
         }
-        if (match.playerAlphaAttacker != null && match.playerAlphaGoalkeeper != null
-            && match.playerBetaAttacker != null && match.playerBetaGoalkeeper != null) {
-            match.startTime = LocalDateTime.now()
+    }
+
+    private fun clearPlayerOldPosition(player: Player, match: Match) {
+        if (player == match.playerAlphaAttacker) {
+            match.playerAlphaAttacker = null
         }
-        return matchRepository.save(match)
+        if (player == match.playerAlphaGoalkeeper) {
+            match.playerAlphaGoalkeeper = null
+        }
+        if (player == match.playerBetaAttacker) {
+            match.playerBetaAttacker = null
+        }
+        if (player == match.playerBetaGoalkeeper) {
+            match.playerBetaGoalkeeper = null
+        }
     }
 
     fun score(tableCode: String, team: Team, position: Position?): Match {
