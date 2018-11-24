@@ -1,4 +1,15 @@
-<p>
-    player-teams works!
-  </p>
-  
+<div class="player-teams">
+  <button (click)="goBack()">go back</button>
+  <mat-accordion *ngFor="let playerTeam of playerTeams | async">
+    <mat-grid-list cols="3" rowHeight="50px">
+      <mat-grid-tile rowspan=2>
+        <mat-icon>account_circle</mat-icon>
+      </mat-grid-tile>
+      <mat-grid-tile>{{playerTeam.teamName}}</mat-grid-tile>
+      <mat-grid-tile>{{playerTeam.createdTime}} - {{playerTeam.closedTime}}</mat-grid-tile>
+      <mat-grid-tile colspan=2>
+        As {{playerTeam.playerPosition}}, with {{playerTeam.teammatePosition}}: {{playerTeam.teammateName}}
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-accordion>
+</div>

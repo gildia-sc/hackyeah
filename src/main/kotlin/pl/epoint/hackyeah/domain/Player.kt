@@ -120,18 +120,22 @@ class Player : AbstractAuditingEntity(), Serializable {
 
     override fun toString(): String {
         return "User{" +
-                "login='" + this.login + '\''.toString() +
-                ", firstName='" + firstName + '\''.toString() +
-                ", lastName='" + lastName + '\''.toString() +
-                ", email='" + email + '\''.toString() +
-                ", image='" + image + '\''.toString() +
-                ", activated='" + activated + '\''.toString() +
-                ", langKey='" + langKey + '\''.toString() +
-                ", activationKey='" + activationKey + '\''.toString() +
-                "}"
+            "login='" + this.login + '\''.toString() +
+            ", firstName='" + firstName + '\''.toString() +
+            ", lastName='" + lastName + '\''.toString() +
+            ", email='" + email + '\''.toString() +
+            ", image='" + image + '\''.toString() +
+            ", activated='" + activated + '\''.toString() +
+            ", langKey='" + langKey + '\''.toString() +
+            ", activationKey='" + activationKey + '\''.toString() +
+            "}"
     }
 
     companion object {
         private const val serialVersionUID = 1L
+    }
+
+    fun getDisplayName(): String {
+        return firstName + " " + lastName?.substring(0, 1) + "."
     }
 }

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { Player } from '../../model/player.model';
-import { PlayerView } from '../player-view.model';
+import { PlayerView } from '../view/player-view.model';
 import { PlayerViewService } from '../player.service';
 import { Observable } from "rxjs";
-import {map} from 'rxjs/operators'
+import { map } from 'rxjs/operators'
 
 @Component({
   selector: 'app-player-list',

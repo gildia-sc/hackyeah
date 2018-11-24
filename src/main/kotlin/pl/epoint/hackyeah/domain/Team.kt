@@ -1,6 +1,7 @@
 package pl.epoint.hackyeah.domain
 
 import java.io.Serializable
+import java.time.LocalDateTime
 import javax.persistence.*
 import javax.persistence.Table
 
@@ -19,8 +20,13 @@ class Team(
     val attacker: Player,
 
     @OneToOne(optional = false)
-    val goalkeeper: Player
-): Serializable {
+    val goalkeeper: Player,
+
+    var createdTime: LocalDateTime,
+
+    var closedTime: LocalDateTime?
+
+) : Serializable {
 
     companion object {
         private val serialVersionUID = 1L

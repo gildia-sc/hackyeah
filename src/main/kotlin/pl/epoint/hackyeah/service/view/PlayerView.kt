@@ -1,13 +1,8 @@
 package pl.epoint.hackyeah.service.view
+
 import pl.epoint.hackyeah.domain.Match
 import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.domain.Team
-
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Pattern
-import javax.validation.constraints.Size
-import java.time.Instant
 import java.util.stream.Collectors
 
 /**
@@ -29,7 +24,7 @@ open class PlayerView(player: Player, teams: List<Team>, matches: List<Match>) {
 
     init {
         this.id = player.id
-        this.displayName = player.firstName + " " + player.lastName?.substring(0, 1) + "."
+        this.displayName = player.getDisplayName()
         this.image = player.image
         this.teams = teams.stream().map { it.name }.collect(Collectors.joining(", "))
         this.numberOfWins = matches.filter {

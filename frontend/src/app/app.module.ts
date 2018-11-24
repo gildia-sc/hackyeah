@@ -26,7 +26,8 @@ import {
   MatMenuModule, MatProgressBarModule,
   MatSnackBarModule,
   MatToolbarModule,
-  MatDialogModule
+  MatDialogModule,
+  MatGridListModule
 } from '@angular/material';
 import { MatchComponent } from "./match/single/match.component";
 import { TableEditComponent } from './table/table-edit/table-edit.component';
@@ -73,6 +74,7 @@ const ROUTES: Route[] = [
     MatChipsModule,
     MatDividerModule,
     MatExpansionModule,
+    MatGridListModule,
     MatIconModule,
     MatMenuModule,
     MatProgressBarModule,
