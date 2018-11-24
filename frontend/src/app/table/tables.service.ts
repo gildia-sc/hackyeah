@@ -12,10 +12,22 @@ export class TablesService {
   getAllTables(): Observable<Table[]> {
     return this.httpClient.get<Table[]>('/api/tables')
   }
+
+  getTableByCode(code: string): Observable<Table> {
+    return this.httpClient.get<Table>(`/api/tables/${code}`)
+  }
+
+  insertTable(table: Table): Observable<Table> {
+    return this.httpClient.post<Table>('/api/tables', table)
+  }
+
+  updateTable(table: Table): Observable<Table> {
+    return this.httpClient.put<Table>(`/api/tables/${table.code}`, table)
+  }
 }
 
 export class Table {
   code: string;
-  alphaTeamColor: string;
-  betaTeamColor: string;
+  teamAlphaColor: string;
+  teamBetaColor: string;
 }

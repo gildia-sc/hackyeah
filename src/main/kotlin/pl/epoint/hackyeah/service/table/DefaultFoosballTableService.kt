@@ -24,18 +24,15 @@ class DefaultFoosballTableService(private val foosballTableRepository: FoosballT
         return foosballTableRepository.findAll().map { it.toDto() }
     }
 
-    override fun updateTeamAlphaColor(tableCode: FoosballTableCode, newColor: TeamColor): FoosballTableDto {
+    override fun findByCode(tableCode: FoosballTableCode): FoosballTableDto? {
+        return foosballTableRepository.findByCode(tableCode.raw)?.toDto()
+    }
+
+    override fun updateTable(tableCode: FoosballTableCode, teamAlphaColor: TeamColor,
+                                      teamBetaColor: TeamColor): FoosballTableDto {
         return foosballTableRepository.findByCode(tableCode.raw)
-            ?.let { foosballTableRepository.save(it.updateTeamAlphaColor(newColor)) }
+            ?.let { foosballTableRepository.save(it.updateTeamAlphaColor(teamAlphaColor).updateTeamBetaColor(teamBetaColor)) }
             ?.let { it.toDto() }
             ?: throw IllegalStateException("Table ${tableCode.raw} does not exist")
     }
-
-    override fun updateTeamBetaColor(tableCode: FoosballTableCode, newColor: TeamColor): FoosballTableDto {
-        return foosballTableRepository.findByCode(tableCode.raw)
-            ?.let { foosballTableRepository.save(it.updateTeamBetaColor(newColor)) }
-            ?.let { it.toDto() }
-            ?: throw IllegalStateException("Table ${tableCode.raw} does not exist")
-    }
-
 }

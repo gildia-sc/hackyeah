@@ -12,8 +12,20 @@ import java.net.URI
 @RequestMapping("/api/tables")
 class TableRestController(private val foosballTableService: FoosballTableService) {
 
+    @GetMapping
+    fun getAll(): ResponseEntity<List<FoosballTableDto>> {
+        return ResponseEntity.ok(foosballTableService.findAll())
+    }
+
+    @GetMapping(value = "/{code}")
+    fun getbyCode(@PathVariable("code") code: String): ResponseEntity<FoosballTableDto> {
+        return foosballTableService.findByCode(FoosballTableCode(code))
+            ?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.notFound().build()
+    }
+
     @PostMapping
-    fun addTable(@RequestBody tableDto: FoosballTableDto): ResponseEntity<FoosballTableDto> {
+    fun insertTable(@RequestBody tableDto: FoosballTableDto): ResponseEntity<FoosballTableDto> {
         val newTableDto = foosballTableService.addTable(FoosballTableCode(tableDto.code),
             TeamColor(tableDto.teamAlphaColor),
             TeamColor(tableDto.teamBetaColor))
@@ -22,8 +34,19 @@ class TableRestController(private val foosballTableService: FoosballTableService
             .body(newTableDto)
     }
 
-    @GetMapping
-    fun getAll(): ResponseEntity<List<FoosballTableDto>> {
-        return ResponseEntity.ok(foosballTableService.findAll())
+    @PutMapping(value = "/{code}")
+    fun updateTable(@PathVariable("code") code: String,
+                    @RequestBody tableDto: FoosballTableDto): ResponseEntity<FoosballTableDto> {
+
+        foosballTableService.findByCode(FoosballTableCode(code)) ?: return ResponseEntity.notFound().build()
+
+        val updatedTableDto = foosballTableService.updateTable(FoosballTableCode(tableDto.code),
+            TeamColor(tableDto.teamAlphaColor),
+            TeamColor(tableDto.teamBetaColor))
+
+
+        return ResponseEntity
+            .created(URI("/tables/${updatedTableDto.code}"))
+            .body(updatedTableDto)
     }
 }

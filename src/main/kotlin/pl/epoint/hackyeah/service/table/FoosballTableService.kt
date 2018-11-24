@@ -6,11 +6,11 @@ import pl.epoint.hackyeah.service.dto.FoosballTableDto
 
 interface FoosballTableService {
 
-    fun addTable(code: FoosballTableCode, teamAlphaColor: TeamColor, teamBetaColor: TeamColor): FoosballTableDto
+    fun addTable(tableCode: FoosballTableCode, teamAlphaColor: TeamColor, teamBetaColor: TeamColor): FoosballTableDto
 
-    fun updateTeamAlphaColor(tableCode: FoosballTableCode, newColor: TeamColor): FoosballTableDto
-
-    fun updateTeamBetaColor(tableCode: FoosballTableCode, newColor: TeamColor): FoosballTableDto
+    fun updateTable(tableCode: FoosballTableCode, teamAlphaColor: TeamColor, teamBetaColor: TeamColor): FoosballTableDto
 
     fun findAll(): List<FoosballTableDto>
+
+    fun findByCode(code: FoosballTableCode): FoosballTableDto?
 }

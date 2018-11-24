@@ -66,7 +66,7 @@ export class Principal {
             return Promise.resolve(this.userIdentity);
         }
 
-        // retrieve the userIdentity data from the server, update the identity object, and then resolve.
+        // retrieve the userIdentity data from the server, submitForm the identity object, and then resolve.
         return this.account
             .get()
             .toPromise()

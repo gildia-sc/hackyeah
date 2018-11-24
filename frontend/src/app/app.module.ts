@@ -4,12 +4,12 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Route, RouterModule } from '@angular/router';
+import { TableListComponent } from './table/table-list/table-list.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from "./login/login.component";
 import { HomepageComponent } from "./homepage/homepage.component";
-import { TableListComponent } from "./table/table-list/table-list.component";
 
 import {
   MatButtonModule,
@@ -24,6 +24,7 @@ import {
   MatToolbarModule
 } from '@angular/material';
 import { MatchComponent } from "./match/single/match.component";
+import { TableEditComponent } from './table/table-edit/table-edit.component';
 
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
@@ -31,6 +32,7 @@ const ROUTES: Route[] = [
   { path: 'login', component: LoginComponent },
   { path: 'tables', component: TableListComponent },
   { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' }
+  { path: 'tables/:tableCode', component: TableEditComponent },
 ];
 
 @NgModule({
@@ -40,7 +42,8 @@ const ROUTES: Route[] = [
     RegisterComponent,
     LoginComponent,
     HomepageComponent,
-    MatchComponent
+    MatchComponent,
+    TableEditComponent
   ],
   imports: [
     BrowserModule,

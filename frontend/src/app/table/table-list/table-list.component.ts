@@ -11,11 +11,6 @@ export class TableListComponent implements OnInit {
 
   tables: Observable<Table[]>;
 
-  // tables: Table[] = [
-  //   { code: "F16", alphaTeamColor: "0000ff", betaTeamColor: "ff0000"},
-  //   { code: "W15", alphaTeamColor: "0000ff", betaTeamColor: "ff0000"}
-  // ];
-
   constructor(private tablesService: TablesService) { }
 
   ngOnInit() {
