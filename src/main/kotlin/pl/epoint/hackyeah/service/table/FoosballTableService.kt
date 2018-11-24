@@ -13,4 +13,6 @@ interface FoosballTableService {
     fun findAll(): List<FoosballTableDto>
 
     fun findByCode(code: FoosballTableCode): FoosballTableDto?
+
+    fun deleteByCode(foosballTableCode: FoosballTableCode)
 }

@@ -18,7 +18,7 @@ class TableRestController(private val foosballTableService: FoosballTableService
     }
 
     @GetMapping(value = "/{code}")
-    fun getbyCode(@PathVariable("code") code: String): ResponseEntity<FoosballTableDto> {
+    fun getByCode(@PathVariable("code") code: String): ResponseEntity<FoosballTableDto> {
         return foosballTableService.findByCode(FoosballTableCode(code))
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
@@ -48,5 +48,10 @@ class TableRestController(private val foosballTableService: FoosballTableService
         return ResponseEntity
             .created(URI("/tables/${updatedTableDto.code}"))
             .body(updatedTableDto)
+    }
+
+    @DeleteMapping(value = "/{code}")
+    fun deleteTable(@PathVariable("code") code: String) {
+        foosballTableService.deleteByCode(FoosballTableCode(code))
     }
 }

@@ -24,6 +24,10 @@ export class TablesService {
   updateTable(table: Table): Observable<Table> {
     return this.httpClient.put<Table>(`/api/tables/${table.code}`, table)
   }
+
+  deleteTable(tableCode: string) {
+    return this.httpClient.delete<Table>(`/api/tables/${tableCode}`)
+  }
 }
 
 export class Table {

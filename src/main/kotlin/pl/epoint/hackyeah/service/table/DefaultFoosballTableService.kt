@@ -35,4 +35,8 @@ class DefaultFoosballTableService(private val foosballTableRepository: FoosballT
             ?.let { it.toDto() }
             ?: throw IllegalStateException("Table ${tableCode.raw} does not exist")
     }
+
+    override fun deleteByCode(foosballTableCode: FoosballTableCode) {
+        foosballTableRepository.findByCode(foosballTableCode.raw)?.let { foosballTableRepository.delete(it) }
+    }
 }

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Route, RouterModule } from '@angular/router';
+import { DeleteTableDialog} from './table/table-list/table-list.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -24,7 +25,8 @@ import {
   MatInputModule,
   MatMenuModule, MatProgressBarModule,
   MatSnackBarModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatDialogModule
 } from '@angular/material';
 import { MatchComponent } from "./match/single/match.component";
 import { TableEditComponent } from './table/table-edit/table-edit.component';
@@ -47,6 +49,7 @@ const ROUTES: Route[] = [
   declarations: [
     AppComponent,
     TableListComponent,
+    DeleteTableDialog,
     RegisterComponent,
     LoginComponent,
     HomepageComponent,
@@ -75,10 +78,12 @@ const ROUTES: Route[] = [
     MatInputModule,
     MatCheckboxModule,
     MatSnackBarModule,
+    MatDialogModule,
     RouterModule.forRoot(ROUTES)
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DeleteTableDialog]
 })
 export class AppModule {
 }
