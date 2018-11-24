@@ -6,5 +6,9 @@
     <input matInput type="password" placeholder="Password" required formControlName="password">
   </mat-form-field>
   <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
-  <button mat-raised-button [disabled]="!loginForm.valid">Login</button>
+  <mat-grid-list cols="1" rowHeight="50px">
+    <mat-grid-tile>
+      <button mat-raised-button color="primary" [disabled]="!loginForm.valid">Login</button>
+    </mat-grid-tile>
+  </mat-grid-list>
 </form>

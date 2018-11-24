@@ -23,5 +23,9 @@
     <input matInput required placeholder="Last name" formControlName="lastName">
     <mat-error *ngIf="registerForm.get('lastName').hasError('required')">Last name is required</mat-error>
   </mat-form-field>
-  <button mat-raised-button [disabled]="!registerForm.valid">Register</button>
+  <mat-grid-list cols="1" rowHeight="50px">
+    <mat-grid-tile>
+      <button mat-raised-button color="primary" [disabled]="!registerForm.valid">Register</button>
+    </mat-grid-tile>
+  </mat-grid-list>
 </form>

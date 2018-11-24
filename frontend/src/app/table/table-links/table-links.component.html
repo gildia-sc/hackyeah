@@ -14,5 +14,9 @@
   <mat-form-field>
     <input matInput placeholder="Team beta goalkeeper URL" formControlName="teamAlphaAttacker">
   </mat-form-field>
-  <button [routerLink]="['/tables']">Back</button>
+  <mat-grid-list cols="1" rowHeight="50px">
+    <mat-grid-tile>
+      <button mat-raised-button [routerLink]="['/tables']">Back</button>
+    </mat-grid-tile>
+  </mat-grid-list>
 </form>

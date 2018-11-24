@@ -15,7 +15,13 @@
     <mat-error *ngIf="tableForm.get('teamBetaColor').hasError('required')">Beta team color is required</mat-error>
     <mat-error *ngIf="tableForm.get('teamBetaColor').hasError('pattern')">Beta  team color must contains exactly 6 characters: 0...9, a...f or A...F</mat-error>
   </mat-form-field>
-  <button [routerLink]="['/tables']">Cancel</button>
-  <button *ngIf="!isAddNew()" mat-raised-button [disabled]="!tableForm.valid">Update</button>
-  <button *ngIf="isAddNew()" mat-raised-button [disabled]="!tableForm.valid">Insert</button>
+  <mat-grid-list cols="2" rowHeight="50px">
+    <mat-grid-tile>
+      <button mat-raised-button [routerLink]="['/tables']">Cancel</button>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <button *ngIf="!isAddNew()" mat-raised-button color="primary" [disabled]="!tableForm.valid">Update</button>
+      <button *ngIf="isAddNew()" mat-raised-button color="primary" [disabled]="!tableForm.valid">Insert</button>
+    </mat-grid-tile>
+  </mat-grid-list>
 </form>
