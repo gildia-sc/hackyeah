@@ -209,6 +209,8 @@ dependencies {
     }
     compile "org.springframework.boot:spring-boot-starter-undertow"
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
+    compile "org.springframework.boot:spring-boot-starter-websocket"
+
     compile "org.zalando:problem-spring-web:0.24.0-RC.0"
     compile "org.springframework.boot:spring-boot-starter-cloud-connectors"
     compile "org.springframework.security:spring-security-config"
