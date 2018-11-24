@@ -47,4 +47,6 @@ export class Match {
   started: boolean;
   alphaScore: number;
   betaScore: number;
+  startTime: string;
+  endTime: string
 }

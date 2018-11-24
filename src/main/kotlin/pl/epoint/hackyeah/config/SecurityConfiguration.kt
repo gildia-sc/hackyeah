@@ -88,9 +88,9 @@ class SecurityConfiguration(private val authenticationManagerBuilder: Authentica
     public override fun configure(http: HttpSecurity) {
 
         http
-                .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
+                .csrf().disable()
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                .and()
                 .addFilterBefore(corsFilter, CsrfFilter::class.java)
                 .exceptionHandling()
                 .authenticationEntryPoint(problemSupport)
@@ -119,6 +119,7 @@ class SecurityConfiguration(private val authenticationManagerBuilder: Authentica
                 .disable()
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/ws/**").permitAll()
                 .antMatchers("/api/register").permitAll()
                 .antMatchers("/api/login-taken").permitAll()
                 .antMatchers("/api/email-taken").permitAll()
