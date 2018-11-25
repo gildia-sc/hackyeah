@@ -38,9 +38,13 @@ export class MatchComponent implements OnInit {
     }
   }
 
-  freePosition(team: string, position: string) {
+  freePositionOrScoreGoal(team: string, position: string) {
     if (!this.matchStarted) {
       this.matchService.freePosition(this.tableCode, team, position).subscribe()
+    }
+
+    if (this.matchStarted && !this.matchEnded) {
+      this.matchService.scoreGoal(this.tableCode, team, position).subscribe();
     }
   }
 

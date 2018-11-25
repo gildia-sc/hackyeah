@@ -58,7 +58,8 @@ export class PlayerEditComponent implements OnInit {
   }
 
   getPlayerFromForm(): Player {
-    return new Player(
+    return new
+    Player(
       this.id,
       this.updateForm.get('login').value,
       this.updateForm.get('email').value,
