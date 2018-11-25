@@ -273,4 +273,12 @@
                                  referencedColumnNames="event_id"
                                  referencedTableName="jhi_persistent_audit_event"/>
     </changeSet>
+    <changeSet author="liquibase-docs" id="00000000000002">
+        <sqlFile encoding="utf8"
+                 endDelimiter="\nGO"
+                 path="test-data.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"/>
+    </changeSet>
 </databaseChangeLog>
