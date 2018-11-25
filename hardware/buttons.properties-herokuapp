@@ -1,0 +1,5 @@
+url5=https://gildia-hackyeah.herokuapp.com/api/matches/F16/BETA/goal?position=GOALKEEPER
+url4=https://gildia-hackyeah.herokuapp.com/api/matches/F16/ALPHA/goal?position=ATTACKER
+url3=https://gildia-hackyeah.herokuapp.com/api/matches/F16/BETA/goal?position=ATTACKER
+url2=https://gildia-hackyeah.herokuapp.com/api/matches/F16/ALPHA/goal?position=GOALKEEPER
+

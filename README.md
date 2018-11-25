@@ -158,6 +158,18 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
+## Hardware part (optional)
+
+To compile:
+
+    ./gradlew :hardware:shadowJar
+    
+Create buttons.properties file that maps Raspberry Pi pins to post endpoints. Find pin numbers on [http://pi4j.com](http://pi4j.com) site (eg [http://pi4j.com/pins/model-2b-rev1.html](http://pi4j.com/pins/model-2b-rev1.html) for Raspberry Pi 2 - Model B). 
+Eg. for pi4j pin3 - Raspberry Pi 2 Model B J8 Header pin15 please add
+   
+    pin3=https://example.com/endpoint 
+
+
 [JHipster Homepage and latest documentation]: https://www.jhipster.tech
 [JHipster 5.5.0 archive]: https://www.jhipster.tech/documentation-archive/v5.5.0
 
