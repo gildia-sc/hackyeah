@@ -3,6 +3,7 @@ package pl.epoint.hackyeah.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.apache.commons.lang3.StringUtils
 import org.hibernate.annotations.BatchSize
+import pl.epoint.hackyeah.service.dto.UserDTO
 
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -137,5 +138,14 @@ class Player : AbstractAuditingEntity(), Serializable {
 
     fun getDisplayName(): String {
         return firstName + " " + lastName?.substring(0, 1) + "."
+    }
+
+    fun update(userDTO: UserDTO): Player {
+        this.login = userDTO.login
+        this.email = userDTO.email
+        this.firstName = userDTO.firstName
+        this.lastName = userDTO.lastName
+        this.image = userDTO.image
+        return this
     }
 }

@@ -31,7 +31,15 @@ export class PlayerService {
         return this.httpClient.get<PlayerMatchView[]>(url);
     }
 
+    getPlayer(id: number) {
+        return this.httpClient.get<Player>(`${this.playersUrl}/${id}`)
+    }
+
+    updatePlayer(player: Player) {
+        return this.httpClient.put<Player>(`${this.playersUrl}/${player.id}`, player)
+    }
+
     deletePlayer(id: number) {
         return this.httpClient.delete<Player>(`${this.playersUrl}/${id}`)
-      }
+    }
 }

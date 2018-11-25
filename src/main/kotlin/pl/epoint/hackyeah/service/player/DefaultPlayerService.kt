@@ -2,9 +2,11 @@ package pl.epoint.hackyeah.service.player
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import pl.epoint.hackyeah.domain.Player
 import pl.epoint.hackyeah.repository.MatchRepository
 import pl.epoint.hackyeah.repository.PlayerRepository
 import pl.epoint.hackyeah.repository.TeamRepository
+import pl.epoint.hackyeah.service.dto.UserDTO
 import pl.epoint.hackyeah.service.view.PlayerMatchView
 import pl.epoint.hackyeah.service.view.PlayerTeamView
 import pl.epoint.hackyeah.service.view.PlayerView
@@ -14,6 +16,26 @@ import pl.epoint.hackyeah.service.view.PlayerView
 class DefaultPlayerService(private val playerRepository: PlayerRepository,
                            private val teamRepository: TeamRepository,
                            private val matchRepository: MatchRepository) : PlayerViewService {
+
+    override fun getPlayerByPlayerId(id: Long): UserDTO {
+        val player = playerRepository.findById(id)
+        if (player.isPresent) {
+            return UserDTO(player.get())
+        }
+        return UserDTO(Player())
+    }
+
+    override fun updatePlayer(userDTO: UserDTO) {
+        val playerId: Long = userDTO.id ?: return
+        val player = playerRepository.findById(playerId)
+
+        if (!player.isPresent) {
+            return
+        }
+
+        playerRepository.save(player.get().update(userDTO))
+    }
+
     @Transactional(readOnly = true)
     override fun findAll(): List<PlayerView> {
         return playerRepository.findAll()
@@ -41,10 +63,18 @@ class DefaultPlayerService(private val playerRepository: PlayerRepository,
 
     override fun deleteByPlayerId(id: Long) {
         val player = playerRepository.findById(id)
-        if (player.isPresent){
+        if (player.isPresent) {
             player.get().activated = false
             playerRepository.save(player.get())
         }
+    }
+
+    override fun validateLoginTaken(id: Long, login: String): Boolean {
+        return playerRepository.findOneByLogin(login.toLowerCase()).map { it.id != id }.orElse(false)
+    }
+
+    override fun validateEmailTaken(id: Long, email: String): Boolean {
+        return playerRepository.findOneByEmailIgnoreCase(email).map { it.id != id }.orElse(false)
     }
 
 }

@@ -18,7 +18,7 @@ export class PlayerMatchesComponent implements OnInit {
     private playerService: PlayerService,
     private route: ActivatedRoute,
     private location: Location
-  ) {}p
+  ) {}
  
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id');

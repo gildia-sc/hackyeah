@@ -38,6 +38,7 @@ import { RequestPendingService } from './request-pending/request-pending.service
 import { WebsocketService } from "./websocket/websocket.service";
 import { AuthGuard } from "./auth.guard";
 import { TitleService } from './title/title.service';
+import { PlayerEditComponent } from './player/player-edit/player-edit.component';
 
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
@@ -51,6 +52,7 @@ const ROUTES: Route[] = [
   { path: 'tables/:tableCode/:side/:role', redirectTo: 'matches/:tableCode/:side/:role' },
   { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' },
   { path: 'players', component: PlayerListComponent },
+  { path: 'players/:id', component: PlayerEditComponent },
   { path: 'players/:id/teams', component: PlayerTeamsComponent },
   { path: 'players/:id/matches', component: PlayerMatchesComponent }
 ];
@@ -69,6 +71,7 @@ const ROUTES: Route[] = [
     PlayerTeamsComponent,
     PlayerMatchesComponent,
     TableLinksComponent,
+    PlayerEditComponent,
   ],
   imports: [
     BrowserModule,
