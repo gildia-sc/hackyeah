@@ -90,7 +90,7 @@ const ROUTES: Route[] = [
     MatCheckboxModule,
     MatSnackBarModule,
     MatDialogModule,
-    RouterModule.forRoot(ROUTES)
+    RouterModule.forRoot(ROUTES, { useHash: true })
   ],
   providers: [
     RequestPendingService, WebsocketService, AuthGuard,
