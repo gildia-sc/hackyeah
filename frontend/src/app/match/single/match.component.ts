@@ -13,6 +13,7 @@ import * as moment from 'moment';
 })
 export class MatchComponent implements OnInit {
   private tableCode: string;
+  private startPopupDisplayed = false;
 
   match: Match;
 
@@ -44,7 +45,7 @@ export class MatchComponent implements OnInit {
   }
 
   switchPositions(team: string) {
-    if (!this.matchStarted) {
+    if (!this.matchEnded) {
       this.matchService.switchPositions(this.tableCode, team).subscribe()
     }
   }
@@ -86,6 +87,14 @@ export class MatchComponent implements OnInit {
       if (message.body) {
         this.match = JSON.parse(message.body) as Match;
         this.startTimer();
+
+        if (this.matchStarted && !this.startPopupDisplayed) {
+          this.startPopupDisplayed = true;
+          this.snackBar.open('The match has started, good luck and have fun!', null, {
+            duration: 5000
+          })
+        }
+
         if (this.matchEnded) {
           this.displayDisplayWinner();
         }
