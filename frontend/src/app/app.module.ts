@@ -39,6 +39,7 @@ import { WebsocketService } from "./websocket/websocket.service";
 import { AuthGuard } from "./auth.guard";
 import { TitleService } from './title/title.service';
 import { PlayerEditComponent } from './player/player-edit/player-edit.component';
+import { MatchListElementComponent } from './match/list/match-list/match-list-element.component';
 
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
@@ -72,6 +73,7 @@ const ROUTES: Route[] = [
     PlayerMatchesComponent,
     TableLinksComponent,
     PlayerEditComponent,
+    MatchListElementComponent,
   ],
   imports: [
     BrowserModule,

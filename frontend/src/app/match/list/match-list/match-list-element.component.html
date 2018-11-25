@@ -1,0 +1,81 @@
+<mat-chip-list>
+  <div class="container">
+    <h2>Currently playing on table: {{tableCode}}</h2>
+    <div class="row">
+      <div class="col">
+        <mat-chip color="primary" selected>Team Alpha</mat-chip>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5">
+        <mat-chip *ngIf="match && match.alphaAttacker">
+          <span>{{match.alphaAttacker.name}}</span>
+        </mat-chip>
+        <mat-chip *ngIf="!match || !match.alphaAttacker">
+          <span>Waiting for players</span>
+        </mat-chip>
+      </div>
+      <div class="col-2" align="center">
+        <button mat-mini-fab style="display: none;">
+          <mat-icon>sync</mat-icon>
+        </button>
+      </div>
+      <div class="col-5">
+        <mat-chip *ngIf="match && match.alphaGoalkeeper">
+          <span>{{match.alphaGoalkeeper.name}}</span>
+        </mat-chip>
+        <mat-chip *ngIf="!match || !match.alphaGoalkeeper">
+          <span>Waiting for players</span>
+        </mat-chip>
+      </div>
+    </div>
+    <div class="row align-items-center justify-content-center">
+      <div class="col-2">
+        <button mat-button class="score blue">
+          <span>{{alphaScore}}</span>
+        </button>
+      </div>
+      <div class="col-6" align="center">
+        <div>
+          <img style="margin: 5px" src="assets/img/foosball_table.png">
+        </div>
+      </div>
+      <div class="col-2">
+        <button mat-button class="score red">
+          <span>{{betaScore}}</span>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5">
+        <mat-chip class="table-single-player-position" *ngIf="match && match.betaAttacker">
+          <span>{{match.betaAttacker.name}}</span>
+        </mat-chip>
+        <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaAttacker">
+          <span>Waiting for players</span>
+        </mat-chip>
+      </div>
+      <div class="col-2" align="center">
+        <button mat-mini-fab style="display: none;">
+          <mat-icon>sync</mat-icon>
+        </button>
+      </div>
+      <div class="col-5">
+        <mat-chip class="table-single-player-position" *ngIf="match && match.betaGoalkeeper">
+          <span>{{match.betaGoalkeeper.name}}</span>
+        </mat-chip>
+        <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaGoalkeeper">
+          <span>Waiting for players</span>
+        </mat-chip>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <mat-chip color="accent" selected>Team Beta</mat-chip>
+      </div>
+    </div>
+  </div>
+</mat-chip-list>
+<div style="margin: 20px 0 20px 0"></div>
+<mat-divider></mat-divider>
+

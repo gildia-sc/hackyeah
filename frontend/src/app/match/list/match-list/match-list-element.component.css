@@ -1,0 +1,20 @@
+.score {
+  /*float: left;*/
+  width: 100px;
+  height: 100px;
+
+  font-size: 3em;
+  font-weight: bold;
+
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.container {
+  padding: 5%;
+}
+
+.container mat-chip {
+  width: 100%;
+}

@@ -1,1 +1,3 @@
-<mat-card>Homepage</mat-card>
+<div *ngFor="let table of tables">
+  <app-match-list-elem tableCode="{{table.code}}"></app-match-list-elem>
+</div>
