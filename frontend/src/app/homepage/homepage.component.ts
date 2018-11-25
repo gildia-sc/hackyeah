@@ -15,7 +15,7 @@ export class HomepageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.titleService.changeTitle("Homepage");
+    this.titleService.changeTitle("Rivalry 4 Health");
     this.tableService.getAllTables()
       .subscribe(tables => {
         this.tables = tables
