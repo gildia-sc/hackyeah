@@ -38,7 +38,8 @@ class MatchDto(
 
 class PlayerDto(
     val id: Long,
-    val name: String
+    val name: String,
+    val image: String?
 ) {
-    constructor(player: Player) : this(player.id!!, "${player.firstName} ${player.lastName}")
+    constructor(player: Player) : this(player.id!!, "${player.firstName} ${player.lastName}", player.image)
 }

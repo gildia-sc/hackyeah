@@ -8,10 +8,12 @@
     <div class="row">
       <div class="col-5">
         <mat-chip *ngIf="match && match.alphaAttacker" (click)="freePosition('alpha', 'attacker')">
+          <img class="avatar" *ngIf="match && match.alphaAttacker && match.alphaAttacker.image" [src]="match.alphaAttacker.image" />
+          <mat-icon *ngIf="match && match.alphaAttacker && !match.alphaAttacker.image" class="icon">account_circle</mat-icon>
           <span>{{match.alphaAttacker.name}}</span>
         </mat-chip>
         <mat-chip *ngIf="!match || !match.alphaAttacker" (click)="takePosition('alpha', 'attacker')">
-          <span>Take position</span>
+          <mat-icon class="icon">account_circle</mat-icon> <span>Take position</span>
         </mat-chip>
       </div>
       <div class="col-2" align="center">
@@ -21,10 +23,12 @@
       </div>
       <div class="col-5">
         <mat-chip *ngIf="match && match.alphaGoalkeeper" (click)="freePosition('alpha', 'goalkeeper')">
+          <img class="avatar" *ngIf="match && match.alphaGoalkeeper && match.alphaGoalkeeper.image" [src]="match.alphaGoalkeeper.image" />
+          <mat-icon *ngIf="match && match.alphaGoalkeeper && !match.alphaGoalkeeper.image" class="icon">account_circle</mat-icon>
           <span>{{match.alphaGoalkeeper.name}}</span>
         </mat-chip>
         <mat-chip *ngIf="!match || !match.alphaGoalkeeper" (click)="takePosition('alpha', 'goalkeeper')">
-          <span>Take position</span>
+          <mat-icon class="icon">account_circle</mat-icon><span>Take position</span>
         </mat-chip>
       </div>
     </div>
@@ -48,10 +52,12 @@
     <div class="row">
       <div class="col-5">
         <mat-chip class="table-single-player-position" *ngIf="match && match.betaAttacker" (click)="freePosition('beta', 'Attacker')">
+          <img class="avatar" *ngIf="match && match.betaAttacker && match.betaAttacker.image" [src]="match.betaAttacker.image" />
+          <mat-icon *ngIf="match && match.betaAttacker && !match.betaAttacker.image" class="icon">account_circle</mat-icon>
           <span>{{match.betaAttacker.name}}</span>
         </mat-chip>
         <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaAttacker" (click)="takePosition('beta', 'Attacker')">
-          <span>Take position</span>
+          <mat-icon class="icon">account_circle</mat-icon><span>Take position</span>
         </mat-chip>
       </div>
       <div class="col-2" align="center">
@@ -61,10 +67,12 @@
       </div>
       <div class="col-5">
         <mat-chip class="table-single-player-position" *ngIf="match && match.betaGoalkeeper" (click)="freePosition('beta', 'Goalkeeper')">
+          <img class="avatar" *ngIf="match && match.betaGoalkeeper && match.betaGoalkeeper.image" [src]="match.betaGoalkeeper.image" />
+          <mat-icon *ngIf="match && match.betaGoalkeeper && !match.betaGoalkeeper.image" class="icon">account_circle</mat-icon>
           <span>{{match.betaGoalkeeper.name}}</span>
         </mat-chip>
         <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaGoalkeeper" (click)="takePosition('beta', 'Goalkeeper')">
-          <span>Take position</span>
+          <mat-icon class="icon">account_circle</mat-icon><span>Take position</span>
         </mat-chip>
       </div>
     </div>
@@ -75,4 +83,3 @@
     </div>
   </div>
 </mat-chip-list>
-

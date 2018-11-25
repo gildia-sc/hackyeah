@@ -16,5 +16,4 @@ export class Player {
     this.image = image;
   }
 
-
 }
