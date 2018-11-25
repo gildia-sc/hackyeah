@@ -1,29 +1,47 @@
 <div class="player-matches">
-  <button (click)="goBack()">go back</button>
+    <button mat-raised-button color="secondary" (click)="goBack()">BACK</button>
   <mat-accordion *ngFor="let playerMatch of playerMatches | async">
     <mat-grid-list cols="6" rowHeight="50px">
       <mat-grid-tile>
-        {{playerMatch.attackerAlphaImage}}
-        Attacker
+        <p>
+          <img class="avatar" *ngIf="playerMatch.attackerAlphaImage" [src]="playerMatch.attackerAlphaImage" />
+          <mat-icon *ngIf="!playerMatch.attackerAlphaImage" class="icon">account_circle</mat-icon>
+          Attacker
+        </p>
       </mat-grid-tile>
       <mat-grid-tile>
-        {{playerMatch.goalkeeperAlphaImage}}
-        Goalkeeper
+        <p>
+          <img class="avatar" *ngIf="playerMatch.goalkeeperAlphaImage" [src]="playerMatch.goalkeeperAlphaImage" />
+          <mat-icon *ngIf="!playerMatch.goalkeeperAlphaImage" class="icon">account_circle</mat-icon>
+          Goalkeeper
+        </p>
       </mat-grid-tile>
-      <mat-grid-tile colspan=2 rowspan=2>
-        {{playerMatch.startTime}}
-        {{playerMatch.teamAlphaScore}} : {{playerMatch.teamBetaScore}}
-      </mat-grid-tile>
-      <mat-grid-tile>
-        {{playerMatch.attackerBetaImage}}
-        Attacker
+      <mat-grid-tile colspan=2>
+        <div>{{playerMatch.startTime}}</div>
       </mat-grid-tile>
       <mat-grid-tile>
-        {{playerMatch.attackerBetaImage}}
-        Goalkeeper
+        <p>
+          <img class="avatar" *ngIf="playerMatch.attackerBetaImage" [src]="playerMatch.attackerBetaImage" />
+          <mat-icon *ngIf="!playerMatch.attackerBetaImage" class="icon">account_circle</mat-icon>
+          Attacker
+        </p>
       </mat-grid-tile>
-      <mat-grid-tile colspan=2>Team: {{playerMatch.teamAlphaName}}</mat-grid-tile>
-      <mat-grid-tile colspan=2>Team: {{playerMatch.teamBetaName}}</mat-grid-tile>
+      <mat-grid-tile>
+        <p>
+          <img class="avatar" *ngIf="playerMatch.goalkeeperBetaImage" [src]="playerMatch.goalkeeperBetaImage" />
+          <mat-icon *ngIf="!playerMatch.goalkeeperBetaImage" class="icon">account_circle</mat-icon>
+          Goalkeeper
+        </p>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=2>
+        <p>Team: {{playerMatch.teamAlphaName}}</p>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=2>
+        <div class="bold">{{playerMatch.teamAlphaScore}} : {{playerMatch.teamBetaScore}}</div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=2>
+        <p>Team: {{playerMatch.teamBetaName}}</p>
+      </mat-grid-tile>
     </mat-grid-list>
   </mat-accordion>
 </div>
