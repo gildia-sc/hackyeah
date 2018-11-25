@@ -51,6 +51,24 @@ export class MatchComponent implements OnInit {
       this.matchService.getMatch(this.tableCode).subscribe(match => {
         if (match) {
           this.match = match;
+          let side = params['side'];
+          let role = params['role'];
+          if(side && role) {
+            console.log(`Enter with side ${side} and ${role}`)
+            if (!this.matchStarted) {
+              this.matchService.takePosition(this.tableCode, side, role).subscribe(() => {
+                this.snackBar.open('Position taken', null, {
+                  duration: 3000
+                });
+              })
+            } else {
+              this.snackBar.open('Match already started, position has not taken', null, {
+                duration: 3000
+              });
+            }
+          } else {
+            console.log('Enter without side or role')
+          }
         }
       });
     })

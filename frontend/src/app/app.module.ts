@@ -43,8 +43,10 @@ const ROUTES: Route[] = [
   { path: 'login', component: LoginComponent },
   { path: 'tables', component: TableListComponent },
   { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' },
+  { path: 'matches/:tableCode/:side/:role', component: MatchComponent, pathMatch: 'full' },
   { path: 'tables/:tableCode', component: TableEditComponent },
   { path: 'tables/:tableCode/links', component: TableLinksComponent },
+  { path: 'tables/:tableCode/:side/:role', redirectTo: 'matches/:tableCode/:side/:role' },
   { path: 'matches/:tableCode', component: MatchComponent, pathMatch: 'full' },
   { path: 'players', component: PlayerListComponent },
   { path: 'players/:id/teams', component: PlayerTeamsComponent },
@@ -64,7 +66,7 @@ const ROUTES: Route[] = [
     PlayerListComponent,
     PlayerTeamsComponent,
     PlayerMatchesComponent,
-    TableLinksComponent
+    TableLinksComponent,
   ],
   imports: [
     BrowserModule,
