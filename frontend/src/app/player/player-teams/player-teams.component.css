@@ -1,0 +1,8 @@
+.left {
+    position: absolute;
+    left: 10px;
+}
+
+.description{
+    color: grey;
+}
