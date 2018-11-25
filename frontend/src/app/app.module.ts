@@ -36,6 +36,7 @@ import { TableLinksComponent } from './table/table-links/table-links.component';
 import { PendingRequestInterceptor } from './request-pending/pending-request.interceptor';
 import { RequestPendingService } from './request-pending/request-pending.service';
 import { WebsocketService } from "./websocket/websocket.service";
+import { AuthGuard } from "./auth.guard";
 
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
@@ -92,7 +93,7 @@ const ROUTES: Route[] = [
     RouterModule.forRoot(ROUTES)
   ],
   providers: [
-    RequestPendingService, WebsocketService,
+    RequestPendingService, WebsocketService, AuthGuard,
 
     { provide: HTTP_INTERCEPTORS, useClass: PendingRequestInterceptor, multi: true },
   ],

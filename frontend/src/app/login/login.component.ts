@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
-import {LoginService} from "./login.service";
-import {Router} from "@angular/router";
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { FormBuilder, Validators } from "@angular/forms";
+import { HttpClient } from "@angular/common/http";
+import { LoginService } from "./login.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +11,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  private returnUrl;
 
   authenticationError: boolean;
   loginForm = this.formBuilder.group({
@@ -23,9 +24,12 @@ export class LoginComponent implements OnInit {
               private readonly httpClient: HttpClient,
               private readonly router: Router,
               private loginService: LoginService,
-              public snackBar: MatSnackBar) { }
+              private activatedRoute: ActivatedRoute,
+              public snackBar: MatSnackBar) {
+  }
 
   ngOnInit() {
+    this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || ''
   }
 
   login() {
@@ -37,15 +41,7 @@ export class LoginComponent implements OnInit {
       })
       .then(() => {
         this.authenticationError = false;
-        this.router.navigate(['']);
-
-        // previousState was set in the authExpiredInterceptor before being redirected to login modal.
-        // since login is succesful, go to stored previousState and clear previousState
-        // const redirect = this.stateStorageService.getUrl();
-        // if (redirect) {
-        //   this.stateStorageService.storeUrl(null);
-        //   this.router.navigate([redirect]);
-        // }
+        this.router.navigate([this.returnUrl]);
       })
       .catch(() => {
         this.authenticationError = true;
