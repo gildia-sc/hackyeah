@@ -4,6 +4,7 @@ import {FormBuilder, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material";
 import {TablesService} from "../tables.service";
+import { TitleService } from '../../title/title.service';
 
 @Component({
   selector: 'app-table-links',
@@ -24,11 +25,13 @@ export class TableLinksComponent implements OnInit {
               private readonly router: Router,
               private readonly snackBar: MatSnackBar,
               private readonly route: ActivatedRoute,
-              private readonly tablesService: TablesService) { }
+              private readonly tablesService: TablesService,
+              private readonly titleService: TitleService) { }
 
   ngOnInit() {
     let tableCode = this.route.paramMap.pipe(map(params => params.get('tableCode')));
     tableCode.subscribe(dataWithTableCode => {
+      this.titleService.changeTitle(`Links for table ${dataWithTableCode}`);
       if(dataWithTableCode != '#new') {
         this.tablesService.getTableByCode(dataWithTableCode)
           .subscribe(table => {

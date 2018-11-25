@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators'
 import { MatDialog, MatDialogRef, MatSnackBar } from "@angular/material";
 import { Router } from "@angular/router";
 import { DeleteDialog } from '../../util/delete-dialog/delete-dialog.component'
+import { TitleService } from '../../title/title.service';
 
 @Component({
   selector: 'app-player-list',
@@ -19,12 +20,14 @@ export class PlayerListComponent implements OnInit {
 
   players: Observable<PlayerView[]>;
 
-  constructor(private playerService: PlayerService,
-    private dialog: MatDialog,
-    private router: Router,
-    private snackBar: MatSnackBar) { }
+  constructor(private readonly playerService: PlayerService,
+              private readonly dialog: MatDialog,
+              private readonly router: Router,
+              private readonly snackBar: MatSnackBar,
+              private readonly titleService: TitleService) { }
 
   ngOnInit() {
+    this.titleService.changeTitle('Players');
     this.players = this.playerService.getAllPlayers();
   }
 

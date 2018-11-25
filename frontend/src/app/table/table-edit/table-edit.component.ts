@@ -7,6 +7,7 @@ import {MatSnackBar} from "@angular/material";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {Table, TablesService} from "../tables.service";
+import { TitleService } from '../../title/title.service';
 
 @Component({
   selector: 'app-table-edit',
@@ -31,11 +32,13 @@ export class TableEditComponent implements OnInit {
               private readonly router: Router,
               private readonly snackBar: MatSnackBar,
               private readonly route: ActivatedRoute,
-              private readonly tablesService: TablesService) { }
+              private readonly tablesService: TablesService,
+              private readonly titleService: TitleService) { }
 
   ngOnInit() {
     this.tableCode = this.route.paramMap.pipe(map(params => params.get('tableCode')));
     this.tableCode.subscribe(dataWithTableCode => {
+      this.titleService.changeTitle(`Edit table ${dataWithTableCode}`);
       if(dataWithTableCode != '#new') {
         this.tablesService.getTableByCode(dataWithTableCode)
           .subscribe(table => {

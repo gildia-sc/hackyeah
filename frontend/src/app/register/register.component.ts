@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { uniqueValidator } from './unique-validator';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { TitleService } from '../title/title.service';
 
 @Component({
   selector: 'app-register',
@@ -26,11 +27,13 @@ export class RegisterComponent implements OnInit {
   });
 
   constructor(private readonly formBuilder: FormBuilder,
-    private readonly httpClient: HttpClient,
-    private readonly router: Router,
-    private readonly snackBar: MatSnackBar) { }
+              private readonly httpClient: HttpClient,
+              private readonly router: Router,
+              private readonly snackBar: MatSnackBar,
+              private readonly titleService: TitleService) { }
 
   ngOnInit() {
+    this.titleService.changeTitle('Register');
   }
 
   register() {

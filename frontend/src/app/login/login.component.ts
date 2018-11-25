@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { LoginService } from "./login.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TitleService } from '../title/title.service';
 
 @Component({
   selector: 'app-login',
@@ -23,13 +24,15 @@ export class LoginComponent implements OnInit {
   constructor(private readonly formBuilder: FormBuilder,
               private readonly httpClient: HttpClient,
               private readonly router: Router,
-              private loginService: LoginService,
-              private activatedRoute: ActivatedRoute,
-              public snackBar: MatSnackBar) {
+              private readonly titleService: TitleService,
+              private readonly loginService: LoginService,
+              private readonly activatedRoute: ActivatedRoute,
+              private readonly snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
-    this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || ''
+    this.titleService.changeTitle('Login');
+    this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '';
   }
 
   login() {

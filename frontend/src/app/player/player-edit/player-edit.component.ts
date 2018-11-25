@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { PlayerService } from '../player.service';
 import { Player } from 'src/app/model/player.model';
 import { Observable } from 'rxjs';
+import { TitleService } from '../../title/title.service';
 
 @Component({
   selector: 'app-player-edit',
@@ -34,9 +35,11 @@ export class PlayerEditComponent implements OnInit {
     private readonly snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private location: Location,
-    private playerService: PlayerService) { }
+    private playerService: PlayerService,
+    private titleService: TitleService) { }
  
   ngOnInit(){
+    this.titleService.changeTitle('Edit player');
     const id = +this.route.snapshot.paramMap.get('id');
     this.playerService.getPlayer(id).subscribe(item => this.fillUpdateForm(item));
   }

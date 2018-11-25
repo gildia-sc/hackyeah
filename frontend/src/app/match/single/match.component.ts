@@ -49,7 +49,7 @@ export class MatchComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.tableCode = params['tableCode']
-      this.titleService.changeTitle(this.tableCode);
+      this.titleService.changeTitle(`Match ${this.tableCode}`);
       this.subscribeToTableChannel(this.tableCode);
       this.matchService.getMatch(this.tableCode).subscribe(match => {
         if (match) {
