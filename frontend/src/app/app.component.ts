@@ -6,6 +6,7 @@ import {LoginService} from "./login/login.service";
 import {MatSnackBar} from "@angular/material";
 import {Principal} from "./login/principal.service";
 import { RequestPendingService } from './request-pending/request-pending.service';
+import { TitleService } from './title/title.service';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,13 @@ import { RequestPendingService } from './request-pending/request-pending.service
 export class AppComponent implements OnInit {
 
   progressBarMode = 'determinate';
+  title = "";
 
   constructor(private loginService: LoginService,
               private snackBar: MatSnackBar,
               private principal: Principal,
-              private requestPendingService: RequestPendingService) { }
+              private requestPendingService: RequestPendingService,
+              private titleService: TitleService) { }
 
   ngOnInit(): void {
     this.requestPendingService.requestPendingSubject.subscribe(value => {
@@ -27,6 +30,7 @@ export class AppComponent implements OnInit {
         this.progressBarMode = value ? 'indeterminate' : 'determinate';
       });
     });
+    this.titleService.titleChanged$.subscribe(title => this.title = title);
   }
 
   logout() {

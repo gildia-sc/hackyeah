@@ -3,6 +3,7 @@ import { Match, MatchService } from "../match.service";
 import { ActivatedRoute } from "@angular/router";
 import { WebsocketService } from "../../websocket/websocket.service";
 import { MatSnackBar } from "@angular/material";
+import { TitleService } from '../../title/title.service';
 
 @Component({
   selector: 'app-table',
@@ -17,7 +18,8 @@ export class MatchComponent implements OnInit {
   constructor(private matchService: MatchService,
               private route: ActivatedRoute,
               private webSocketService: WebsocketService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar,
+              private titleService: TitleService) {
   }
 
   scoreGoal(team: string, position?: string) {
@@ -46,7 +48,8 @@ export class MatchComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.tableCode = params['tableCode'];
+      this.tableCode = params['tableCode']
+      this.titleService.changeTitle(this.tableCode);
       this.subscribeToTableChannel(this.tableCode);
       this.matchService.getMatch(this.tableCode).subscribe(match => {
         if (match) {
