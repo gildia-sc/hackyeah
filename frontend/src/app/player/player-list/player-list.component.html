@@ -1,16 +1,27 @@
 <div class="player-list">
   <mat-accordion *ngFor="let player of players | async">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        {{player.firstName}}
-        <mat-icon>account_circle</mat-icon>
-        <mat-panel-title>{{player.displayName}}</mat-panel-title>
-        <mat-panel-description>
-          <p>{{player.teams}}</p>
-          <p>Won:{{player.numberOfWins}}</p>
-          <p>Lost:{{player.numberOfLoses}}</p>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
+    <mat-grid-list cols="10" rowHeight="50px" (click)="toggleExpansionPanel(player.id)">
+      <mat-grid-tile colspan=1 rowspan=2>
+        <div class="left">
+            <div *ngIf="player.image; then avatarBlock; else elseAvatarBlock"></div>
+            <ng-template #avatarBlock>
+              <img *ngIf="player.image" [src]="player.image" />
+            </ng-template>
+            <ng-template #elseAvatarBlock>
+              <mat-icon class="icon">account_circle</mat-icon>
+            </ng-template>
+      </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=7>
+        <div class="title left">{{player.displayName}}</div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=2><span>Won: <span class="bold">{{player.numberOfWins}}</span></span></mat-grid-tile>
+      <mat-grid-tile colspan=7>
+        <div class="description left">{{player.teams}}</div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=2><span>Lost: <span class="bold">{{player.numberOfLoses}}</span></span></mat-grid-tile>
+    </mat-grid-list>
+    <div [id]="'expansion-body-' + player.id" class="hide expansion-body">
       <div>
         <button mat-button [routerLink]="['/players/' + player.id + '/teams']">
           <mat-icon>group</mat-icon>&nbsp;TEAMS
@@ -25,6 +36,6 @@
           <mat-icon>delete</mat-icon>&nbsp;DELETE
         </button>
       </div>
-    </mat-expansion-panel>
+    </div>
   </mat-accordion>
 </div>

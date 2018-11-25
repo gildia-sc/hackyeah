@@ -26,16 +26,11 @@
   <div class="form-group">
     <div *ngIf="registerForm.get('image').value; then avatarBlock; else elseAvatarBlock"></div>
     <ng-template #avatarBlock>
-      <span>
-        <img *ngIf="registerForm.get('image').value" [src]="registerForm.get('image').value" />
-      </span>
+      <img *ngIf="registerForm.get('image').value" [src]="registerForm.get('image').value" />
     </ng-template>
     <ng-template #elseAvatarBlock>
-      <span>
-        <mat-icon class="icon">account_circle</mat-icon>
-      </span>
+      <mat-icon class="icon">account_circle</mat-icon>
     </ng-template>
-    <input class="hide" type="file" id="avatar" name="avatar" (change)="onFileChange($event)" #avatarInput>
     <div class="right">
       <span (click)="triggerAvatarClick()">
         <mat-icon class="icon">add_circle</mat-icon>
@@ -44,6 +39,7 @@
         <mat-icon class="icon">clear</mat-icon>
       </span>
     </div>
+    <input class="hide" type="file" id="avatar" name="avatar" (change)="onFileChange($event)" #avatarInput>
   </div>
   <mat-grid-list cols="1" rowHeight="50px">
     <mat-grid-tile>

@@ -9,10 +9,9 @@
 }
 
 img {
-  height: 50px;
   width: 50px;
+  height: 50px;
   border-radius: 50%;
-  padding: 25px;
 }
 
 .hide {
@@ -23,7 +22,7 @@ img {
   float: right;
 }
 
-span .icon{
+span {
   padding: 25px;
 }
 

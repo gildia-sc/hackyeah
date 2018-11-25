@@ -6,9 +6,9 @@ import { PlayerView } from '../view/player-view.model';
 import { PlayerService } from '../player.service';
 import { Observable } from "rxjs";
 import { map } from 'rxjs/operators'
-import {MatDialog, MatDialogRef, MatSnackBar} from "@angular/material";
-import {Router} from "@angular/router";
-import {DeleteDialog} from '../../util/delete-dialog/delete-dialog.component'
+import { MatDialog, MatDialogRef, MatSnackBar } from "@angular/material";
+import { Router } from "@angular/router";
+import { DeleteDialog } from '../../util/delete-dialog/delete-dialog.component'
 
 @Component({
   selector: 'app-player-list',
@@ -20,14 +20,25 @@ export class PlayerListComponent implements OnInit {
   players: Observable<PlayerView[]>;
 
   constructor(private playerService: PlayerService,
-              private dialog: MatDialog,
-              private router: Router,
-              private snackBar: MatSnackBar) { }
+    private dialog: MatDialog,
+    private router: Router,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.players = this.playerService.getAllPlayers();
   }
-  
+
+  toggleExpansionPanel(id: number) {
+    let allExpansionBodies: HTMLElement[] = [].slice.call(document.querySelectorAll(".expansion-body"));
+    let expansionBody: HTMLElement = document.querySelector("#expansion-body-" + id) as HTMLElement;
+    if (!expansionBody.classList.contains("hide")) {
+      expansionBody.classList.add("hide");
+    } else {
+      allExpansionBodies.forEach(item => item.classList.add("hide"));
+      expansionBody.classList.remove("hide");
+    }
+  }
+
   openDeleteDialog(id: number): void {
     const dialogRef = this.dialog.open(DeleteDialog, {
       width: '250px'
@@ -35,7 +46,7 @@ export class PlayerListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      if(result) {
+      if (result) {
         this.playerService.deletePlayer(id).subscribe(() => {
           this.players = this.playerService.getAllPlayers()
         }, () => {

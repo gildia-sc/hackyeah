@@ -49,13 +49,14 @@ export class RegisterComponent implements OnInit {
       let file = event.target.files[0];
       reader.readAsDataURL(file);
       reader.onload = () => {
-        this.registerForm.controls['image'].setValue('data:' + file.type + ';base64,' + reader.result.split(',')[1])
+        this.registerForm.controls['image'].setValue(reader.result as string)
       };
     }
   }
 
   triggerAvatarClick() {
-    document.querySelector("#avatar").click();
+    let avatarInput: HTMLElement = document.querySelector("#avatar") as HTMLElement;
+    avatarInput.click();
   }
 
   clearFile() {
