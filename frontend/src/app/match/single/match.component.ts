@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Match, MatchService } from "../match.service";
 import { ActivatedRoute } from "@angular/router";
 import { WebsocketService } from "../../websocket/websocket.service";
+import { MatSnackBar } from "@angular/material";
 
 @Component({
   selector: 'app-table',
@@ -15,7 +16,8 @@ export class MatchComponent implements OnInit {
 
   constructor(private matchService: MatchService,
               private route: ActivatedRoute,
-              private webSocketService: WebsocketService) {
+              private webSocketService: WebsocketService,
+              private snackBar: MatSnackBar) {
   }
 
   scoreGoal(team: string, position?: string) {
@@ -57,7 +59,11 @@ export class MatchComponent implements OnInit {
   subscribeToTableChannel(tableCode: string) {
     this.webSocketService.subscribeToChannel(`${tableCode}`, message => {
       if (message.body) {
-        this.match = JSON.parse(message.body) as Match
+        this.match = JSON.parse(message.body) as Match;
+        if (this.matchEnded) {
+          this.displayDisplayWinner();
+        }
+
       }
     })
   }
@@ -78,4 +84,24 @@ export class MatchComponent implements OnInit {
     return this.match != null ? this.match.endTime != null : false;
   }
 
+  private resetTable() {
+    this.match = null;
+  }
+
+  private displayDisplayWinner() {
+    let winner;
+
+    if (this.alphaScore > this.betaScore) {
+      winner = 'Alpha'
+    } else {
+      winner = 'Beta'
+    }
+
+    this.snackBar.open(`The match has ended. Team ${winner} has won the match! Final result is ${this.alphaScore} : ${this.betaScore}.`,
+      null, {duration: 5000}
+    )
+      .afterDismissed()
+      .subscribe(() => this.resetTable());
+
+  }
 }
