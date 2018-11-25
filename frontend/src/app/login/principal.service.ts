@@ -14,7 +14,7 @@ export class Principal {
         // private languageService: JhiLanguageService,
         // private sessionStorage: SessionStorageService,
         private account: AccountService
-    ) {}
+    ) { }
 
     authenticate(identity) {
         this.userIdentity = identity;
@@ -109,5 +109,12 @@ export class Principal {
 
     getImageUrl(): string {
         return this.isIdentityResolved() ? this.userIdentity.imageUrl : null;
+    }
+
+    getUserId(): string {
+        if (this.isAuthenticated()) {
+            return (this.userIdentity as Account).id
+        }
+        return null
     }
 }

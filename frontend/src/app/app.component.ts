@@ -41,6 +41,13 @@ export class AppComponent implements OnInit {
     });
   }
 
+  getAccountLink(): string {
+    if (this.principal.getUserId() != null) {
+      return '/players/' + this.principal.getUserId()
+    }
+    return ''
+  }
+
   isAuthenticated() {
     return this.principal.isAuthenticated()
   }
