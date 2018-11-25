@@ -1,8 +1,8 @@
 BEGIN;
 
-INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (1, 'F16', 'ff0000', '0000ff', true);
-INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (2, 'W15', 'ff0000', '0000ff', true);
-INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (3, 'ITB', 'ff0000', '0000ff', true);
+INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (1, 'F16', '#ff0000', '#0000ff', true);
+INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (2, 'W15', '#ff0000', '#0000ff', true);
+INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (3, 'ITB', '#ff0000', '#0000ff', true);
 
 INSERT INTO player (id, login, password_hash, first_name, last_name, email, activated, created_by, created_date)
 VALUES (5, 'mkowalski', '$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K', 'Marek', 'Kowalski',

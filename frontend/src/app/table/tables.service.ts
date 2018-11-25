@@ -21,8 +21,9 @@ export class TablesService {
     return this.httpClient.post<Table>('/api/tables', table)
   }
 
-  updateTable(table: Table): Observable<Table> {
-    return this.httpClient.put<Table>(`/api/tables/${table.code}`, table)
+  updateTable(code: string, table: Table): Observable<Table> {
+    table.code = code
+    return this.httpClient.put<Table>(`/api/tables/${code}`, table)
   }
 
   deleteTable(tableCode: string) {

@@ -16,12 +16,12 @@ import { TitleService } from '../../title/title.service';
 })
 export class TableEditComponent implements OnInit {
 
-  tableCode: Observable<string>;
+  tableCode: string;
   addNew : boolean = false;
 
   tableForm = this.formBuilder.group({
     code: ['', [Validators.required, Validators.maxLength(50)],
-      // [uniqueValidator(this.httpClient, '/api/table-code-taken')]
+      [uniqueValidator(this.httpClient, '/api/tables/login-taken')]
     ],
     teamAlphaColor: ['', [Validators.required, Validators.pattern('#[0-9a-fA-F]{6}')]],
     teamBetaColor: ['', [Validators.required, Validators.pattern('#[0-9a-fA-F]{6}')]],
@@ -36,13 +36,15 @@ export class TableEditComponent implements OnInit {
               private readonly titleService: TitleService) { }
 
   ngOnInit() {
-    this.tableCode = this.route.paramMap.pipe(map(params => params.get('tableCode')));
-    this.tableCode.subscribe(dataWithTableCode => {
+    let observabletTableCode : Observable<string> = this.route.paramMap.pipe(map(params => params.get('tableCode')));
+    observabletTableCode.subscribe(dataWithTableCode => {
       this.titleService.changeTitle(`Edit table ${dataWithTableCode}`);
       if(dataWithTableCode != '#new') {
+        this.tableCode = dataWithTableCode
         this.tablesService.getTableByCode(dataWithTableCode)
           .subscribe(table => {
               this.tableForm.get('code').setValue(dataWithTableCode)
+              this.tableForm.get('code').disable()
               this.tableForm.get('teamAlphaColor').setValue(table.teamAlphaColor)
               this.tableForm.get('teamBetaColor').setValue(table.teamBetaColor)
             }
@@ -50,6 +52,7 @@ export class TableEditComponent implements OnInit {
         this.addNew = false;
       } else {
         this.addNew = true;
+        this.tableForm.get('code').enable()
       }
     })
   }
@@ -61,7 +64,7 @@ export class TableEditComponent implements OnInit {
   submitForm() {
     let table = this.addNew
       ? this.tablesService.insertTable(this.tableForm.value)
-      : this.tablesService.updateTable(this.tableForm.value)
+      : this.tablesService.updateTable(this.tableCode, this.tableForm.value)
 
     table.subscribe(() => {
       this.router.navigate(['/tables']);

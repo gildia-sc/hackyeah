@@ -24,6 +24,13 @@ class TableRestController(private val foosballTableService: FoosballTableService
             ?: ResponseEntity.notFound().build()
     }
 
+    @PostMapping("/login-taken")
+    fun loginTaken(@RequestBody code: String): Boolean {
+        return foosballTableService.findByCode(FoosballTableCode(code))?.let { true }?: (false)
+    }
+
+
+
     @PostMapping
     fun insertTable(@RequestBody tableDto: FoosballTableDto): ResponseEntity<FoosballTableDto> {
         val newTableDto = foosballTableService.addTable(FoosballTableCode(tableDto.code),
