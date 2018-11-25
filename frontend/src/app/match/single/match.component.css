@@ -1,23 +1,5 @@
-.ts-team-name {
-  text-align: center;
-  margin: 0 auto;
-  min-width: 200px;
-}
-
-.table-single {
-  margin: 0 auto;
-}
-
-.table-single-waiting {
-  margin-bottom: 10px;
-}
-
-.table-single-background {
-  float: left;
-}
-
 .score {
-  float: left;
+  /*float: left;*/
   width: 100px;
   height: 100px;
 
@@ -29,7 +11,10 @@
   border-radius: 50%;
 }
 
-.score .score-value {
-  min-width: 40px;
-  margin: 0 auto;
+.container {
+  padding: 5%;
+}
+
+.container mat-chip {
+  width: 100%;
 }
