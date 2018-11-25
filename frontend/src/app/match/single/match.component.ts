@@ -4,6 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { WebsocketService } from "../../websocket/websocket.service";
 import { MatSnackBar } from "@angular/material";
 import { TitleService } from '../../title/title.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-table',
@@ -14,6 +15,8 @@ export class MatchComponent implements OnInit {
   private tableCode: string;
 
   match: Match;
+
+  timer = 0;
 
   constructor(private matchService: MatchService,
               private route: ActivatedRoute,
@@ -30,7 +33,7 @@ export class MatchComponent implements OnInit {
 
   takePosition(team: string, position: string) {
     if (!this.matchStarted) {
-      this.matchService.takePosition(this.tableCode, team, position).subscribe()
+      this.matchService.takePosition(this.tableCode, team, position).subscribe();
     }
   }
 
@@ -54,6 +57,7 @@ export class MatchComponent implements OnInit {
       this.matchService.getMatch(this.tableCode).subscribe(match => {
         if (match) {
           this.match = match;
+          this.startTimer();
           let side = params['side'];
           let role = params['role'];
           if(side && role) {
@@ -81,12 +85,30 @@ export class MatchComponent implements OnInit {
     this.webSocketService.subscribeToChannel(`${tableCode}`, message => {
       if (message.body) {
         this.match = JSON.parse(message.body) as Match;
+        this.startTimer();
         if (this.matchEnded) {
           this.displayDisplayWinner();
         }
 
       }
     })
+  }
+
+  private startTimer() {
+    if (this.matchStarted && this.timer === 0) {
+      const startTime = moment();
+      const timerCallback = () => {
+        const now = moment();
+        const secondsElapsed = now.diff(startTime, 'seconds');
+        if (this.matchStarted) {
+          this.timer = secondsElapsed;
+          setTimeout(timerCallback, 1000);
+        } else {
+          this.timer = 0;
+        }
+      };
+      setTimeout(timerCallback, 1000);
+    }
   }
 
   get alphaScore(): number {
@@ -124,5 +146,17 @@ export class MatchComponent implements OnInit {
       .afterDismissed()
       .subscribe(() => this.resetTable());
 
+  }
+
+  pad(num: number): string {
+    return ("0" + num).slice(-2);
+  }
+
+  hhmmss(secs: number): string {
+    let minutes = Math.floor(secs / 60);
+    secs = secs % 60;
+    const hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
+    return this.pad(hours) + ":" + this.pad(minutes) + ":" + this.pad(secs);
   }
 }
