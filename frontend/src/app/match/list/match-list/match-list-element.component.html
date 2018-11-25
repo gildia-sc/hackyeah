@@ -9,10 +9,12 @@
     <div class="row">
       <div class="col-5">
         <mat-chip *ngIf="match && match.alphaAttacker">
+          <img class="avatar" *ngIf="match && match.alphaAttacker && match.alphaAttacker.image" [src]="match.alphaAttacker.image" />
+          <mat-icon *ngIf="match && match.alphaAttacker && !match.alphaAttacker.image" class="icon">account_circle</mat-icon>
           <span>{{match.alphaAttacker.name}}</span>
         </mat-chip>
         <mat-chip *ngIf="!match || !match.alphaAttacker">
-          <span>Waiting for players</span>
+          <mat-icon class="icon">account_circle</mat-icon> <span>Waiting for players</span>
         </mat-chip>
       </div>
       <div class="col-2" align="center">
@@ -22,10 +24,12 @@
       </div>
       <div class="col-5">
         <mat-chip *ngIf="match && match.alphaGoalkeeper">
+          <img class="avatar" *ngIf="match && match.alphaGoalkeeper && match.alphaGoalkeeper.image" [src]="match.alphaGoalkeeper.image" />
+          <mat-icon *ngIf="match && match.alphaGoalkeeper && !match.alphaGoalkeeper.image" class="icon">account_circle</mat-icon>
           <span>{{match.alphaGoalkeeper.name}}</span>
         </mat-chip>
         <mat-chip *ngIf="!match || !match.alphaGoalkeeper">
-          <span>Waiting for players</span>
+          <mat-icon class="icon">account_circle</mat-icon> <span>Waiting for players</span>
         </mat-chip>
       </div>
     </div>
@@ -49,10 +53,12 @@
     <div class="row">
       <div class="col-5">
         <mat-chip class="table-single-player-position" *ngIf="match && match.betaAttacker">
+          <img class="avatar" *ngIf="match && match.betaAttacker && match.betaAttacker.image" [src]="match.betaAttacker.image" />
+          <mat-icon *ngIf="match && match.betaAttacker && !match.betaAttacker.image" class="icon">account_circle</mat-icon>
           <span>{{match.betaAttacker.name}}</span>
         </mat-chip>
         <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaAttacker">
-          <span>Waiting for players</span>
+          <mat-icon class="icon">account_circle</mat-icon> <span>Waiting for players</span>
         </mat-chip>
       </div>
       <div class="col-2" align="center">
@@ -62,10 +68,12 @@
       </div>
       <div class="col-5">
         <mat-chip class="table-single-player-position" *ngIf="match && match.betaGoalkeeper">
+          <img class="avatar" *ngIf="match && match.betaGoalkeeper && match.betaGoalkeeper.image" [src]="match.betaGoalkeeper.image" />
+          <mat-icon *ngIf="match && match.betaGoalkeeper && !match.betaGoalkeeper.image" class="icon">account_circle</mat-icon>
           <span>{{match.betaGoalkeeper.name}}</span>
         </mat-chip>
         <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaGoalkeeper">
-          <span>Waiting for players</span>
+          <mat-icon class="icon">account_circle</mat-icon> <span>Waiting for players</span>
         </mat-chip>
       </div>
     </div>
@@ -78,4 +86,3 @@
 </mat-chip-list>
 <div style="margin: 20px 0 20px 0"></div>
 <mat-divider></mat-divider>
-
