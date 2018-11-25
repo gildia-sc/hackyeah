@@ -1,2 +1,2 @@
 rootProject.name = 'hackyeah'
-include 'frontend'
+include 'frontend','hardware'

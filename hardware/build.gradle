@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    maven {
+          url "https://oss.sonatype.org/content/groups/public"
+    }
+}
+
+dependencies {
+    compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+    compile 'org.apache.httpcomponents:fluent-hc:4.5.6'
+}
