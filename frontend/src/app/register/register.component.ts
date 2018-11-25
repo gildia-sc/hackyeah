@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { uniqueValidator } from './unique-validator';
@@ -12,6 +12,8 @@ import { MatSnackBar } from '@angular/material';
 })
 export class RegisterComponent implements OnInit {
 
+  avatar: string;
+
   registerForm = this.formBuilder.group({
     login: ['', [Validators.required, Validators.maxLength(50)],
       [uniqueValidator(this.httpClient, '/api/login-taken')]],
@@ -20,12 +22,13 @@ export class RegisterComponent implements OnInit {
       [uniqueValidator(this.httpClient, '/api/email-taken')]],
     firstName: ['', [Validators.required, Validators.maxLength(50)]],
     lastName: ['', [Validators.required, Validators.maxLength(50)]],
+    image: ['']
   });
 
   constructor(private readonly formBuilder: FormBuilder,
-              private readonly httpClient: HttpClient,
-              private readonly router: Router,
-              private readonly snackBar: MatSnackBar) { }
+    private readonly httpClient: HttpClient,
+    private readonly router: Router,
+    private readonly snackBar: MatSnackBar) { }
 
   ngOnInit() {
   }
@@ -38,5 +41,25 @@ export class RegisterComponent implements OnInit {
         duration: 3000
       });
     });
+  }
+
+  onFileChange(event) {
+    let reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.registerForm.controls['image'].setValue('data:' + file.type + ';base64,' + reader.result.split(',')[1])
+      };
+    }
+  }
+
+  triggerAvatarClick() {
+    document.querySelector("#avatar").click();
+  }
+
+  clearFile() {
+    this.registerForm.controls['image'].setValue('')
+    this.avatar = null;
   }
 }

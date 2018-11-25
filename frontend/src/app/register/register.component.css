@@ -7,3 +7,26 @@
 .container > * {
   width: 100%;
 }
+
+img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  padding: 25px;
+}
+
+.hide {
+  display: none;
+}
+
+.right {
+  float: right;
+}
+
+span .icon{
+  padding: 25px;
+}
+
+.icon {
+  font-size: 50px;
+}
