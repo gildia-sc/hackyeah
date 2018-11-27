@@ -8,6 +8,8 @@ import pl.epoint.hackyeah.domain.Player
 
 interface MatchRepository : JpaRepository<Match, Long> {
 
+    fun findByTableCodeAndStartTimeNotNullAndEndTimeNull(tableCode: String): Match?
+
     fun findByTableCodeAndEndTimeNull(tableCode: String): Match?
 
     @Query("SELECT m FROM Match m WHERE m.playerAlphaAttacker = :player OR m.playerBetaAttacker = :player " +

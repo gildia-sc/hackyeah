@@ -40,27 +40,33 @@ class MatchRestController(private val matchService: MatchService,
     @PostMapping("/{team}/goal")
     fun scoreGoal(@PathVariable tableCode: String,
                   @PathVariable team: Team,
-                  @RequestParam(required = false) position: Position?): ResponseEntity<MatchDto> {
-        return MatchDto(matchService.score(tableCode, team, position))
-            .also { matchDto -> publishToWsChannel(tableCode, matchDto) }
-            .let { matchDto -> ResponseEntity.ok(matchDto) }
+                  @RequestParam(required = false) position: Position?): ResponseEntity<out Any> {
+        return matchService.score(tableCode, team, position)
+            ?.let { MatchDto(it) }
+            ?.also { matchDto -> publishToWsChannel(tableCode, matchDto) }
+            ?.let { matchDto -> ResponseEntity.ok(matchDto) }
+            ?: ResponseEntity.badRequest().body("Match does not exist, or is not started.")
     }
 
     @PostMapping("/{team}/free")
     fun clearPosition(@PathVariable tableCode: String,
                       @PathVariable team: Team,
                       @RequestParam position: Position): ResponseEntity<MatchDto> {
-        return MatchDto(matchService.clearPosition(tableCode, team, position))
-            .also { matchDto -> publishToWsChannel(tableCode, matchDto) }
-            .let { matchDto -> ResponseEntity.ok(matchDto) }
+        return matchService.clearPosition(tableCode, team, position)
+            ?.let { MatchDto(it) }
+            ?.also { matchDto -> publishToWsChannel(tableCode, matchDto) }
+            ?.let { matchDto -> ResponseEntity.ok(matchDto) }
+            ?: ResponseEntity.notFound().build()
     }
 
     @PostMapping("/{team}/switch")
     fun switchPositions(@PathVariable tableCode: String,
                         @PathVariable team: Team): ResponseEntity<MatchDto> {
-        return MatchDto(matchService.switchPositions(tableCode, team))
-            .also { matchDto -> publishToWsChannel(tableCode, matchDto) }
-            .let { matchDto -> ResponseEntity.ok(matchDto) }
+        return matchService.switchPositions(tableCode, team)
+            ?.let { MatchDto(it) }
+            ?.also { matchDto -> publishToWsChannel(tableCode, matchDto) }
+            ?.let { matchDto -> ResponseEntity.ok(matchDto) }
+            ?: ResponseEntity.notFound().build()
     }
 
     private fun publishToWsChannel(channel: String, match: MatchDto) {

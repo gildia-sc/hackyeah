@@ -1,122 +1,33 @@
 package pl.epoint.hackyeah.service.match
 
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import pl.epoint.hackyeah.domain.Match
 import pl.epoint.hackyeah.domain.Player
-import pl.epoint.hackyeah.repository.FoosballTableRepository
-import pl.epoint.hackyeah.repository.MatchRepository
-import java.time.LocalDateTime
 
-/**
- * @author Piotr Wolny
- */
-@Service
-@Transactional
-class MatchService(private val tableRepository: FoosballTableRepository, private val matchRepository: MatchRepository) {
+interface MatchService {
 
-    fun getCurrentMatch(tableCode: String): Match? {
-        return matchRepository.findByTableCodeAndEndTimeNull(tableCode)
-    }
+    /**
+     * Swaps players' positions in the given team.
+     */
+    fun switchPositions(tableCode: String, team: Team): Match?
 
-    fun takePosition(tableCode: String, player: Player, team: Team, position: Position): Match {
-        return tableRepository.findByCode(tableCode)
-            .let { matchRepository.findByTableCodeAndEndTimeNull(tableCode) ?: Match(it) }
-            .also { match -> clearPlayerOldPosition(player, match) }
-            .also { match -> setPlayerNewPosition(team, position, match, player) }
-            .also { match ->
-                if (allPositionsTaken(match)) {
-                    match.startTime = LocalDateTime.now()
-                }
-            }
-            .let { match -> matchRepository.save(match) }
-    }
+    /**
+     * Clears given position in the team.
+     */
+    fun clearPosition(tableCode: String, team: Team, position: Position): Match?
 
-    private fun allPositionsTaken(match: Match) =
-        match.playerAlphaAttacker != null && match.playerAlphaGoalkeeper != null
-            && match.playerBetaAttacker != null && match.playerBetaGoalkeeper != null
+    /**
+     * Increments goal count for the given team. Optionally position information can be passed
+     * to update player's statistics.
+     */
+    fun score(tableCode: String, team: Team, position: Position?): Match?
 
-    private fun setPlayerNewPosition(team: Team, position: Position, match: Match, player: Player) {
-        when (team) {
-            Team.ALPHA -> when (position) {
-                Position.ATTACKER -> match.playerAlphaAttacker = player
-                Position.GOALKEEPER -> match.playerAlphaGoalkeeper = player
-            }
-            Team.BETA -> when (position) {
-                Position.ATTACKER -> match.playerBetaAttacker = player
-                Position.GOALKEEPER -> match.playerBetaGoalkeeper = player
-            }
-        }
-    }
+    /**
+     * Puts a player on the given position in a team.
+     */
+    fun takePosition(tableCode: String, player: Player, team: Team, position: Position): Match
 
-    private fun clearPlayerOldPosition(player: Player, match: Match) {
-        if (player == match.playerAlphaAttacker) {
-            match.playerAlphaAttacker = null
-        }
-        if (player == match.playerAlphaGoalkeeper) {
-            match.playerAlphaGoalkeeper = null
-        }
-        if (player == match.playerBetaAttacker) {
-            match.playerBetaAttacker = null
-        }
-        if (player == match.playerBetaGoalkeeper) {
-            match.playerBetaGoalkeeper = null
-        }
-    }
-
-    fun score(tableCode: String, team: Team, position: Position?): Match {
-        val match = matchRepository.findByTableCodeAndEndTimeNull(tableCode)!!
-        when (team) {
-            Team.ALPHA -> {
-                match.teamAlphaScore++
-                when (position) {
-                    Position.ATTACKER -> match.playerAlphaAttackerScore++
-                    Position.GOALKEEPER -> match.playerAlphaGoalkeeperScore++
-                }
-            }
-            Team.BETA -> {
-                match.teamBetaScore++
-                when (position) {
-                    Position.ATTACKER -> match.playerBetaAttackerScore++
-                    Position.GOALKEEPER -> match.playerBetaGoalkeeperScore++
-                }
-            }
-        }
-        if (match.teamAlphaScore == 10 || match.teamBetaScore == 10) {
-            match.endTime = LocalDateTime.now()
-        }
-        return match
-    }
-
-    fun clearPosition(tableCode: String, team: Team, position: Position): Match {
-        val match = matchRepository.findByTableCodeAndEndTimeNull(tableCode)!!
-        when (team) {
-            Team.ALPHA -> when (position) {
-                Position.ATTACKER -> match.playerAlphaAttacker = null
-                Position.GOALKEEPER -> match.playerAlphaGoalkeeper = null
-            }
-            Team.BETA -> when (position) {
-                Position.ATTACKER -> match.playerBetaAttacker = null
-                Position.GOALKEEPER -> match.playerBetaGoalkeeper = null
-            }
-        }
-        return match
-    }
-
-    fun switchPositions(tableCode: String, team: Team): Match {
-        val match = matchRepository.findByTableCodeAndEndTimeNull(tableCode)!!
-        when (team) {
-            Team.ALPHA -> {
-                val attacker = match.playerAlphaAttacker
-                match.playerAlphaAttacker = match.playerAlphaGoalkeeper
-                match.playerAlphaGoalkeeper = attacker
-            }
-            Team.BETA -> {
-                val attacker = match.playerBetaAttacker
-                match.playerBetaAttacker = match.playerBetaGoalkeeper
-                match.playerBetaGoalkeeper = attacker
-            }
-        }
-        return match
-    }
+    /**
+     * Returns current match, if exists.
+     */
+    fun getCurrentMatch(tableCode: String): Match?
 }
