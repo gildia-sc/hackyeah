@@ -17,7 +17,7 @@ class TableRestController(private val foosballTableService: FoosballTableService
         return ResponseEntity.ok(foosballTableService.findAll())
     }
 
-    @GetMapping(value = "/{code}")
+    @GetMapping("/{code}")
     fun getByCode(@PathVariable("code") code: String): ResponseEntity<FoosballTableDto> {
         return foosballTableService.findByCode(FoosballTableCode(code))
             ?.let { ResponseEntity.ok(it) }
@@ -26,38 +26,31 @@ class TableRestController(private val foosballTableService: FoosballTableService
 
     @PostMapping("/login-taken")
     fun loginTaken(@RequestBody code: String): Boolean {
-        return foosballTableService.findByCode(FoosballTableCode(code))?.let { true }?: (false)
+        return foosballTableService.findByCode(FoosballTableCode(code)) != null
     }
-
-
 
     @PostMapping
     fun insertTable(@RequestBody tableDto: FoosballTableDto): ResponseEntity<FoosballTableDto> {
-        val newTableDto = foosballTableService.addTable(FoosballTableCode(tableDto.code),
+        return foosballTableService.addTable(FoosballTableCode(tableDto.code),
             TeamColor(tableDto.teamAlphaColor),
             TeamColor(tableDto.teamBetaColor))
-        return ResponseEntity
-            .created(URI("/tables/${newTableDto.code}"))
-            .body(newTableDto)
+            .let { table -> ResponseEntity.created(URI("/tables/${table.code}")).body(table) }
     }
 
-    @PutMapping(value = "/{code}")
+    @PutMapping("/{code}")
     fun updateTable(@PathVariable("code") code: String,
                     @RequestBody tableDto: FoosballTableDto): ResponseEntity<FoosballTableDto> {
-
-        foosballTableService.findByCode(FoosballTableCode(code)) ?: return ResponseEntity.notFound().build()
-
-        val updatedTableDto = foosballTableService.updateTable(FoosballTableCode(tableDto.code),
-            TeamColor(tableDto.teamAlphaColor),
-            TeamColor(tableDto.teamBetaColor))
-
-
-        return ResponseEntity
-            .created(URI("/tables/${updatedTableDto.code}"))
-            .body(updatedTableDto)
+        return foosballTableService.findByCode(FoosballTableCode(code))
+            ?.let {
+                foosballTableService.updateTable(FoosballTableCode(tableDto.code),
+                    TeamColor(tableDto.teamAlphaColor),
+                    TeamColor(tableDto.teamBetaColor))
+            }
+            ?.let { updatedTable -> ResponseEntity.created(URI("/tables/${updatedTable.code}")).body(updatedTable) }
+            ?: ResponseEntity.notFound().build()
     }
 
-    @DeleteMapping(value = "/{code}")
+    @DeleteMapping("/{code}")
     fun deleteTable(@PathVariable("code") code: String) {
         foosballTableService.deleteByCode(FoosballTableCode(code))
     }

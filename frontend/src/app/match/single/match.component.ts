@@ -56,7 +56,7 @@ export class MatchComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.tableCode = params['tableCode']
+      this.tableCode = params['tableCode'];
       this.titleService.changeTitle(`Match ${this.tableCode}`);
       this.subscribeToTableChannel(this.tableCode);
       this.matchService.getMatch(this.tableCode).subscribe(match => {
@@ -66,7 +66,7 @@ export class MatchComponent implements OnInit {
           let side = params['side'];
           let role = params['role'];
           if(side && role) {
-            console.log(`Enter with side ${side} and ${role}`)
+            console.log(`Enter with side ${side} and ${role}`);
             if (!this.matchStarted) {
               this.matchService.takePosition(this.tableCode, side, role).subscribe(() => {
                 this.snackBar.open('Position taken', null, {
@@ -74,7 +74,7 @@ export class MatchComponent implements OnInit {
                 });
               })
             } else {
-              this.snackBar.open('Match already started, position has not taken', null, {
+              this.snackBar.open('Match already started, position has not been taken', null, {
                 duration: 3000
               });
             }

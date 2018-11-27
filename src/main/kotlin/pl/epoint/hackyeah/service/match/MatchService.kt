@@ -13,27 +13,28 @@ import java.time.LocalDateTime
  */
 @Service
 @Transactional
-class MatchService(val tableRepository: FoosballTableRepository,
-                   val matchRepository: MatchRepository) {
+class MatchService(private val tableRepository: FoosballTableRepository, private val matchRepository: MatchRepository) {
 
     fun getCurrentMatch(tableCode: String): Match? {
         return matchRepository.findByTableCodeAndEndTimeNull(tableCode)
     }
 
     fun takePosition(tableCode: String, player: Player, team: Team, position: Position): Match {
-        val table = tableRepository.findByCode(tableCode)!!
-        var match = matchRepository.findByTableCodeAndEndTimeNull(tableCode)
-        if (match == null) {
-            match = Match(table)
-        }
-        clearPlayerOldPosition(player, match)
-        setPlayerNewPosition(team, position, match, player)
-        if (match.playerAlphaAttacker != null && match.playerAlphaGoalkeeper != null
-            && match.playerBetaAttacker != null && match.playerBetaGoalkeeper != null) {
-            match.startTime = LocalDateTime.now()
-        }
-        return matchRepository.save(match)
+        return tableRepository.findByCode(tableCode)
+            .let { matchRepository.findByTableCodeAndEndTimeNull(tableCode) ?: Match(it) }
+            .also { match -> clearPlayerOldPosition(player, match) }
+            .also { match -> setPlayerNewPosition(team, position, match, player) }
+            .also { match ->
+                if (allPositionsTaken(match)) {
+                    match.startTime = LocalDateTime.now()
+                }
+            }
+            .let { match -> matchRepository.save(match) }
     }
+
+    private fun allPositionsTaken(match: Match) =
+        match.playerAlphaAttacker != null && match.playerAlphaGoalkeeper != null
+            && match.playerBetaAttacker != null && match.playerBetaGoalkeeper != null
 
     private fun setPlayerNewPosition(team: Team, position: Position, match: Match, player: Player) {
         when (team) {

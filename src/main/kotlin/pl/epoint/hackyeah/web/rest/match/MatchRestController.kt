@@ -3,12 +3,13 @@ package pl.epoint.hackyeah.web.rest.match
 import org.springframework.http.ResponseEntity
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.web.bind.annotation.*
+import pl.epoint.hackyeah.extension.unwrap
+import pl.epoint.hackyeah.extension.unwrapOrThrow
 import pl.epoint.hackyeah.repository.PlayerRepository
 import pl.epoint.hackyeah.service.match.MatchService
 import pl.epoint.hackyeah.service.match.Position
 import pl.epoint.hackyeah.service.match.Team
 import pl.epoint.hackyeah.web.rest.MatchDto
-import java.lang.RuntimeException
 import java.security.Principal
 
 @RestController
@@ -29,38 +30,38 @@ class MatchRestController(private val matchService: MatchService,
                      @PathVariable team: Team,
                      @RequestParam position: Position,
                      principal: Principal): ResponseEntity<MatchDto> {
-        val player = playerRepository.findOneByLogin(principal.name).orElseThrow {
-            RuntimeException()
-        }
-        val match = MatchDto(matchService.takePosition(tableCode, player, team, position))
-        publishToWsChannel(tableCode, match)
-        return ResponseEntity.ok(match)
+        return playerRepository.findOneByLogin(principal.name)
+            .unwrapOrThrow { IllegalStateException("Player ${principal.name} not found") }
+            .let { matchService.takePosition(tableCode, it, team, position) }
+            .let { match -> MatchDto(match) }
+            .also { matchDto -> publishToWsChannel(tableCode, matchDto) }
+            .let { matchDto -> ResponseEntity.ok(matchDto) }
     }
 
     @PostMapping("/{team}/goal")
     fun scoreGoal(@PathVariable tableCode: String,
                   @PathVariable team: Team,
                   @RequestParam(required = false) position: Position?): ResponseEntity<MatchDto> {
-        val match = MatchDto(matchService.score(tableCode, team, position))
-        publishToWsChannel(tableCode, match)
-        return ResponseEntity.ok(match)
+        return MatchDto(matchService.score(tableCode, team, position))
+            .also { matchDto -> publishToWsChannel(tableCode, matchDto) }
+            .let { matchDto -> ResponseEntity.ok(matchDto) }
     }
 
     @PostMapping("/{team}/free")
     fun clearPosition(@PathVariable tableCode: String,
                       @PathVariable team: Team,
                       @RequestParam position: Position): ResponseEntity<MatchDto> {
-        val match = MatchDto(matchService.clearPosition(tableCode, team, position))
-        publishToWsChannel(tableCode, match)
-        return ResponseEntity.ok(match)
+        return MatchDto(matchService.clearPosition(tableCode, team, position))
+            .also { matchDto -> publishToWsChannel(tableCode, matchDto) }
+            .let { matchDto -> ResponseEntity.ok(matchDto) }
     }
 
     @PostMapping("/{team}/switch")
     fun switchPositions(@PathVariable tableCode: String,
                         @PathVariable team: Team): ResponseEntity<MatchDto> {
-        val match = MatchDto(matchService.switchPositions(tableCode, team))
-        publishToWsChannel(tableCode, match)
-        return ResponseEntity.ok(match)
+        return MatchDto(matchService.switchPositions(tableCode, team))
+            .also { matchDto -> publishToWsChannel(tableCode, matchDto) }
+            .let { matchDto -> ResponseEntity.ok(matchDto) }
     }
 
     private fun publishToWsChannel(channel: String, match: MatchDto) {

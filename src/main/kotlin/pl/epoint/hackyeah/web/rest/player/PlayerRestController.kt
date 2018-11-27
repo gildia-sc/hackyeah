@@ -22,7 +22,7 @@ class PlayerRestController(private val playerService: DefaultPlayerService) {
 
     @PutMapping("/{id}")
     fun updatePlayer(@PathVariable("id") id: Long, @RequestBody userDTO: UserDTO) {
-        playerService.updatePlayer(userDTO);
+        playerService.updatePlayer(userDTO)
     }
 
     @GetMapping("/view")
