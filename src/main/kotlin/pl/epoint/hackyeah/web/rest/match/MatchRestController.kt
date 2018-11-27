@@ -3,7 +3,6 @@ package pl.epoint.hackyeah.web.rest.match
 import org.springframework.http.ResponseEntity
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.web.bind.annotation.*
-import pl.epoint.hackyeah.extension.unwrap
 import pl.epoint.hackyeah.extension.unwrapOrThrow
 import pl.epoint.hackyeah.repository.PlayerRepository
 import pl.epoint.hackyeah.service.match.MatchService
