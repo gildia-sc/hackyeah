@@ -89,6 +89,7 @@ export class MatchComponent implements OnInit {
   subscribeToTableChannel(tableCode: string) {
     this.webSocketService.subscribeToChannel(`${tableCode}`, message => {
       if (message.body) {
+        let oldMatch : Match = { ...this.match };
         this.match = JSON.parse(message.body) as Match;
         this.startTimer();
 
@@ -97,15 +98,26 @@ export class MatchComponent implements OnInit {
           this.snackBar.open('The match has started, good luck and have fun!', null, {
             duration: 5000
           })
-        }
-
-        if (this.matchEnded) {
+          this.playAudio('begin_match');
+        } else if (this.matchEnded) {
           this.displayDisplayWinner();
+          this.playAudio('end_match');
+        } else if (this.match.alphaScore > oldMatch.alphaScore) {
+          this.playAudio('goal_for_alpha');
+        } else if (this.match.betaScore > oldMatch.betaScore) {
+          this.playAudio('goal_for_beta');
         }
-
       }
     })
   }
+
+  private playAudio(audioName: string){
+    let audio = new Audio();
+    audio.src = `../../../assets/sound/${audioName}.mp3`;
+    audio.load();
+    audio.play();
+  }
+
 
   private startTimer() {
     if (this.matchStarted && this.timer === 0) {
