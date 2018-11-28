@@ -15,8 +15,7 @@ export class MatchListElementComponent implements OnInit {
   match: Match;
 
   constructor(private matchService: MatchService,
-              private webSocketService: WebsocketService,
-              private titleService: TitleService) { }
+              private webSocketService: WebsocketService) { }
 
   ngOnInit() {
     this.matchService.getMatch(this.tableCode)
@@ -44,4 +43,11 @@ export class MatchListElementComponent implements OnInit {
     return this.match != null ? this.match.betaScore : 0;
   }
 
+  get alphaColor(): string {
+    return this.match != null ? this.match.alphaColor : 'blue';
+  }
+
+  get betaColor(): string {
+    return this.match != null ? this.match.betaColor : 'red';
+  }
 }
