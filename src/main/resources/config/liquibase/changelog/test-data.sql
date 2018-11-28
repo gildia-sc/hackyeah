@@ -1,6 +1,6 @@
 BEGIN;
 
-INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (1, 'F16', '#0000ff', '#ffffff', true);
+INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (1, 'F16', '#0000ff', '#d0d0d0', true);
 INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (2, 'W15', '#0000ff', '#ff0000', true);
 INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (3, 'ITB', '#ff0000', '#0000ff', true);
 INSERT INTO foosball_table (id, code, team_a_color, team_b_color, activated) VALUES (4, 'DEV', '#ff0000', '#ffff00', true);
