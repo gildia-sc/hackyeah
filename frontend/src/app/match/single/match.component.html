@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <mat-chip color="primary" selected>Team Alpha</mat-chip>
+        <mat-chip [style.background-color]="alphaColor" selected>Team Alpha</mat-chip>
       </div>
     </div>
     <div class="row">
@@ -39,8 +39,8 @@
     </div>
     <div class="row align-items-center justify-content-center">
       <div class="col-2">
-        <button mat-button class="score blue" (click)="scoreGoal('alpha')">
-          <span>{{alphaScore}}</span>
+        <button mat-button class="score" [style.background-color]="betaColor" (click)="scoreGoal('beta')">
+          <span>{{betaScore}}</span>
         </button>
       </div>
       <div class="col-6" align="center">
@@ -49,8 +49,8 @@
         </div>
       </div>
       <div class="col-2">
-        <button mat-button class="score red" (click)="scoreGoal('beta')">
-          <span>{{betaScore}}</span>
+        <button mat-button class="score" [style.background-color]="alphaColor" (click)="scoreGoal('alpha')">
+          <span>{{alphaScore}}</span>
         </button>
       </div>
     </div>
@@ -83,7 +83,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <mat-chip color="accent" selected>Team Beta</mat-chip>
+        <mat-chip [style.background-color]="betaColor" selected>Team Beta</mat-chip>
       </div>
     </div>
   </div>

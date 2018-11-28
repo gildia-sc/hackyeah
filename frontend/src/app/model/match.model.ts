@@ -1,20 +1,16 @@
-import { Player } from "./player.model";
-import { Team } from "./team.model";
+import { Player } from './player.model';
 
 export class Match {
-    id: number;
-    startTime: string;
-    endTime: string;
-    playerAlphaAttacker: Player;
-    playerAlphaGoalkeeper: Player;
-    playerBetaAttacker: Player;
-    playerBetaGoalkeeper: Player;
-    teamAlpha: Team;
-    teamBeta: Team;
-    playerAlphaAttackerScore: number;
-    playerBetaAttackerScore: number;
-    playerAlphaGoalkeeperScore: number;
-    playerBetaGoalkeeperScore: number;
-    teamAlphaScore: number;
-    teamBetaScore: number;
+  tableCode: string;
+  alphaAttacker: Player;
+  alphaGoalkeeper: Player;
+  betaAttacker: Player;
+  betaGoalkeeper: Player;
+  alphaColor: string;
+  betaColor: string;
+  started: boolean;
+  alphaScore: number;
+  betaScore: number;
+  startTime: string;
+  endTime: string
 }

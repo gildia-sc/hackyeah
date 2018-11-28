@@ -17,7 +17,8 @@ class DefaultMatchService(private val tableRepository: FoosballTableRepository,
                           private val matchRepository: MatchRepository) : MatchService {
 
     override fun getCurrentMatch(tableCode: String): Match? {
-        return matchRepository.findByTableCodeAndEndTimeNull(tableCode)
+        return tableRepository.findByCode(tableCode)
+            .let { matchRepository.findByTableCodeAndEndTimeNull(tableCode) ?: Match(it) }
     }
 
     override fun takePosition(tableCode: String, player: Player, team: Team, position: Position): Match {

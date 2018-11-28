@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { Player } from "../model/player.model";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Match } from '../model/match.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,18 +35,4 @@ export class MatchService {
       params: new HttpParams().append('position', position.toUpperCase())
     });
   }
-}
-
-export class Match {
-  id: number;
-  tableCode: string;
-  alphaAttacker: Player;
-  alphaGoalkeeper: Player;
-  betaAttacker: Player;
-  betaGoalkeeper: Player;
-  started: boolean;
-  alphaScore: number;
-  betaScore: number;
-  startTime: string;
-  endTime: string
 }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Match, MatchService } from "../match.service";
-import { ActivatedRoute } from "@angular/router";
-import { WebsocketService } from "../../websocket/websocket.service";
-import { MatSnackBar } from "@angular/material";
+import { MatchService } from '../match.service';
+import { ActivatedRoute } from '@angular/router';
+import { WebsocketService } from '../../websocket/websocket.service';
+import { MatSnackBar } from '@angular/material';
 import { TitleService } from '../../title/title.service';
 import * as moment from 'moment';
+import { Match } from '../../model/match.model';
 
 @Component({
   selector: 'app-table',
@@ -142,6 +143,14 @@ export class MatchComponent implements OnInit {
 
   get betaScore(): number {
     return this.match != null ? this.match.betaScore : 0;
+  }
+
+  get alphaColor(): string {
+    return this.match != null ? this.match.alphaColor : 'blue';
+  }
+
+  get betaColor(): string {
+    return this.match != null ? this.match.betaColor : 'red';
   }
 
   get matchStarted() {

@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Match, MatchService } from "../../match.service";
-import { WebsocketService } from "../../../websocket/websocket.service";
-import { TitleService } from "../../../title/title.service";
+import { MatchService } from '../../match.service';
+import { WebsocketService } from '../../../websocket/websocket.service';
+import { TitleService } from '../../../title/title.service';
+import { Match } from '../../../model/match.model';
 
 @Component({
   selector: 'app-match-list-elem',
