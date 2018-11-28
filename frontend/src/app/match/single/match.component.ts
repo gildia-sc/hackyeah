@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatchService } from '../match.service';
 import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../../websocket/websocket.service';
@@ -10,15 +10,24 @@ import { Match } from '../../model/match.model';
 @Component({
   selector: 'app-table',
   templateUrl: './match.component.html',
-  styleUrls: ['./match.component.css']
+  styleUrls: ['./match.component.css'],
 })
 export class MatchComponent implements OnInit {
-  private tableCode: string;
-  private startPopupDisplayed = false;
 
+  readonly tableWidth = 256;
+  readonly tableHeight = 164;
+  readonly playerWidth = 10;
+  readonly playerHeight = 20;
+
+  private tableCode: string;
+
+  private startPopupDisplayed = false;
   match: Match;
 
   timer = 0;
+
+  @ViewChild('tableCanvas')
+  tableCanvas: ElementRef;
 
   constructor(private matchService: MatchService,
               private route: ActivatedRoute,
@@ -41,7 +50,7 @@ export class MatchComponent implements OnInit {
 
   freePositionOrScoreGoal(team: string, position: string) {
     if (!this.matchStarted) {
-      this.matchService.freePosition(this.tableCode, team, position).subscribe()
+      this.matchService.freePosition(this.tableCode, team, position).subscribe();
     }
 
     if (this.matchStarted && !this.matchEnded) {
@@ -51,7 +60,7 @@ export class MatchComponent implements OnInit {
 
   switchPositions(team: string) {
     if (!this.matchEnded) {
-      this.matchService.switchPositions(this.tableCode, team).subscribe()
+      this.matchService.switchPositions(this.tableCode, team).subscribe();
     }
   }
 
@@ -63,6 +72,7 @@ export class MatchComponent implements OnInit {
       this.matchService.getMatch(this.tableCode).subscribe(match => {
         if (match) {
           this.match = match;
+          this.drawTable();
           this.startTimer();
           let side = params['side'];
           let role = params['role'];
@@ -71,20 +81,20 @@ export class MatchComponent implements OnInit {
             if (!this.matchStarted) {
               this.matchService.takePosition(this.tableCode, side, role).subscribe(() => {
                 this.snackBar.open('Position taken', null, {
-                  duration: 3000
+                  duration: 3000,
                 });
-              })
+              });
             } else {
               this.snackBar.open('Match already started, position has not been taken', null, {
-                duration: 3000
+                duration: 3000,
               });
             }
           } else {
-            console.log('Enter without side or role')
+            console.log('Enter without side or role');
           }
         }
       });
-    })
+    });
   }
 
   subscribeToTableChannel(tableCode: string) {
@@ -97,8 +107,8 @@ export class MatchComponent implements OnInit {
         if (this.matchStarted && !this.startPopupDisplayed) {
           this.startPopupDisplayed = true;
           this.snackBar.open('The match has started, good luck and have fun!', null, {
-            duration: 5000
-          })
+            duration: 5000,
+          });
           this.playAudio('begin_match');
         } else if (this.matchEnded) {
           this.displayDisplayWinner();
@@ -109,7 +119,7 @@ export class MatchComponent implements OnInit {
           this.playAudio('goal_for_beta');
         }
       }
-    })
+    });
   }
 
   private playAudio(audioName: string){
@@ -119,6 +129,44 @@ export class MatchComponent implements OnInit {
     audio.play();
   }
 
+  drawTable() {
+    const ctx = this.tableCanvas.nativeElement.getContext('2d');
+    const lineGap = Math.ceil((this.tableWidth - (8 * this.playerWidth)) / 9);
+    ctx.fillStyle = 'black';
+    ctx.strokeRect(0, 0, this.tableWidth, this.tableHeight);
+    ctx.fillStyle = this.betaColor;
+    this.drawPlayers(ctx, lineGap, lineGap, 1);
+    ctx.fillStyle = this.alphaColor;
+    this.drawPlayers(ctx, this.tableWidth - lineGap - this.playerWidth, lineGap, -1);
+  }
+
+  private drawPlayers(ctx, startX, lineGap, direction) {
+    this.drawPlayer(ctx, startX, this.tableHeight / 2 - this.playerHeight / 2);
+
+    let currentX = startX + direction * (lineGap + this.playerWidth);
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - this.playerHeight);
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + this.playerHeight);
+
+    currentX = startX + direction * (3 * lineGap + 3 * this.playerWidth);
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - ((this.playerHeight + 5) * 2));
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - (this.playerHeight + 5));
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2));
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + (this.playerHeight + 5));
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + ((this.playerHeight + 5) * 2));
+
+    currentX = startX + direction * (5 * lineGap + 5 * this.playerWidth);
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - (this.playerHeight + 5));
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2));
+    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + (this.playerHeight + 5));
+  }
+
+  private drawPlayer(ctx, x: number, y: number) {
+    ctx.fillRect(x + 3, y, 4, 4);
+    ctx.fillRect(x, y + 6, 10, 2);
+    ctx.fillRect(x + 2, y + 8, 6, 6);
+    ctx.fillRect(x + 2, y + 14, 2, 6);
+    ctx.fillRect(x + 2 + 4, y + 14, 2, 6);
+  }
 
   private startTimer() {
     if (this.matchStarted && this.timer === 0) {
@@ -169,13 +217,13 @@ export class MatchComponent implements OnInit {
     let winner;
 
     if (this.alphaScore > this.betaScore) {
-      winner = 'Alpha'
+      winner = 'Alpha';
     } else {
-      winner = 'Beta'
+      winner = 'Beta';
     }
 
     this.snackBar.open(`The match has ended. Team ${winner} has won the match! Final result is ${this.alphaScore} : ${this.betaScore}.`,
-      null, {duration: 5000}
+      null, {duration: 5000},
     )
       .afterDismissed()
       .subscribe(() => this.resetTable());
@@ -183,7 +231,7 @@ export class MatchComponent implements OnInit {
   }
 
   pad(num: number): string {
-    return ("0" + num).slice(-2);
+    return ('0' + num).slice(-2);
   }
 
   hhmmss(secs: number): string {
@@ -191,6 +239,6 @@ export class MatchComponent implements OnInit {
     secs = secs % 60;
     const hours = Math.floor(minutes / 60);
     minutes = minutes % 60;
-    return this.pad(hours) + ":" + this.pad(minutes) + ":" + this.pad(secs);
+    return this.pad(hours) + ':' + this.pad(minutes) + ':' + this.pad(secs);
   }
 }
