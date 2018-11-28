@@ -1,47 +1,50 @@
 <form class="container" [formGroup]="updateForm" (submit)="update()">
-    <mat-form-field>
-      <input matInput required placeholder="Login" formControlName="login">
-      <mat-error *ngIf="updateForm.get('login').hasError('required')">Login is required</mat-error>
-      <mat-error *ngIf="updateForm.get('login').hasError('taken')">Login already used</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="email" required placeholder="E-mail" formControlName="email">
-      <mat-error *ngIf="updateForm.get('email').hasError('required')">E-mail is required</mat-error>
-      <mat-error *ngIf="updateForm.get('email').hasError('email')">Invalid e-mail</mat-error>
-      <mat-error *ngIf="updateForm.get('email').hasError('taken')">E-mail already used</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput required placeholder="First name" formControlName="firstName">
-      <mat-error *ngIf="updateForm.get('firstName').hasError('required')">First name is required</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput required placeholder="Last name" formControlName="lastName">
-      <mat-error *ngIf="updateForm.get('lastName').hasError('required')">Last name is required</mat-error>
-    </mat-form-field>
-    <div class="form-group">
-      <div *ngIf="updateForm.get('image').value; then avatarBlock; else elseAvatarBlock"></div>
-      <ng-template #avatarBlock>
-        <img *ngIf="updateForm.get('image').value" [src]="updateForm.get('image').value" />
-      </ng-template>
-      <ng-template #elseAvatarBlock>
-        <mat-icon class="icon">account_circle</mat-icon>
-      </ng-template>
-      <div class="right">
-        <span (click)="triggerAvatarClick()">
-          <mat-icon class="icon">add_circle</mat-icon>
-        </span>
-        <span (click)="clearFile()">
-          <mat-icon class="icon">clear</mat-icon>
-        </span>
-      </div>
-      <input class="hide" type="file" id="avatar" name="avatar" (change)="onFileChange($event)" #avatarInput>
+  <mat-form-field>
+    <input matInput required placeholder="Login" formControlName="login">
+    <mat-error *ngIf="updateForm.get('login').hasError('required')">Login is required</mat-error>
+    <mat-error *ngIf="updateForm.get('login').hasError('taken')">Login already used</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="email" required placeholder="E-mail" formControlName="email">
+    <mat-error *ngIf="updateForm.get('email').hasError('required')">E-mail is required</mat-error>
+    <mat-error *ngIf="updateForm.get('email').hasError('email')">Invalid e-mail</mat-error>
+    <mat-error *ngIf="updateForm.get('email').hasError('taken')">E-mail already used</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput required placeholder="First name" formControlName="firstName">
+    <mat-error *ngIf="updateForm.get('firstName').hasError('required')">First name is required</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput required placeholder="Last name" formControlName="lastName">
+    <mat-error *ngIf="updateForm.get('lastName').hasError('required')">Last name is required</mat-error>
+  </mat-form-field>
+  <div class="form-group" class="avatar-field">
+    <div *ngIf="avatar.image; then avatarBlock; else elseAvatarBlock"></div>
+    <ng-template #avatarBlock>
+      <img *ngIf="avatar.image" [src]="avatar.image" [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight" />
+    </ng-template>
+    <ng-template #elseAvatarBlock>
+      <mat-icon class="icon">account_circle</mat-icon>
+    </ng-template>
+    <div class="right">
+      <span (click)="triggerAvatarClick()">
+        <mat-icon class="icon">add_circle</mat-icon>
+      </span>
+      <span (click)="clearFile()">
+        <mat-icon class="icon">clear</mat-icon>
+      </span>
     </div>
-    <mat-grid-list cols="2" rowHeight="50px">
-      <mat-grid-tile>
-          <button mat-raised-button color="secondary" (click)="onCancelClick()">Cancel</button>
-        </mat-grid-tile>
-      <mat-grid-tile>
-        <button mat-raised-button color="primary" [disabled]="!updateForm.valid">Save</button>
-      </mat-grid-tile>
-    </mat-grid-list>
-  </form>
+    <div>
+      <input class="hide" id="avatarInput" type="file" (change)="fileChangeListener($event)">
+      <img-cropper class="hide" [image]="avatar" [settings]="cropperSettings" id="avatar" name="avatar" #avatarInput></img-cropper>
+    </div>
+  </div>
+  <mat-grid-list cols="2" rowHeight="50px">
+    <mat-grid-tile>
+      <button mat-raised-button color="secondary" (click)="onCancelClick()">Cancel</button>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <button mat-raised-button color="primary" [disabled]="!updateForm.valid">Save</button>
+    </mat-grid-tile>
+  </mat-grid-list>
+</form>

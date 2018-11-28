@@ -23,10 +23,10 @@
     <input matInput required placeholder="Last name" formControlName="lastName">
     <mat-error *ngIf="registerForm.get('lastName').hasError('required')">Last name is required</mat-error>
   </mat-form-field>
-  <div class="form-group">
-    <div *ngIf="registerForm.get('image').value; then avatarBlock; else elseAvatarBlock"></div>
+  <div class="form-group" class="avatar-field">
+    <div *ngIf="avatar.image; then avatarBlock; else elseAvatarBlock"></div>
     <ng-template #avatarBlock>
-      <img *ngIf="registerForm.get('image').value" [src]="registerForm.get('image').value" />
+      <img *ngIf="avatar.image" [src]="avatar.image" [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight" />
     </ng-template>
     <ng-template #elseAvatarBlock>
       <mat-icon class="icon">account_circle</mat-icon>
@@ -39,7 +39,10 @@
         <mat-icon class="icon">clear</mat-icon>
       </span>
     </div>
-    <input class="hide" type="file" id="avatar" name="avatar" (change)="onFileChange($event)" #avatarInput>
+    <div>
+      <input class="hide" id="avatarInput" type="file" (change)="fileChangeListener($event)">
+      <img-cropper class="hide" [image]="avatar" [settings]="cropperSettings" id="avatar" name="avatar" #avatarInput></img-cropper>
+    </div>
   </div>
   <mat-grid-list cols="1" rowHeight="50px">
     <mat-grid-tile>

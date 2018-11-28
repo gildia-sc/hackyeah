@@ -14,6 +14,7 @@ import { TableListComponent } from "./table/table-list/table-list.component";
 import { PlayerListComponent } from './player/player-list/player-list.component';
 import { PlayerTeamsComponent } from './player/player-teams/player-teams.component';
 import { PlayerMatchesComponent } from './player/player-matches/player-matches.component';
+import {ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
 
 import {
   MatButtonModule,
@@ -73,6 +74,7 @@ const ROUTES: Route[] = [
     TableLinksComponent,
     PlayerEditComponent,
     MatchListElementComponent,
+    ImageCropperComponent
   ],
   imports: [
     BrowserModule,

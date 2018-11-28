@@ -5,6 +5,7 @@ import { uniqueValidator } from './unique-validator';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { TitleService } from '../title/title.service';
+import { ImageCropperComponent, CropperSettings } from 'ng2-img-cropper';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,12 @@ import { TitleService } from '../title/title.service';
 })
 export class RegisterComponent implements OnInit {
 
-  avatar: string;
+  avatar: any;
+  id: number;
+  cropperSettings: CropperSettings;
+
+  @ViewChild('avatarInput', undefined)
+  avatarInput: ImageCropperComponent;
 
   registerForm = this.formBuilder.group({
     login: ['', [Validators.required, Validators.maxLength(50)],
@@ -27,16 +33,30 @@ export class RegisterComponent implements OnInit {
   });
 
   constructor(private readonly formBuilder: FormBuilder,
-              private readonly httpClient: HttpClient,
-              private readonly router: Router,
-              private readonly snackBar: MatSnackBar,
-              private readonly titleService: TitleService) { }
+    private readonly httpClient: HttpClient,
+    private readonly router: Router,
+    private readonly snackBar: MatSnackBar,
+    private readonly titleService: TitleService) {
+
+    this.cropperSettings = new CropperSettings();
+    this.cropperSettings.width = 100;
+    this.cropperSettings.height = 100;
+    this.cropperSettings.croppedWidth = 100;
+    this.cropperSettings.croppedHeight = 100;
+    this.cropperSettings.canvasWidth = 400;
+    this.cropperSettings.canvasHeight = 300;
+    this.cropperSettings.rounded = true;
+    this.cropperSettings.noFileInput = true;
+
+    this.avatar = {};
+  }
 
   ngOnInit() {
     this.titleService.changeTitle('Register');
   }
 
   register() {
+    this.registerForm.controls['image'].setValue(this.avatar.image)
     this.httpClient.post('/api/register', this.registerForm.value).subscribe(() => {
       this.router.navigate(['/login']);
     }, () => {
@@ -46,24 +66,29 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  onFileChange(event) {
-    let reader = new FileReader();
-    if (event.target.files && event.target.files.length > 0) {
-      let file = event.target.files[0];
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.registerForm.controls['image'].setValue(reader.result as string)
-      };
-    }
-  }
+  fileChangeListener($event) {
+    var image: any = new Image();
+    var file: File = $event.target.files[0];
+    var myReader: FileReader = new FileReader();
+    var that = this;
+    myReader.onloadend = function (loadEvent: any) {
+      image.src = loadEvent.target.result;
+      that.avatarInput.setImage(image);
+      that.avatar.image = image;
+    };
 
+    myReader.readAsDataURL(file);
+  }
+  
   triggerAvatarClick() {
-    let avatarInput: HTMLElement = document.querySelector("#avatar") as HTMLElement;
-    avatarInput.click();
+    document.querySelector("#avatar").classList.remove("hide");
+    (document.querySelector("#avatarInput") as HTMLElement).click();
   }
 
   clearFile() {
     this.registerForm.controls['image'].setValue('')
-    this.avatar = null;
+    this.avatar.image = null;
+    document.querySelector("#avatar").classList.add("hide");
+    this.avatarInput.setImage(null);
   }
 }

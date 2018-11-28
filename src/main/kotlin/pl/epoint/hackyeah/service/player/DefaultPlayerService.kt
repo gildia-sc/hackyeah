@@ -40,6 +40,7 @@ class DefaultPlayerService(private val playerRepository: PlayerRepository,
     override fun findAll(): List<PlayerView> {
         return playerRepository.findAll()
             .filter { it.activated }
+            .sortedBy { it.login }
             .map { PlayerView(it, teamRepository.findByPlayer(it), matchRepository.findByPlayer(it)) }
     }
 
