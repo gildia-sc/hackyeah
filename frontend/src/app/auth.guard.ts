@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Principal } from "./login/principal.service";
+import { AccountService } from "./login/account.service";
+import { catchError, map } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,9 @@ import { Principal } from "./login/principal.service";
 export class AuthGuard implements CanActivate {
 
   constructor(private router: Router,
-              private principal: Principal) {}
+              private principal: Principal,
+              private account: AccountService) {
+  }
 
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -18,7 +22,9 @@ export class AuthGuard implements CanActivate {
     if (this.principal.isAuthenticated()) {
       return true;
     }
-
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    return this.account.get().pipe(map(response => {
+      this.principal.authenticate(response);
+      return true;
+    }), catchError(() => of(false)))
   }
 }
