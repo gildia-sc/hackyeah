@@ -22,8 +22,8 @@ export class PlayerEditComponent implements OnInit {
   id: number;
 
   updateForm = this.formBuilder.group({
-    login: [''],
-    email: [''],
+    login: ['', [Validators.required, Validators.maxLength(50)]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
     firstName: ['', [Validators.required, Validators.maxLength(50)]],
     lastName: ['', [Validators.required, Validators.maxLength(50)]],
     image: ['']
@@ -47,11 +47,9 @@ export class PlayerEditComponent implements OnInit {
   fillUpdateForm(player: Player) {
     this.id = player.id
     this.updateForm.controls['login'].setValue(player.login)
-    // this.updateForm.controls['login'].setValidators([Validators.required, Validators.maxLength(50), 
-    //   uniqueValidator(this.httpClient, `/api/players/${this.id}/login-taken`)])
+    this.updateForm.controls['login']. setAsyncValidators(uniqueValidator(this.httpClient, `/api/players/${this.id}/login-taken`))
     this.updateForm.controls['email'].setValue(player.email)
-    // this.updateForm.controls['email'].setValidators([Validators.required, Validators.email, Validators.maxLength(254),
-    //   uniqueValidator(this.httpClient, `/api/players/${this.id}/email-taken`)])
+    this.updateForm.controls['email']. setAsyncValidators(uniqueValidator(this.httpClient, `/api/players/${this.id}/email-taken`))
     this.updateForm.controls['firstName'].setValue(player.firstName)
     this.updateForm.controls['lastName'].setValue(player.lastName)
     this.updateForm.controls['image'].setValue(player.image)
