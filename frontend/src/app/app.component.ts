@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoginService } from "./login/login.service";
 import { MatSnackBar } from "@angular/material";
 import { Principal } from "./login/principal.service";
@@ -41,8 +41,7 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    console.log("Logout")
-    this.loginService.logout()
+    this.loginService.logout();
     this.snackBar.open('Logout completed', null, {
       duration: 3000
     })
