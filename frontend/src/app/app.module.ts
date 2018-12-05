@@ -41,6 +41,7 @@ import { AuthGuard } from "./auth.guard";
 import { TitleService } from './title/title.service';
 import { PlayerEditComponent } from './player/player-edit/player-edit.component';
 import { MatchListElementComponent } from './match/list/match-list/match-list-element.component';
+import { TableImageComponent } from './match/table-image/table-image.component';
 
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
@@ -74,7 +75,8 @@ const ROUTES: Route[] = [
     TableLinksComponent,
     PlayerEditComponent,
     MatchListElementComponent,
-    ImageCropperComponent
+    ImageCropperComponent,
+    TableImageComponent
   ],
   imports: [
     BrowserModule,

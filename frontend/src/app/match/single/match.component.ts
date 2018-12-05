@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatchService } from '../match.service';
 import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../../websocket/websocket.service';
@@ -13,21 +13,12 @@ import { Match } from '../../model/match.model';
   styleUrls: ['./match.component.css'],
 })
 export class MatchComponent implements OnInit {
-
-  readonly tableWidth = 256;
-  readonly tableHeight = 164;
-  readonly playerWidth = 10;
-  readonly playerHeight = 20;
-
   private tableCode: string;
 
   private startPopupDisplayed = false;
   match: Match;
 
   timer = 0;
-
-  @ViewChild('tableCanvas')
-  tableCanvas: ElementRef;
 
   constructor(private matchService: MatchService,
               private route: ActivatedRoute,
@@ -72,11 +63,10 @@ export class MatchComponent implements OnInit {
       this.matchService.getMatch(this.tableCode).subscribe(match => {
         if (match) {
           this.match = match;
-          this.drawTable();
           this.startTimer();
           let side = params['side'];
           let role = params['role'];
-          if(side && role) {
+          if (side && role) {
             console.log(`Enter with side ${side} and ${role}`);
             if (!this.matchStarted) {
               this.matchService.takePosition(this.tableCode, side, role).subscribe(() => {
@@ -100,7 +90,7 @@ export class MatchComponent implements OnInit {
   subscribeToTableChannel(tableCode: string) {
     this.webSocketService.subscribeToChannel(`${tableCode}`, message => {
       if (message.body) {
-        let oldMatch : Match = { ...this.match };
+        let oldMatch: Match = {...this.match};
         this.match = JSON.parse(message.body) as Match;
         this.startTimer();
 
@@ -122,50 +112,11 @@ export class MatchComponent implements OnInit {
     });
   }
 
-  private playAudio(audioName: string){
+  private playAudio(audioName: string) {
     let audio = new Audio();
     audio.src = `../../../assets/sound/${audioName}.mp3`;
     audio.load();
     audio.play();
-  }
-
-  drawTable() {
-    const ctx = this.tableCanvas.nativeElement.getContext('2d');
-    const lineGap = Math.ceil((this.tableWidth - (8 * this.playerWidth)) / 9);
-    ctx.fillStyle = 'black';
-    ctx.strokeRect(0, 0, this.tableWidth, this.tableHeight);
-    ctx.fillStyle = this.betaColor;
-    this.drawPlayers(ctx, lineGap, lineGap, 1);
-    ctx.fillStyle = this.alphaColor;
-    this.drawPlayers(ctx, this.tableWidth - lineGap - this.playerWidth, lineGap, -1);
-  }
-
-  private drawPlayers(ctx, startX, lineGap, direction) {
-    this.drawPlayer(ctx, startX, this.tableHeight / 2 - this.playerHeight / 2);
-
-    let currentX = startX + direction * (lineGap + this.playerWidth);
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - this.playerHeight);
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + this.playerHeight);
-
-    currentX = startX + direction * (3 * lineGap + 3 * this.playerWidth);
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - ((this.playerHeight + 5) * 2));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - (this.playerHeight + 5));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + (this.playerHeight + 5));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + ((this.playerHeight + 5) * 2));
-
-    currentX = startX + direction * (5 * lineGap + 5 * this.playerWidth);
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - (this.playerHeight + 5));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + (this.playerHeight + 5));
-  }
-
-  private drawPlayer(ctx, x: number, y: number) {
-    ctx.fillRect(x + 3, y, 4, 4);
-    ctx.fillRect(x, y + 6, 10, 2);
-    ctx.fillRect(x + 2, y + 8, 6, 6);
-    ctx.fillRect(x + 2, y + 14, 2, 6);
-    ctx.fillRect(x + 2 + 4, y + 14, 2, 6);
   }
 
   private startTimer() {

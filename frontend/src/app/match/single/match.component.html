@@ -44,11 +44,7 @@
         </button>
       </div>
       <div class="col-6" align="center">
-        <div>
-          <canvas #tableCanvas width="{{tableWidth}}" height="{{tableHeight}}"></canvas>
-
-          <!--<img style="margin: 5px" src="assets/img/foosball_table.png">-->
-        </div>
+        <app-table-image [alphaColor]="alphaColor" [betaColor]="betaColor"></app-table-image>
       </div>
       <div class="col-2">
         <button mat-button class="score" [style.background-color]="alphaColor" (click)="scoreGoal('alpha')">
