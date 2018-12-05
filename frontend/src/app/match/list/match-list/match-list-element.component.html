@@ -14,7 +14,7 @@
           <span>{{match.alphaAttacker.name}}</span>
         </mat-chip>
         <mat-chip disabled [style.opacity]="'1'" *ngIf="!match || !match.alphaAttacker">
-          <mat-icon class="icon">account_circle</mat-icon> <span>Take position</span>
+          <mat-icon class="icon">account_circle</mat-icon> <span>Waiting for players</span>
         </mat-chip>
       </div>
       <div class="col-2" align="center">
@@ -27,7 +27,7 @@
           <span>{{match.alphaGoalkeeper.name}}</span>
         </mat-chip>
         <mat-chip disabled [style.opacity]="'1'" *ngIf="!match || !match.alphaGoalkeeper">
-          <mat-icon class="icon">account_circle</mat-icon><span>Take position</span>
+          <mat-icon class="icon">account_circle</mat-icon><span>Waiting for players</span>
         </mat-chip>
       </div>
     </div>
@@ -56,7 +56,7 @@
           <span>{{match.betaAttacker.name}}</span>
         </mat-chip>
         <mat-chip disabled [style.opacity]="'1'" class="table-single-player-position" *ngIf="!match || !match.betaAttacker">
-          <mat-icon class="icon">account_circle</mat-icon><span>Take position</span>
+          <mat-icon class="icon">account_circle</mat-icon><span>Waiting for players</span>
         </mat-chip>
       </div>
       <div class="col-2" align="center">
@@ -69,7 +69,7 @@
           <span>{{match.betaGoalkeeper.name}}</span>
         </mat-chip>
         <mat-chip disabled [style.opacity]="'1'" class="table-single-player-position" *ngIf="!match || !match.betaGoalkeeper">
-          <mat-icon class="icon">account_circle</mat-icon><span>Take position</span>
+          <mat-icon class="icon">account_circle</mat-icon><span>Waiting for players</span>
         </mat-chip>
       </div>
     </div>
