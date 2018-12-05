@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Route, RouterModule } from '@angular/router';
-import { DeleteDialog} from './util/delete-dialog/delete-dialog.component';
+import { DeleteDialog } from './util/delete-dialog/delete-dialog.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -14,22 +14,24 @@ import { TableListComponent } from "./table/table-list/table-list.component";
 import { PlayerListComponent } from './player/player-list/player-list.component';
 import { PlayerTeamsComponent } from './player/player-teams/player-teams.component';
 import { PlayerMatchesComponent } from './player/player-matches/player-matches.component';
-import {ImageCropperComponent, CropperSettings} from 'ng2-img-cropper';
+import { ImageCropperComponent } from 'ng2-img-cropper';
 
 import {
   MatButtonModule,
-  MatCardModule, MatChipsModule, MatCheckboxModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDialogModule,
   MatDividerModule,
   MatExpansionModule,
   MatFormFieldModule,
+  MatGridListModule,
   MatIconModule,
   MatInputModule,
   MatMenuModule,
   MatProgressBarModule,
   MatSnackBarModule,
-  MatToolbarModule,
-  MatDialogModule,
-  MatGridListModule
+  MatToolbarModule
 } from '@angular/material';
 import { MatchComponent } from "./match/single/match.component";
 import { TableEditComponent } from './table/table-edit/table-edit.component';
@@ -42,6 +44,7 @@ import { TitleService } from './title/title.service';
 import { PlayerEditComponent } from './player/player-edit/player-edit.component';
 import { MatchListElementComponent } from './match/list/match-list/match-list-element.component';
 import { TableImageComponent } from './match/table-image/table-image.component';
+import { TimerComponent } from './match/timer/timer.component';
 
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
@@ -76,7 +79,8 @@ const ROUTES: Route[] = [
     PlayerEditComponent,
     MatchListElementComponent,
     ImageCropperComponent,
-    TableImageComponent
+    TableImageComponent,
+    TimerComponent
   ],
   imports: [
     BrowserModule,

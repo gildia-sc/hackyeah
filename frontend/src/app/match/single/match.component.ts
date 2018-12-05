@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatchService } from '../match.service';
 import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../../websocket/websocket.service';
@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material';
 import { TitleService } from '../../title/title.service';
 import * as moment from 'moment';
 import { Match } from '../../model/match.model';
+import { Timer } from "../timer/timer.component";
 
 @Component({
   selector: 'app-table',
@@ -14,11 +15,11 @@ import { Match } from '../../model/match.model';
 })
 export class MatchComponent implements OnInit {
   private tableCode: string;
-
   private startPopupDisplayed = false;
-  match: Match;
 
-  timer = 0;
+  @ViewChild("timer") private timer: Timer;
+
+  match: Match;
 
   constructor(private matchService: MatchService,
               private route: ActivatedRoute,
@@ -90,10 +91,9 @@ export class MatchComponent implements OnInit {
   subscribeToTableChannel(tableCode: string) {
     this.webSocketService.subscribeToChannel(`${tableCode}`, message => {
       if (message.body) {
+        this.startTimer();
         let oldMatch: Match = {...this.match};
         this.match = JSON.parse(message.body) as Match;
-        this.startTimer();
-
         if (this.matchStarted && !this.startPopupDisplayed) {
           this.startPopupDisplayed = true;
           this.snackBar.open('The match has started, good luck and have fun!', null, {
@@ -120,19 +120,8 @@ export class MatchComponent implements OnInit {
   }
 
   private startTimer() {
-    if (this.matchStarted && this.timer === 0) {
-      const startTime = moment();
-      const timerCallback = () => {
-        const now = moment();
-        const secondsElapsed = now.diff(startTime, 'seconds');
-        if (this.matchStarted) {
-          this.timer = secondsElapsed;
-          setTimeout(timerCallback, 1000);
-        } else {
-          this.timer = 0;
-        }
-      };
-      setTimeout(timerCallback, 1000);
+    if (this.matchStarted && this.timer.currentTime === 0) {
+      this.timer.startTimer(moment());
     }
   }
 
@@ -179,17 +168,5 @@ export class MatchComponent implements OnInit {
       .afterDismissed()
       .subscribe(() => this.resetTable());
 
-  }
-
-  pad(num: number): string {
-    return ('0' + num).slice(-2);
-  }
-
-  hhmmss(secs: number): string {
-    let minutes = Math.floor(secs / 60);
-    secs = secs % 60;
-    const hours = Math.floor(minutes / 60);
-    minutes = minutes % 60;
-    return this.pad(hours) + ':' + this.pad(minutes) + ':' + this.pad(secs);
   }
 }

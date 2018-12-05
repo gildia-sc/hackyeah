@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row" align="center">
       <div class="col">
-        <span class="timer">{{hhmmss(timer)}}</span>
+        <app-timer #timer [currentTime]="0" [tickLimit]="60"></app-timer>
       </div>
     </div>
     <div class="row">
