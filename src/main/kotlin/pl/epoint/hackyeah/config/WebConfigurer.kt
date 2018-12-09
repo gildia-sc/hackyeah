@@ -19,9 +19,14 @@ import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerF
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.servlet.resource.PathResourceResolver
 
 import javax.servlet.DispatcherType
 import javax.servlet.ServletContext
@@ -38,15 +43,16 @@ import java.net.URLDecoder.decode
  * Configuration of web application with Servlet 3.0 APIs.
  */
 @Configuration
-class WebConfigurer(private val env: Environment, private val jHipsterProperties: JHipsterProperties) : ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
+class WebConfigurer(private val env: Environment,
+                    private val jHipsterProperties: JHipsterProperties) :
+    ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory>, WebMvcConfigurer {
 
     private val log = LoggerFactory.getLogger(WebConfigurer::class.java)
-
     private var metricRegistry: MetricRegistry? = null
 
     @Throws(ServletException::class)
     override fun onStartup(servletContext: ServletContext) {
-        if (env.activeProfiles.size != 0) {
+        if (env.activeProfiles.isNotEmpty()) {
             log.info("Web application configuration, using profiles: {}", *env.activeProfiles as Array<Any>)
         }
         val disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC)
@@ -55,6 +61,13 @@ class WebConfigurer(private val env: Environment, private val jHipsterProperties
             initCachingHttpHeadersFilter(servletContext, disps)
         }
         log.info("Web application fully configured")
+    }
+
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/**/*")
+            .addResourceLocations("classpath:/static/")
+            .resourceChain(true)
+            .addResolver(IndexPathResourceResolver())
     }
 
     /**
@@ -176,5 +189,17 @@ class WebConfigurer(private val env: Environment, private val jHipsterProperties
     @Autowired(required = false)
     fun setMetricRegistry(metricRegistry: MetricRegistry) {
         this.metricRegistry = metricRegistry
+    }
+}
+
+private class IndexPathResourceResolver: PathResourceResolver() {
+
+    override fun getResource(resourcePath: String, location: Resource): Resource? {
+        val requestedResource = location.createRelative(resourcePath)
+        return if (requestedResource.exists() && requestedResource.isReadable) {
+            requestedResource
+        } else {
+            ClassPathResource("/static/index.html")
+        }
     }
 }

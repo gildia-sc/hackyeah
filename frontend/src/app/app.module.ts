@@ -103,7 +103,7 @@ const ROUTES: Route[] = [
     MatCheckboxModule,
     MatSnackBarModule,
     MatDialogModule,
-    RouterModule.forRoot(ROUTES, { useHash: true })
+    RouterModule.forRoot(ROUTES)
   ],
   providers: [
     RequestPendingService,
