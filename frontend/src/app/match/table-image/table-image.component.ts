@@ -23,44 +23,48 @@ export class TableImageComponent implements OnChanges {
     this.drawTable();
   }
 
-  drawTable() {
+  drawTable(): void {
     const ctx = this.tableCanvas.nativeElement.getContext('2d');
+    this.drawBorder(ctx);
+
     const lineGap = Math.ceil((this.tableWidth - (8 * this.playerWidth)) / 9);
-    ctx.fillStyle = 'black';
-    ctx.strokeRect(0, 0, this.tableWidth, this.tableHeight);
+
     ctx.fillStyle = this.betaColor;
     this.drawPlayers(ctx, lineGap, lineGap, 1);
+
     ctx.fillStyle = this.alphaColor;
     this.drawPlayers(ctx, this.tableWidth - lineGap - this.playerWidth, lineGap, -1);
   }
 
-  private drawPlayers(ctx, startX, lineGap, direction) {
-    this.drawPlayer(ctx, startX, this.tableHeight / 2 - this.playerHeight / 2);
-
-    let currentX = startX + direction * (lineGap + this.playerWidth);
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - this.playerHeight);
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + this.playerHeight);
-
-    currentX = startX + direction * (3 * lineGap + 3 * this.playerWidth);
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - ((this.playerHeight + 5) * 2));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - (this.playerHeight + 5));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + (this.playerHeight + 5));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + ((this.playerHeight + 5) * 2));
-
-    currentX = startX + direction * (5 * lineGap + 5 * this.playerWidth);
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) - (this.playerHeight + 5));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2));
-    this.drawPlayer(ctx, currentX, (this.tableHeight) / 2 - (this.playerHeight / 2) + (this.playerHeight + 5));
+  private drawBorder(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = 'black';
+    ctx.strokeRect(0, 0, this.tableWidth, this.tableHeight);
   }
 
-  private drawPlayer(ctx, x: number, y: number) {
+  private drawPlayers(ctx: CanvasRenderingContext2D, startX: number, lineGap: number, direction: number): void {
+    this.drawLine(ctx, startX, 1);
+
+    let currentX = startX + direction * (lineGap + this.playerWidth);
+    this.drawLine(ctx, currentX, 2);
+
+    currentX = startX + direction * (3 * lineGap + 3 * this.playerWidth);
+    this.drawLine(ctx, currentX, 5);
+
+    currentX = startX + direction * (5 * lineGap + 5 * this.playerWidth);
+    this.drawLine(ctx, currentX, 3);
+  }
+
+  private drawLine(ctx: CanvasRenderingContext2D, startX: number, noOfPlayers: number): void {
+    for (let i = 0; i < noOfPlayers; i++) {
+      this.drawPlayer(ctx, startX, this.tableHeight / (noOfPlayers + 1) * (i + 1) - this.playerHeight / 2);
+    }
+  }
+
+  private drawPlayer(ctx: CanvasRenderingContext2D, x: number, y: number): void {
     ctx.fillRect(x + 3, y, 4, 4);
     ctx.fillRect(x, y + 6, 10, 2);
     ctx.fillRect(x + 2, y + 8, 6, 6);
     ctx.fillRect(x + 2, y + 14, 2, 6);
     ctx.fillRect(x + 2 + 4, y + 14, 2, 6);
   }
-
-
 }
