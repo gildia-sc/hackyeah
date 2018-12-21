@@ -1,25 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatchService } from '../match.service';
 import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../../websocket/websocket.service';
 import { MatSnackBar } from '@angular/material';
 import { TitleService } from '../../title/title.service';
-import * as moment from 'moment';
 import { Match } from '../../model/match.model';
-import { Timer } from "../timer/timer.component";
+import { map, switchMap, takeUntil } from "rxjs/operators";
+import { Observable, Subject } from "rxjs";
 
 @Component({
   selector: 'app-table',
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.css'],
 })
-export class MatchComponent implements OnInit {
-  private tableCode: string;
-  private startPopupDisplayed = false;
-
-  @ViewChild("timer") private timer: Timer;
-
-  match: Match;
+export class MatchComponent implements OnInit, OnDestroy {
+  private _destroyed$ = new Subject();
+  match$: Subject<Match> = new Subject();
 
   constructor(private matchService: MatchService,
               private route: ActivatedRoute,
@@ -28,145 +24,69 @@ export class MatchComponent implements OnInit {
               private titleService: TitleService) {
   }
 
-  scoreGoal(team: string, position?: string) {
-    if (this.matchStarted && !this.matchEnded) {
-      this.matchService.scoreGoal(this.tableCode, team, position).subscribe();
+  scoreGoal(match: Match, team: string, position?: string) {
+    if (match.startTime && !match.endTime) {
+      this.matchService.scoreGoal(match.tableCode, team, position).subscribe();
     }
   }
 
-  takePosition(team: string, position: string) {
-    if (!this.matchStarted) {
-      this.matchService.takePosition(this.tableCode, team, position).subscribe();
+  takePosition(match: Match, team: string, position: string) {
+    if (!match.startTime) {
+      this.matchService.takePosition(match.tableCode, team, position).subscribe();
     }
   }
 
-  freePositionOrScoreGoal(team: string, position: string) {
-    if (!this.matchStarted) {
-      this.matchService.freePosition(this.tableCode, team, position).subscribe();
+  freePositionOrScoreGoal(match: Match, team: string, position: string) {
+    if (!match.startTime) {
+      this.matchService.freePosition(match.tableCode, team, position).subscribe();
     }
 
-    if (this.matchStarted && !this.matchEnded) {
-      this.matchService.scoreGoal(this.tableCode, team, position).subscribe();
+    if (match.startTime && !match.endTime) {
+      this.matchService.scoreGoal(match.tableCode, team, position).subscribe();
     }
   }
 
-  switchPositions(team: string) {
-    if (!this.matchEnded) {
-      this.matchService.switchPositions(this.tableCode, team).subscribe();
+  switchPositions(match: Match, team: string) {
+    if (!match.endTime) {
+      this.matchService.switchPositions(match.tableCode, team).subscribe();
     }
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.tableCode = params['tableCode'];
-      this.titleService.changeTitle(`Match ${this.tableCode}`);
-      this.subscribeToTableChannel(this.tableCode);
-      this.matchService.getMatch(this.tableCode).subscribe(match => {
-        if (match) {
-          this.match = match;
-          this.startTimer();
-          let side = params['side'];
-          let role = params['role'];
-          if (side && role) {
-            console.log(`Enter with side ${side} and ${role}`);
-            if (!this.matchStarted) {
-              this.matchService.takePosition(this.tableCode, side, role).subscribe(() => {
-                this.snackBar.open('Position taken', null, {
-                  duration: 3000,
-                });
-              });
-            } else {
-              this.snackBar.open('Match already started, position has not been taken', null, {
-                duration: 3000,
-              });
-            }
-          } else {
-            console.log('Enter without side or role');
-          }
+    this.route.params.pipe(
+      map(params => {
+        return {
+          code: params['tableCode'],
+          team: params['side'],
+          position: params['role']
         }
-      });
+      }),
+      switchMap(params => this.getMatch(params)),
+      takeUntil(this._destroyed$)
+    ).subscribe(match => {
+      this.match$.next(match);
+      this.subscribeToTableChannel(match.tableCode);
+      this.titleService.changeTitle(`Match ${match.tableCode}`);
     });
+  }
+
+  ngOnDestroy(): void {
+    this._destroyed$.next();
+    this._destroyed$.complete();
+  }
+
+  private getMatch(params): Observable<Match> {
+    if (params.team && params.position) {
+      return this.matchService.takePosition(params.code, params.team, params.position);
+    }
+    return this.matchService.getMatch(params.code);
   }
 
   subscribeToTableChannel(tableCode: string) {
     this.webSocketService.subscribeToChannel(`${tableCode}`, message => {
-      if (message.body) {
-        this.startTimer();
-        let oldMatch: Match = {...this.match};
-        this.match = JSON.parse(message.body) as Match;
-        if (this.matchStarted && !this.startPopupDisplayed) {
-          this.startPopupDisplayed = true;
-          this.snackBar.open('The match has started, good luck and have fun!', null, {
-            duration: 5000,
-          });
-          this.playAudio('begin_match');
-        } else if (this.matchEnded) {
-          this.displayDisplayWinner();
-          this.playAudio('end_match');
-        } else if (this.match.alphaScore > oldMatch.alphaScore) {
-          this.playAudio('goal_for_alpha');
-        } else if (this.match.betaScore > oldMatch.betaScore) {
-          this.playAudio('goal_for_beta');
-        }
-      }
+      const match = JSON.parse(message.body) as Match;
+      this.match$.next(match);
     });
   }
 
-  private playAudio(audioName: string) {
-    let audio = new Audio();
-    audio.src = `../../../assets/sound/${audioName}.mp3`;
-    audio.load();
-    audio.play();
-  }
-
-  private startTimer() {
-    if (this.matchStarted && this.timer.currentTime === 0) {
-      this.timer.startTimer(moment());
-    }
-  }
-
-  get alphaScore(): number {
-    return this.match != null ? this.match.alphaScore : 0;
-  }
-
-  get betaScore(): number {
-    return this.match != null ? this.match.betaScore : 0;
-  }
-
-  get alphaColor(): string {
-    return this.match != null ? this.match.alphaColor : 'blue';
-  }
-
-  get betaColor(): string {
-    return this.match != null ? this.match.betaColor : 'red';
-  }
-
-  get matchStarted() {
-    return this.match != null ? this.match.started : false;
-  }
-
-  get matchEnded() {
-    return this.match != null ? this.match.endTime != null : false;
-  }
-
-  private resetTable() {
-    this.match = null;
-  }
-
-  private displayDisplayWinner() {
-    let winner;
-
-    if (this.alphaScore > this.betaScore) {
-      winner = 'Alpha';
-    } else {
-      winner = 'Beta';
-    }
-
-    this.snackBar.open(`The match has ended. Team ${winner} has won the match! Final result is ${this.alphaScore} : ${this.betaScore}.`,
-      null, {duration: 5000},
-    )
-      .afterDismissed()
-      .subscribe(() => this.resetTable());
-
-  }
 }

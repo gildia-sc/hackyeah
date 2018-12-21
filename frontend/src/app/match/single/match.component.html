@@ -1,88 +1,90 @@
 <mat-chip-list>
-  <div class="container">
+  <div class="container" *ngIf="match$ | async as match;else waiting">
     <div class="row" align="center">
       <div class="col">
-        <app-timer #timer [currentTime]="0" [tickLimit]="60"></app-timer>
+        <app-match-notifications [match]="match"></app-match-notifications>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <mat-chip [style.background-color]="alphaColor">Team Alpha</mat-chip>
+        <mat-chip [style.background-color]="match.alphaColor">Team Alpha</mat-chip>
       </div>
     </div>
     <div class="row">
       <div class="col-5">
-        <mat-chip *ngIf="match && match.alphaAttacker" (click)="freePositionOrScoreGoal('alpha', 'attacker')">
-          <img class="avatar" *ngIf="match && match.alphaAttacker && match.alphaAttacker.image" [src]="match.alphaAttacker.image" />
-          <mat-icon *ngIf="match && match.alphaAttacker && !match.alphaAttacker.image" class="icon">account_circle</mat-icon>
+        <mat-chip *ngIf="match.alphaAttacker" (click)="freePositionOrScoreGoal(match, 'alpha', 'attacker')">
+          <img class="avatar" *ngIf="match.alphaAttacker && match.alphaAttacker.image" [src]="match.alphaAttacker.image" />
+          <mat-icon *ngIf="match.alphaAttacker && !match.alphaAttacker.image" class="icon">account_circle</mat-icon>
           <span>{{match.alphaAttacker.name}}</span>
         </mat-chip>
-        <mat-chip *ngIf="!match || !match.alphaAttacker" (click)="takePosition('alpha', 'attacker')">
+        <mat-chip *ngIf="!match.alphaAttacker" (click)="takePosition(match, 'alpha', 'attacker')">
           <mat-icon class="icon">account_circle</mat-icon> <span>Take position</span>
         </mat-chip>
       </div>
       <div class="col-2" align="center">
-        <button mat-mini-fab (click)="switchPositions('alpha')">
+        <button mat-mini-fab (click)="switchPositions(match, 'alpha')">
           <mat-icon>sync</mat-icon>
         </button>
       </div>
       <div class="col-5">
-        <mat-chip *ngIf="match && match.alphaGoalkeeper" (click)="freePositionOrScoreGoal('alpha', 'goalkeeper')">
-          <img class="avatar" *ngIf="match && match.alphaGoalkeeper && match.alphaGoalkeeper.image" [src]="match.alphaGoalkeeper.image" />
-          <mat-icon *ngIf="match && match.alphaGoalkeeper && !match.alphaGoalkeeper.image" class="icon">account_circle</mat-icon>
+        <mat-chip *ngIf="match.alphaGoalkeeper" (click)="freePositionOrScoreGoal(match, 'alpha', 'goalkeeper')">
+          <img class="avatar" *ngIf="match.alphaGoalkeeper && match.alphaGoalkeeper.image" [src]="match.alphaGoalkeeper.image" />
+          <mat-icon *ngIf="match.alphaGoalkeeper && !match.alphaGoalkeeper.image" class="icon">account_circle</mat-icon>
           <span>{{match.alphaGoalkeeper.name}}</span>
         </mat-chip>
-        <mat-chip *ngIf="!match || !match.alphaGoalkeeper" (click)="takePosition('alpha', 'goalkeeper')">
+        <mat-chip *ngIf="!match.alphaGoalkeeper" (click)="takePosition(match, 'alpha', 'goalkeeper')">
           <mat-icon class="icon">account_circle</mat-icon><span>Take position</span>
         </mat-chip>
       </div>
     </div>
     <div class="row align-items-center justify-content-center">
       <div class="col-2">
-        <button mat-button class="score" [style.background-color]="betaColor" (click)="scoreGoal('beta')">
-          <span>{{betaScore}}</span>
+        <button mat-button class="score" [style.background-color]="match.betaColor" (click)="scoreGoal(match, 'beta')">
+          <span>{{match.betaScore}}</span>
         </button>
       </div>
       <div class="col-6" align="center">
-        <app-table-image [alphaColor]="alphaColor" [betaColor]="betaColor"></app-table-image>
+        <app-table-image [alphaColor]="match.alphaColor" [betaColor]="match.betaColor"></app-table-image>
       </div>
       <div class="col-2">
-        <button mat-button class="score" [style.background-color]="alphaColor" (click)="scoreGoal('alpha')">
-          <span>{{alphaScore}}</span>
+        <button mat-button class="score" [style.background-color]="match.alphaColor" (click)="scoreGoal(match, 'alpha')">
+          <span>{{match.alphaScore}}</span>
         </button>
       </div>
     </div>
     <div class="row">
       <div class="col-5">
-        <mat-chip class="table-single-player-position" *ngIf="match && match.betaAttacker" (click)="freePositionOrScoreGoal('beta', 'Attacker')">
-          <img class="avatar" *ngIf="match && match.betaAttacker && match.betaAttacker.image" [src]="match.betaAttacker.image" />
-          <mat-icon *ngIf="match && match.betaAttacker && !match.betaAttacker.image" class="icon">account_circle</mat-icon>
+        <mat-chip class="table-single-player-position" *ngIf="match.betaAttacker" (click)="freePositionOrScoreGoal(match, 'beta', 'Attacker')">
+          <img class="avatar" *ngIf="match.betaAttacker && match.betaAttacker.image" [src]="match.betaAttacker.image" />
+          <mat-icon *ngIf="match.betaAttacker && !match.betaAttacker.image" class="icon">account_circle</mat-icon>
           <span>{{match.betaAttacker.name}}</span>
         </mat-chip>
-        <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaAttacker" (click)="takePosition('beta', 'Attacker')">
+        <mat-chip class="table-single-player-position" *ngIf="!match.betaAttacker" (click)="takePosition(match, 'beta', 'Attacker')">
           <mat-icon class="icon">account_circle</mat-icon><span>Take position</span>
         </mat-chip>
       </div>
       <div class="col-2" align="center">
-        <button mat-mini-fab (click)="switchPositions('beta')">
+        <button mat-mini-fab (click)="switchPositions(match, 'beta')">
           <mat-icon>sync</mat-icon>
         </button>
       </div>
       <div class="col-5">
-        <mat-chip class="table-single-player-position" *ngIf="match && match.betaGoalkeeper" (click)="freePositionOrScoreGoal('beta', 'Goalkeeper')">
-          <img class="avatar" *ngIf="match && match.betaGoalkeeper && match.betaGoalkeeper.image" [src]="match.betaGoalkeeper.image" />
-          <mat-icon *ngIf="match && match.betaGoalkeeper && !match.betaGoalkeeper.image" class="icon">account_circle</mat-icon>
+        <mat-chip class="table-single-player-position" *ngIf="match.betaGoalkeeper" (click)="freePositionOrScoreGoal(match, 'beta', 'Goalkeeper')">
+          <img class="avatar" *ngIf="match.betaGoalkeeper && match.betaGoalkeeper.image" [src]="match.betaGoalkeeper.image" />
+          <mat-icon *ngIf="match.betaGoalkeeper && !match.betaGoalkeeper.image" class="icon">account_circle</mat-icon>
           <span>{{match.betaGoalkeeper.name}}</span>
         </mat-chip>
-        <mat-chip class="table-single-player-position" *ngIf="!match || !match.betaGoalkeeper" (click)="takePosition('beta', 'Goalkeeper')">
+        <mat-chip class="table-single-player-position" *ngIf="!match.betaGoalkeeper" (click)="takePosition(match, 'beta', 'Goalkeeper')">
           <mat-icon class="icon">account_circle</mat-icon><span>Take position</span>
         </mat-chip>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <mat-chip [style.background-color]="betaColor">Team Beta</mat-chip>
+        <mat-chip [style.background-color]="match.betaColor">Team Beta</mat-chip>
       </div>
     </div>
   </div>
 </mat-chip-list>
+
+<ng-template #waiting>Waiting for match data</ng-template>

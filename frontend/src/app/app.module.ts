@@ -45,6 +45,7 @@ import { PlayerEditComponent } from './player/player-edit/player-edit.component'
 import { MatchListElementComponent } from './match/list/match-list/match-list-element.component';
 import { TableImageComponent } from './match/table-image/table-image.component';
 import { TimerComponent } from './match/timer/timer.component';
+import { MatchNotificationsComponent } from './match/match-notifications/match-notifications.component';
 
 const ROUTES: Route[] = [
   { path: '', component: HomepageComponent },
@@ -80,7 +81,8 @@ const ROUTES: Route[] = [
     MatchListElementComponent,
     ImageCropperComponent,
     TableImageComponent,
-    TimerComponent
+    TimerComponent,
+    MatchNotificationsComponent
   ],
   imports: [
     BrowserModule,

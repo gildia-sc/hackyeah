@@ -1,28 +1,62 @@
-import { Component, Input } from '@angular/core';
-import * as moment from "moment";
-import { interval } from "rxjs";
-import { take } from "rxjs/operators";
+import { Component, Input, OnDestroy } from '@angular/core';
+import { interval, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'app-timer',
   templateUrl: './timer.component.html',
   styleUrls: ['./timer.component.css']
 })
-export class TimerComponent implements Timer {
-  @Input() currentTime: number;
-  @Input() tickLimit: number;
+export class TimerComponent implements Timer, OnDestroy {
+  @Input() currentTime: number = 0;
+  @Input() countdownTickLimit: number = 60;
+
+  private _started = false;
+  private _destroyed$ = new Subject();
 
   constructor() {
   }
 
-  startTimer(startTime: moment.Moment, onCompleteCallback?: () => any, isCountdown: boolean = false) {
-    interval(1000)
-      .pipe(take(this.tickLimit))
-      .subscribe(
-        elapsed => isCountdown ? this.currentTime-- : this.currentTime = elapsed,
-        () => null,
-        () => this.restartTimer(onCompleteCallback, true, this.tickLimit)
-      );
+  start(elapsedSeconds: number = 0, onCompleteCallback?: () => any) {
+    if (!this._started) {
+      this.currentTime = elapsedSeconds;
+      interval(1000)
+        .pipe(
+          takeUntil(this._destroyed$)
+        )
+        .subscribe(
+          () => {
+            if (elapsedSeconds !== 0 && !this._started) {
+              this.currentTime += elapsedSeconds;
+              this._started = true;
+            }
+            this.currentTime++;
+          },
+          () => null,
+          () => {
+            if (onCompleteCallback) {
+              onCompleteCallback();
+            }
+          }
+        );
+    }
+  }
+
+  ngOnDestroy(): void {
+    this._destroyed$.next();
+    this._destroyed$.complete();
+  }
+
+  stop() {
+    this._started = false;
+    this._destroyed$.next();
+  }
+
+  restartTimer(onCompleteCallback?: () => any, initialValue?: number) {
+    if (initialValue) {
+      this.currentTime = initialValue;
+    }
+    this.start(0, onCompleteCallback);
   }
 
   pad(num: number): string {
@@ -37,17 +71,11 @@ export class TimerComponent implements Timer {
     return this.pad(hours) + ':' + this.pad(minutes) + ':' + this.pad(secs);
   }
 
-  restartTimer(onCompleteCallback?: () => any, isCountdown: boolean = false, initialValue?: number) {
-    if (initialValue) {
-      this.currentTime = initialValue;
-    }
-    this.startTimer(moment(), onCompleteCallback, isCountdown);
-  }
-
 }
 
 export interface Timer {
   currentTime: number;
-  startTimer(startTime: moment.Moment, onCompleteCallback?: () => any, isCountdown?: boolean): void;
-  restartTimer(onCompleteCallback?: () => any, isCountdown?: boolean, initialValue?: number): void;
+  start(elapsedSeconds?: number, onCompleteCallback?: () => any): void;
+  stop();
+  restartTimer(onCompleteCallback?: () => any, initialValue?: number): void;
 }

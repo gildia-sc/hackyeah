@@ -1,11 +1,11 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-table-image',
   templateUrl: './table-image.component.html',
   styleUrls: ['./table-image.component.css']
 })
-export class TableImageComponent implements OnChanges {
+export class TableImageComponent implements AfterViewInit {
   @Input() tableWidth = 256;
   @Input() tableHeight = 164;
   @Input() playerWidth = 10;
@@ -19,8 +19,8 @@ export class TableImageComponent implements OnChanges {
   constructor() {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.drawTable();
+  ngAfterViewInit(): void {
+    this.drawTable()
   }
 
   drawTable(): void {
