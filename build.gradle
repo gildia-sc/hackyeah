@@ -244,6 +244,7 @@ dependencies {
     testCompile "com.h2database:h2"
     compile "org.springframework.cloud:spring-cloud-localconfig-connector"
     compile "org.springframework.cloud:spring-cloud-heroku-connector"
+    compile "org.springframework.boot:spring-boot-starter-cache"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 

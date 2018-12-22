@@ -9,7 +9,9 @@ import javax.persistence.Table
 class Match(
     @ManyToOne(optional = false)
     @JoinColumn(name = "foosball_table_id", unique = false, nullable = false, updatable = false)
-    val table: FoosballTable
+    val table: FoosballTable,
+
+    var reservationStart: LocalDateTime? = null
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")

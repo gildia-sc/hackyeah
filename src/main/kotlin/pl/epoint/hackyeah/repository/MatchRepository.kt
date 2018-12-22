@@ -15,4 +15,6 @@ interface MatchRepository : JpaRepository<Match, Long> {
     @Query("SELECT m FROM Match m WHERE m.playerAlphaAttacker = :player OR m.playerBetaAttacker = :player " +
         "OR m.playerAlphaGoalkeeper = :player OR m.playerBetaGoalkeeper = :player")
     fun findByPlayer(@Param("player") player: Player): List<Match>
+
+    fun findAllByStartTimeNullAndEndTimeNullAndReservationStartNotNull(): Set<Match>
 }

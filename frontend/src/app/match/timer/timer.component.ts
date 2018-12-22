@@ -1,45 +1,19 @@
-import { Component, Input, OnDestroy } from '@angular/core';
-import { interval, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { BehaviorSubject, interval, Subject } from "rxjs";
+import { scan, take, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'app-timer',
   templateUrl: './timer.component.html',
   styleUrls: ['./timer.component.css']
 })
-export class TimerComponent implements Timer, OnDestroy {
-  @Input() currentTime: number = 0;
-  @Input() countdownTickLimit: number = 60;
-
+export class TimerComponent implements Timer, AfterViewInit, OnDestroy {
   private _started = false;
   private _destroyed$ = new Subject();
 
-  constructor() {
-  }
+  currentTime$ = new BehaviorSubject<number>(0);
 
-  start(elapsedSeconds: number = 0, onCompleteCallback?: () => any) {
-    if (!this._started) {
-      this.currentTime = elapsedSeconds;
-      interval(1000)
-        .pipe(
-          takeUntil(this._destroyed$)
-        )
-        .subscribe(
-          () => {
-            if (elapsedSeconds !== 0 && !this._started) {
-              this.currentTime += elapsedSeconds;
-              this._started = true;
-            }
-            this.currentTime++;
-          },
-          () => null,
-          () => {
-            if (onCompleteCallback) {
-              onCompleteCallback();
-            }
-          }
-        );
-    }
+  constructor() {
   }
 
   ngOnDestroy(): void {
@@ -47,16 +21,54 @@ export class TimerComponent implements Timer, OnDestroy {
     this._destroyed$.complete();
   }
 
-  stop() {
-    this._started = false;
-    this._destroyed$.next();
+  ngAfterViewInit(): void {
+    this.currentTime$.next(0);
   }
 
-  restartTimer(onCompleteCallback?: () => any, initialValue?: number) {
-    if (initialValue) {
-      this.currentTime = initialValue;
-    }
-    this.start(0, onCompleteCallback);
+  get started(): boolean {
+    return this._started;
+  }
+
+  start(elapsedSeconds: number = 0, onCompleteCallback?: () => any) {
+    this._started = true;
+    interval(1000)
+      .pipe(
+        scan(acc => ++acc, elapsedSeconds),
+        takeUntil(this._destroyed$)
+      )
+      .subscribe(
+        tick => this.currentTime$.next(tick),
+        () => null,
+        () => {
+          this.currentTime$.next(0);
+          if (onCompleteCallback) {
+            onCompleteCallback();
+          }
+        }
+      );
+  }
+
+  startCountdown(remainingTimeSeconds: number, onComplete?: () => any): void {
+    this._destroyed$.next();
+    this._started = true;
+    interval(1000).pipe(
+      take(remainingTimeSeconds),
+      scan(acc => acc - 1, remainingTimeSeconds),
+      takeUntil(this._destroyed$)
+    ).subscribe(
+      tick => {
+        this.currentTime$.next(tick);
+        if (tick === 0 && onComplete) {
+          onComplete();
+        }
+      },
+      null,
+      () => this._started = false);
+  }
+
+  stop(): void {
+    this._destroyed$.next();
+    this._started = false;
   }
 
   pad(num: number): string {
@@ -74,8 +86,11 @@ export class TimerComponent implements Timer, OnDestroy {
 }
 
 export interface Timer {
-  currentTime: number;
+  started: boolean;
+
   start(elapsedSeconds?: number, onCompleteCallback?: () => any): void;
-  stop();
-  restartTimer(onCompleteCallback?: () => any, initialValue?: number): void;
+
+  stop(): void;
+
+  startCountdown(remainingTimeSeconds: number, onComplete?: () => any): void;
 }

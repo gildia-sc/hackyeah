@@ -29,5 +29,21 @@ interface MatchService {
     /**
      * Returns current match, if exists.
      */
-    fun getCurrentMatch(tableCode: String): Match?
+    fun getCurrentMatch(tableCode: String): Match
+
+    /**
+     * Returns matches with at least one player, which has not started yet.
+     */
+    fun getMatchReservations(): Set<Match>
+
+    /**
+     * Deletes the given match from the persistent storage
+     */
+    fun delete(match: Match)
+
+    /**
+     * Resets a match on the given table. If there's a match being played, it's aborted and new one is created in it's place.
+     *
+     */
+    fun resetMatch(tableCode: String): Match
 }

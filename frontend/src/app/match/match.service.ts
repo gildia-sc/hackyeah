@@ -35,4 +35,8 @@ export class MatchService {
       params: new HttpParams().append('position', position.toUpperCase())
     });
   }
+
+  resetMatch(tableCode: string): Observable<Match> {
+    return this.httpClient.post<Match>(`${this.resourceUrl}/${tableCode}/reset`, null);
+  }
 }

@@ -115,6 +115,7 @@
             <column name="team_b_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
+            <column name="reservation_start" type="timestamp"/>
             <column name="player_a_attacker_id" type="bigint"/>
             <column name="player_b_attacker_id" type="bigint"/>
             <column name="player_a_goalkeeper_id" type="bigint"/>

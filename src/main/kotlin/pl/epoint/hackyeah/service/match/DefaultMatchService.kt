@@ -1,5 +1,7 @@
 package pl.epoint.hackyeah.service.match
 
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pl.epoint.hackyeah.domain.Match
@@ -16,14 +18,30 @@ import java.time.LocalDateTime
 class DefaultMatchService(private val tableRepository: FoosballTableRepository,
                           private val matchRepository: MatchRepository) : MatchService {
 
-    override fun getCurrentMatch(tableCode: String): Match? {
+    override fun getCurrentMatch(tableCode: String): Match {
         return tableRepository.findByCode(tableCode)
             .let { matchRepository.findByTableCodeAndEndTimeNull(tableCode) ?: Match(it) }
     }
 
+    @CacheEvict("match-reservations", allEntries = true)
+    override fun resetMatch(tableCode: String): Match {
+        val match = getCurrentMatch(tableCode)
+        if (match.startTime != null) {
+            match.endTime = LocalDateTime.now()
+            return tableRepository.findByCode(tableCode).let { matchRepository.save(Match(it)) }
+        }
+        return match
+    }
+
+    @CacheEvict("match-reservations", allEntries = true)
     override fun takePosition(tableCode: String, player: Player, team: Team, position: Position): Match {
         return tableRepository.findByCode(tableCode)
-            .let { matchRepository.findByTableCodeAndEndTimeNull(tableCode) ?: Match(it) }
+            .let { matchRepository.findByTableCodeAndEndTimeNull(tableCode) ?: Match(it, LocalDateTime.now()) }
+            .also { match ->
+                if (isNewPlayer(match, player)) {
+                    match.reservationStart = LocalDateTime.now()
+                }
+            }
             .also { match -> clearPlayerOldPosition(player, match) }
             .also { match -> setPlayerNewPosition(team, position, match, player) }
             .also { match ->
@@ -32,6 +50,23 @@ class DefaultMatchService(private val tableRepository: FoosballTableRepository,
                 }
             }
             .let { match -> matchRepository.save(match) }
+    }
+
+    @Cacheable("match-reservations")
+    override fun getMatchReservations(): Set<Match> {
+        return matchRepository.findAllByStartTimeNullAndEndTimeNullAndReservationStartNotNull()
+    }
+
+    @CacheEvict("match-reservations", allEntries = true)
+    override fun delete(match: Match) {
+        matchRepository.delete(match)
+    }
+
+    private fun isNewPlayer(match: Match, player: Player): Boolean {
+        return !(player == match.playerAlphaAttacker
+            || player == match.playerAlphaGoalkeeper
+            || player == match.playerBetaAttacker
+            || player == match.playerBetaGoalkeeper)
     }
 
     private fun allPositionsTaken(match: Match) =

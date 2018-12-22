@@ -52,6 +52,12 @@ export class MatchComponent implements OnInit, OnDestroy {
     }
   }
 
+  reset(match: Match) {
+    if (match.endTime) {
+      this.matchService.resetMatch(match.tableCode).subscribe();
+    }
+  }
+
   ngOnInit() {
     this.route.params.pipe(
       map(params => {

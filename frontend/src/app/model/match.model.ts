@@ -11,6 +11,7 @@ export class Match {
   started: boolean;
   alphaScore: number;
   betaScore: number;
-  startTime: string;
-  endTime: string
+  startTime: string | Date;
+  endTime: string | Date;
+  reservationStart: string | Date
 }

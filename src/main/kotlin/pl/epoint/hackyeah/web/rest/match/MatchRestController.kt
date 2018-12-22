@@ -19,9 +19,7 @@ class MatchRestController(private val matchService: MatchService,
 
     @GetMapping
     fun getMatchForTable(@PathVariable tableCode: String): ResponseEntity<MatchDto> {
-        return matchService.getCurrentMatch(tableCode)
-            ?.let { ResponseEntity.ok(MatchDto(it)) }
-            ?: ResponseEntity.notFound().build()
+        return matchService.getCurrentMatch(tableCode).let { ResponseEntity.ok(MatchDto(it)) }
     }
 
     @PostMapping("/{team}")
@@ -35,6 +33,13 @@ class MatchRestController(private val matchService: MatchService,
             .let { match -> MatchDto(match) }
             .also { matchDto -> publishToWsChannel(tableCode, matchDto) }
             .let { matchDto -> ResponseEntity.ok(matchDto) }
+    }
+
+    @PostMapping("/reset")
+    fun resetMatch(@PathVariable tableCode: String): ResponseEntity<MatchDto> {
+        return MatchDto(matchService.resetMatch(tableCode))
+            .also { publishToWsChannel(tableCode, it) }
+            .let { ResponseEntity.ok(it) }
     }
 
     @PostMapping("/{team}/goal")

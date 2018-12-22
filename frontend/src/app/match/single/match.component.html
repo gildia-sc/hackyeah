@@ -3,6 +3,9 @@
     <div class="row" align="center">
       <div class="col">
         <app-match-notifications [match]="match"></app-match-notifications>
+        <div *ngIf="match.endTime">
+          <button mat-raised-button (click)="reset(match)">Reset table</button>
+        </div>
       </div>
     </div>
     <div class="row">

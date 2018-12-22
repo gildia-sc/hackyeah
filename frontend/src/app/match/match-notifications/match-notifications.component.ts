@@ -21,19 +21,20 @@ export class MatchNotificationsComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['match']) {
       const matchChanges = changes['match'];
-      const currentMatch = matchChanges.currentValue;
-      const oldMatch = matchChanges.previousValue;
+      const oldMatch: Match = matchChanges.previousValue;
+      const currentMatch: Match = matchChanges.currentValue;
 
-      this.startTimer(currentMatch);
+      this.startCountdownTimer(currentMatch);
 
-      if (currentMatch.startTime && this.timer.currentTime == 0) {
+      if (currentMatch.startTime && !this.timer.started) {
+        this.startTimer(currentMatch);
         this._startPopupDisplayed = true;
         setTimeout(() => this.snackBar.open('The match has started, good luck and have fun!', null, {
           duration: 3000,
         }), 10);
         this.playAudio('begin_match');
       } else if (currentMatch.endTime) {
-        this.displayDisplayWinner(currentMatch);
+        this.displayWinner(currentMatch);
         this.playAudio('end_match');
         this.timer.stop();
       } else if (oldMatch && currentMatch.alphaScore > oldMatch.alphaScore) {
@@ -44,9 +45,19 @@ export class MatchNotificationsComponent implements OnChanges {
     }
   }
 
+  private startCountdownTimer(match: Match) {
+    if (!match.startTime && !match.endTime) {
+      const reservationStartTime = moment(match.reservationStart);
+      const now = moment();
+      const elapsed = Math.trunc(now.diff(reservationStartTime) / 1000);
+      this.timer.startCountdown(60 - elapsed);
+    }
+  }
+
   private startTimer(match: Match) {
-    if (match.startTime && this.timer.currentTime === 0) {
+    if (match.startTime) {
       const alreadyElapsed = Math.trunc(moment().diff(moment(match.startTime)) / 1000);
+      this.timer.stop();
       this.timer.start(alreadyElapsed);
     }
   }
@@ -58,7 +69,7 @@ export class MatchNotificationsComponent implements OnChanges {
     audio.play();
   }
 
-  private displayDisplayWinner(match: Match) {
+  private displayWinner(match: Match) {
     let winner;
 
     if (match.alphaScore > match.betaScore) {

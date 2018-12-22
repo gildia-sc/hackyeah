@@ -20,9 +20,9 @@ class MatchDto(
     val endTime: LocalDateTime?,
 
     val alphaScore: Int,
-    val betaScore: Int
+    val betaScore: Int,
 
-    
+    val reservationStart: LocalDateTime?
 ) {
     constructor(match: Match) : this(
         match.table.code,
@@ -36,7 +36,8 @@ class MatchDto(
         match.startTime,
         match.endTime,
         match.teamAlphaScore,
-        match.teamBetaScore)
+        match.teamBetaScore,
+        match.reservationStart)
 }
 
 class PlayerDto(
